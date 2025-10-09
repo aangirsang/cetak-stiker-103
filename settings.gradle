@@ -1,0 +1,4 @@
+rootProject.name = 'cetak-stiker-103'
+
+include '103-server'
+include '103-client'
