@@ -12,7 +12,7 @@ class PenggunaService(private val repo: PenggunaRepository) {
 
     fun cariById(id: Long): Optional<Pengguna> = repo.findById(id)
 
-    fun findByNamaAkun(namaAkun: String): Pengguna? = repo.findByNamaAkun(namaAkun)
+    fun findByNamaAkun(namaAkun: String): List<Pengguna?> = repo.findByNamaAkun(namaAkun)
 
     fun simpan(pengguna: Pengguna): Pengguna = repo.save(pengguna)
 

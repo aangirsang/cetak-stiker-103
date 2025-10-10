@@ -1,5 +1,6 @@
 package com.girsang.client.controller
 
+import client.controller.UmkmController
 import javafx.application.Platform
 import javafx.fxml.FXML
 import javafx.fxml.FXMLLoader
@@ -29,6 +30,7 @@ class MainClientAppController : Initializable {
     @FXML lateinit var lblWaktu: Label
     @FXML private lateinit var lblStatusServer: Label
     @FXML private lateinit var mnPengguna: MenuItem
+    @FXML private lateinit var mnUMKM: MenuItem
 
     val user = "admin"
     val pass = "secret"
@@ -36,6 +38,7 @@ class MainClientAppController : Initializable {
 
     override fun initialize(location: URL?, resources: ResourceBundle?) {
         mnPengguna.setOnAction { tampilFormPengguna() }
+        mnUMKM.setOnAction { tampilFormUMKM() }
         pingServer()
     }
 
@@ -43,6 +46,14 @@ class MainClientAppController : Initializable {
         val fxmlLoader = FXMLLoader(javaClass.getResource("/fxml/pengguna.fxml"))
         val content: AnchorPane = fxmlLoader.load()
         val controller = fxmlLoader.getController<PenggunaController>()
+        controller.setClientController(this)  // kirim parent controller
+        controller.setParentController(this)     // sudah ada ✅
+        mainPane.center = content
+    }
+    private fun tampilFormUMKM() {
+        val fxmlLoader = FXMLLoader(javaClass.getResource("/fxml/data-umkm.fxml"))
+        val content: AnchorPane = fxmlLoader.load()
+        val controller = fxmlLoader.getController<UmkmController>()
         controller.setClientController(this)  // kirim parent controller
         controller.setParentController(this)     // sudah ada ✅
         mainPane.center = content

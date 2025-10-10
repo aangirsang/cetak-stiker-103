@@ -292,7 +292,7 @@ class PenggunaController : Initializable {
                 // 🔹 Encode namaAkun agar URL valid, ganti + menjadi %20 supaya lebih rapi
                 val encodedNamaAkun = URLEncoder.encode(namaAkun, StandardCharsets.UTF_8.toString())
                     .replace("+", "%20")
-                val fullUrl = "${clientController?.url}/api/pengguna/cari/$encodedNamaAkun"
+                val fullUrl = "${clientController?.url}/api/pengguna/cari?namaAkun=$encodedNamaAkun"
                 println("DEBUG: Mencari pengguna dengan namaAkun = $namaAkun")
                 println("DEBUG: URL request = $fullUrl")
 
@@ -315,8 +315,8 @@ class PenggunaController : Initializable {
                 Platform.runLater {
                     if (response.statusCode() == 200) {
                         // Response 200 pasti berisi satu PenggunaDTO
-                        val pengguna = json.decodeFromString<PenggunaDTO>(response.body())
-                        tblPengguna.items = FXCollections.observableArrayList(listOf(pengguna))
+                        val pengguna = json.decodeFromString<List<PenggunaDTO>>(response.body())
+                        tblPengguna.items = FXCollections.observableArrayList(pengguna)
                     } else if (response.statusCode() == 404) {
                         tblPengguna.items.clear()
                         clientController?.showError("Pengguna tidak ditemukan.")

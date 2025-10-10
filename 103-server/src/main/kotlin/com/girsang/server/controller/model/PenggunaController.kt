@@ -52,7 +52,8 @@ class PenggunaController(private val service: PenggunaService) {
         ResponseEntity.ok(mapOf("status" to "ok"))
 
     @GetMapping("/cari")
-    fun cariByNamaAkun(@RequestParam namaAkun: String): ResponseEntity<Any> {
+    fun cariByNamaAkun(@RequestParam("namaAkun") namaAkun: String): ResponseEntity<Any> {
+        println("DEBUG: mencari pengguna dengan namaAkun = $namaAkun")
         val pengguna = service.findByNamaAkun(namaAkun)
         return if (pengguna != null)
             ResponseEntity.ok(pengguna)

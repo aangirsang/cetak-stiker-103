@@ -18,6 +18,11 @@
                         <MenuItem fx:id="mnPengguna" text="Pengguna" />
                     </items>
                 </Menu>
+            <Menu mnemonicParsing="false" text="Data UMKM">
+              <items>
+                <MenuItem fx:id="mnUMKM" mnemonicParsing="false" text="Data UMKM" />
+              </items>
+            </Menu>
             </menus>
         </MenuBar>
     </top>
