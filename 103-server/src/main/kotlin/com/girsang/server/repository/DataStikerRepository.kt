@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository
 interface DataStikerRepository : JpaRepository<DataStiker, Long> {
     fun findByNamaStikerContainingIgnoreCase(namaStiker: String): List<DataStiker>
     fun findByDataUmkm_NamaUsahaContainingIgnoreCase(namaUsaha: String): List<DataStiker>
-    fun findByDataUmkmId(idUmkm: Long): List<DataStiker>
+    fun findByDataUmkm_Id(idUmkm: Long): List<DataStiker>
 }

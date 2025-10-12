@@ -24,6 +24,11 @@
                 <MenuItem fx:id="mnDataStiker" mnemonicParsing="false" text="Data Stiker" />
               </items>
             </Menu>
+            <Menu mnemonicParsing="false" text="Orderan Stiker">
+              <items>
+                <MenuItem fx:id="mnOrderStiker" mnemonicParsing="false" text="Order Stiker" />
+              </items>
+            </Menu>
             </menus>
         </MenuBar>
     </top>

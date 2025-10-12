@@ -20,7 +20,7 @@ class DataStikerService(
     fun cariById(id: Long): Optional<DataStiker> = repo.findById(id)
 
     fun stikerPerUmkm(idUmkm: Long): List<DataStiker> =
-        repo.findAll().filter { it.dataUmkm?.id == idUmkm }
+        repo.findByDataUmkm_Id(idUmkm)
 
     // 🔥 fungsi pembuat kode otomatis
     private fun generateKodeStiker(namaUsaha: String, jumlahSebelumnya: Int): String {

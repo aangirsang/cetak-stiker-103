@@ -282,9 +282,9 @@ class DataStikerController : Initializable {
             val list = json.decodeFromString<List<DataUmkmDTO>>(response.body())
 
             // 🔹 Muat FXML popup
-            val loader = javafx.fxml.FXMLLoader(javaClass.getResource("/fxml/popup-data-umkm.fxml"))
+            val loader = javafx.fxml.FXMLLoader(javaClass.getResource("/fxml/popup-pilih-umkm.fxml"))
             val root = loader.load<javafx.scene.Parent>()
-            val controller = loader.getController<PopUpDataUMKMController>()
+            val controller = loader.getController<PopUpUMKMController>()
             controller.setClientController(clientController!!)
             controller.setData(list)
 
