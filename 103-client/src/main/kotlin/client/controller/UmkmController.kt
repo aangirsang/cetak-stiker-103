@@ -1,40 +1,54 @@
 package client.controller
 
+import client.DTO.DataStikerDTO
+import client.DTO.DataUmkmDTO
+import client.util.LocalDateTimeSerializer
 import com.girsang.client.controller.MainClientAppController
 import javafx.application.Platform
+import javafx.beans.property.SimpleIntegerProperty
+import javafx.beans.property.SimpleLongProperty
+import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections
 import javafx.fxml.FXML
 import javafx.fxml.Initializable
 import javafx.scene.control.Button
+import javafx.scene.control.DatePicker
 import javafx.scene.control.TableColumn
 import javafx.scene.control.TableView
 import javafx.scene.control.TextArea
 import javafx.scene.control.TextField
+import kotlinx.serialization.Contextual
+import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
+import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encodeToString
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.modules.SerializersModule
 import java.net.URI
 import java.net.URL
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.ResourceBundle
 
-@Serializable
-data class DataUmkmDTO (
-    val id: Long? = null,
-    var namaPemilik: String = "",
-    var namaUsaha: String = "",
-    var kontak: String = "",
-    var instagram: String = "",
-    var alamat:String = ""
-
-)
 class UmkmController : Initializable{
 
     private val client = HttpClient.newBuilder().build()
-    private val json = Json { ignoreUnknownKeys = true }
+    private val json = Json {
+        ignoreUnknownKeys = true
+        encodeDefaults = true
+        prettyPrint = true
+        serializersModule = SerializersModule {
+            contextual(LocalDateTime::class, LocalDateTimeSerializer)
+        }
+    }
+
 
     @FXML private lateinit var btnSimpan: Button
     @FXML private lateinit var btnRefresh: Button
@@ -56,10 +70,30 @@ class UmkmController : Initializable{
     @FXML private lateinit var kolNamaUsaha: TableColumn<DataUmkmDTO, String>
     @FXML private lateinit var kolKontak: TableColumn<DataUmkmDTO, String>
     @FXML private lateinit var kolInstagram: TableColumn<DataUmkmDTO, String>
-        @FXML private lateinit var kolAlamat: TableColumn<DataUmkmDTO, String>
+    @FXML private lateinit var kolAlamat: TableColumn<DataUmkmDTO, String>
+
+    @FXML private lateinit var txtStikerKode: TextField
+    @FXML private lateinit var txtStikerNama: TextField
+    @FXML private lateinit var txtStikerPanjang: TextField
+    @FXML private lateinit var txtStikerLebar: TextField
+    @FXML private lateinit var txtStikerCatatan: TextArea
+    @FXML private lateinit var txtStikerDicetak: TextField
+    @FXML private lateinit var dpStikerPembuatan: DatePicker
+    @FXML private lateinit var dpStikerPerubahan: DatePicker
+
+    @FXML private lateinit var btnStikerTambah: Button
+    @FXML private lateinit var btnStikerHapus: Button
+
+    @FXML private lateinit var tblStiker: TableView<DataStikerDTO>
+    @FXML private lateinit var kolStikerNamaUMKM: TableColumn<DataStikerDTO, String>
+    @FXML private lateinit var kolStikerKodeStiker: TableColumn<DataStikerDTO, String>
+    @FXML private lateinit var kolStikerPanjang: TableColumn<DataStikerDTO, Int>
+    @FXML private lateinit var kolStikerLebar: TableColumn<DataStikerDTO, Int>
 
     private var clientController: MainClientAppController? = null
     private var parentController: MainClientAppController? = null
+
+    private var searchThread: Thread? = null
 
     fun setClientController(controller: MainClientAppController) {
         this.clientController = controller  // ✅ simpan controller dulu
@@ -76,24 +110,72 @@ class UmkmController : Initializable{
     }
 
     override fun initialize(p0: URL?, p1: ResourceBundle?) {
-        kolId.setCellValueFactory {javafx.beans.property.SimpleLongProperty(it.value.id?: 0).asObject()}
-        kolNamaPemilik.setCellValueFactory {javafx.beans.property.SimpleStringProperty(it.value.namaPemilik)}
-        kolNamaUsaha.setCellValueFactory {javafx.beans.property.SimpleStringProperty(it.value.namaUsaha)}
-        kolKontak.setCellValueFactory {javafx.beans.property.SimpleStringProperty(it.value.kontak)}
-        kolInstagram.setCellValueFactory {javafx.beans.property.SimpleStringProperty(it.value.instagram)}
-        kolAlamat.setCellValueFactory {javafx.beans.property.SimpleStringProperty(it.value.alamat)}
+
+        //Tabel UMKM
+        kolId.setCellValueFactory { SimpleLongProperty(it.value.id ?: 0).asObject()}
+        kolNamaPemilik.setCellValueFactory {SimpleStringProperty(it.value.namaPemilik)}
+        kolNamaUsaha.setCellValueFactory {SimpleStringProperty(it.value.namaUsaha)}
+        kolKontak.setCellValueFactory {SimpleStringProperty(it.value.kontak)}
+        kolInstagram.setCellValueFactory {SimpleStringProperty(it.value.instagram)}
+        kolAlamat.setCellValueFactory {SimpleStringProperty(it.value.alamat)}
+
+        //Tabel Stiker
+        kolStikerNamaUMKM.setCellValueFactory {
+            SimpleStringProperty(it.value.dataUmkm?.namaUsaha ?: "")
+        }
+        kolStikerKodeStiker.setCellValueFactory {SimpleStringProperty(it.value.kodeStiker)}
+        kolStikerPanjang.setCellValueFactory { SimpleIntegerProperty(it.value.panjang).asObject() }
+        kolStikerLebar.setCellValueFactory { SimpleIntegerProperty(it.value.lebar).asObject() }
 
         btnTutup.setOnAction { parentController?.tutupForm() }
         btnRefresh.setOnAction { bersih() }
         btnSimpan.setOnAction { simpanDataUmkm() }
         btnHapus.setOnAction { hapusData() }
+        btnStikerTambah.setOnAction { tambahStikerUntukUmkm() }
 
         tblUmkm.selectionModel.selectedItemProperty().addListener { _, _, newValue ->
             if (newValue != null) {
                 umkmTerpilih(newValue)
             }
         }
+
+        setupSearchListener(txtCariNamaPemilik, "namaPemilik")
+        setupSearchListener(txtCariNamaUsaha, "namaUsaha")
+        setupSearchListener(txtCariAlamat, "alamat")
+
+        tblUmkm.columnResizePolicy = TableView.UNCONSTRAINED_RESIZE_POLICY
+
+        tblUmkm.widthProperty().addListener { _, _, newWidth ->
+            val w = newWidth.toDouble() - 20 // padding kecil biar gak scroll
+            kolId.prefWidth = w * 0.04
+            kolNamaPemilik.prefWidth = w * 0.172
+            kolNamaUsaha.prefWidth = w * 0.2
+            kolKontak.prefWidth = w * 0.10
+            kolInstagram.prefWidth = w * 0.15
+            kolAlamat.prefWidth = w * 0.35
+        }
     }
+
+    private fun setupSearchListener(field: TextField, paramName: String) {
+        field.textProperty().addListener { _, _, newValue ->
+            searchThread?.interrupt() // hentikan thread sebelumnya jika user masih mengetik
+            searchThread = Thread {
+                try {
+                    Thread.sleep(300) // debounce 300ms
+                    if (Thread.interrupted()) return@Thread
+
+                    if (newValue.isNullOrBlank()) {
+                        Platform.runLater { loadDataUMKM() }
+                    } else {
+                        cariDataUmkm(paramName, newValue)
+                    }
+                } catch (_: InterruptedException) {
+                }
+            }
+            searchThread?.start()
+        }
+    }
+
     fun bersih(){
         txtNamaPemilik.clear()
         txtNamaUsaha.clear()
@@ -104,13 +186,33 @@ class UmkmController : Initializable{
         txtCariNamaUsaha.clear()
         txtCariAlamat.clear()
 
+        txtNamaPemilik.promptText = "Data Nama Pemilik Usaha"
+        txtNamaUsaha.promptText = "Data Nama Usaha"
+        txtKontak.promptText = "Data Kontak No. Handphone atau WhatsApp"
+        txtInstagram.promptText = "Data Akun Instagram"
+        txtAlamat.promptText = "Data Alamat"
+        txtCariNamaPemilik.promptText = "Cari Nama Pemilik Usaha"
+        txtCariNamaUsaha.promptText = "Cari Nama Usaha"
+        txtCariAlamat.promptText = "Cari Alamat"
+
         tblUmkm.selectionModel.clearSelection()
 
         btnSimpan.text = "Simpan"
 
-        loadData()
+        txtStikerKode.clear()
+        txtStikerNama.clear()
+        txtStikerPanjang.clear()
+        txtStikerLebar.clear()
+        txtStikerCatatan.clear()
+        txtStikerDicetak.clear()
+        dpStikerPembuatan.value = java.time.LocalDate.now()
+        dpStikerPerubahan.value = java.time.LocalDate.now()
+
+        loadDataUMKM()
+        loadDataStiker()
     }
-    fun loadData(){
+
+    fun loadDataUMKM(){
         println("DEBUG: clientController = $clientController, url = ${clientController?.url}")
         if(clientController?.url.isNullOrBlank()){
             Platform.runLater { clientController?.showError("URL server belum di set") }
@@ -131,6 +233,41 @@ class UmkmController : Initializable{
                     val list = json.decodeFromString<List<DataUmkmDTO>>(response.body())
                     Platform.runLater {
                         tblUmkm.items = FXCollections.observableArrayList(list)
+                    }
+                } else {
+                    Platform.runLater {
+                        clientController?.showError("Server Error ${response.statusCode()}")
+                    }
+                }
+            } catch (ex: Exception){
+                Platform.runLater {
+                    clientController?.showError(ex.message ?: "Gagal memeuat data UMKM")
+                }
+            }
+        }.start()
+    }
+
+    fun loadDataStiker(){
+        println("DEBUG: clientController = $clientController, url = ${clientController?.url}")
+        if(clientController?.url.isNullOrBlank()){
+            Platform.runLater { clientController?.showError("URL server belum di set") }
+            return
+        }
+        Thread {
+            try {
+                val builder = HttpRequest.newBuilder()
+                    .uri(URI.create("${clientController?.url}/api/dataStiker"))
+                    .GET()
+                    .header("Content-Type", "application/json")
+
+                clientController?.buildAuthHeader()?.let { builder.header("Authorization", it) }
+
+                val request = builder.build()
+                val response = client.send(request, HttpResponse.BodyHandlers.ofString())
+                if(response.statusCode() in 200..299){
+                    val list = json.decodeFromString<List<DataStikerDTO>>(response.body())
+                    Platform.runLater {
+                        tblStiker.items = FXCollections.observableArrayList(list)
                     }
                 } else {
                     Platform.runLater {
@@ -247,6 +384,7 @@ class UmkmController : Initializable{
             }.start()
         }
     }
+
     fun hapusData(){
         val umkm = getUmkmTerpilih()
         val id = umkm?.id
@@ -286,6 +424,54 @@ class UmkmController : Initializable{
             }
         }.start()
     }
+
+    fun cariDataUmkm(paramName: String, keyword: String) {
+        if (clientController?.url.isNullOrBlank()) {
+            Platform.runLater { clientController?.showError("URL server belum di set") }
+            return
+        }
+
+        Thread {
+            try {
+                val uri = "${clientController?.url}/api/dataUmkm/cari?$paramName=${keyword}"
+                val builder = HttpRequest.newBuilder()
+                    .uri(URI.create(uri))
+                    .GET()
+                    .header("Content-Type", "application/json")
+
+                clientController?.buildAuthHeader()?.let { builder.header("Authorization", it) }
+
+                val request = builder.build()
+                val response = client.send(request, HttpResponse.BodyHandlers.ofString())
+
+                if (response.statusCode() in 200..299) {
+                    val hasil = json.decodeFromString<List<DataUmkmDTO>>(response.body())
+
+                    Platform.runLater {
+                        if (hasil.isEmpty()) {
+                            // ⚠️ Kosongkan tabel jika tidak ada hasil
+                            tblUmkm.items = FXCollections.observableArrayList()
+                            clientController?.showInfo("Tidak ada data yang cocok untuk pencarian \"$keyword\"")
+                        } else {
+                            // ✅ Tampilkan hasil pencarian
+                            tblUmkm.items = FXCollections.observableArrayList(hasil)
+                        }
+                    }
+                } else {
+                    Platform.runLater {
+                        clientController?.showError("Server Error ${response.statusCode()}")
+                        tblUmkm.items = FXCollections.observableArrayList() // kosongkan tabel juga
+                    }
+                }
+            } catch (ex: Exception) {
+                Platform.runLater {
+                    clientController?.showError(ex.message ?: "Gagal mencari data UMKM")
+                    tblUmkm.items = FXCollections.observableArrayList() // kosongkan tabel jika error
+                }
+            }
+        }.start()
+    }
+
     fun umkmTerpilih(dto: DataUmkmDTO){
         txtNamaPemilik.text = dto.namaPemilik
         txtNamaUsaha.text = dto.namaUsaha
@@ -294,7 +480,59 @@ class UmkmController : Initializable{
         txtAlamat.text = dto.alamat
         btnSimpan.text = "Ubah"
     }
+
     fun getUmkmTerpilih(): DataUmkmDTO? {
         return tblUmkm.selectionModel.selectedItem
     }
+
+    fun tambahStikerUntukUmkm() {
+        val umkm = getUmkmTerpilih()
+        if (umkm == null) {
+            clientController?.showError("Pilih data UMKM terlebih dahulu.")
+            return
+        }
+
+        val stiker = DataStikerDTO(
+            dataUmkm = umkm,
+            kodeStiker = txtStikerKode.text.trim(),
+            namaStiker = txtStikerNama.text.trim(),
+            panjang = txtStikerPanjang.text.toIntOrNull() ?: 0,
+            lebar = txtStikerLebar.text.toIntOrNull() ?: 0,
+            catatan = txtStikerCatatan.text.trim(),
+            tglPembuatan = dpStikerPembuatan.value?.atStartOfDay() ?: LocalDateTime.now(),
+            tglPerubahan = dpStikerPerubahan.value?.atStartOfDay() ?: LocalDateTime.now()
+        )
+
+        Thread {
+            try {
+                val body = json.encodeToString(stiker)
+                val builder = HttpRequest.newBuilder()
+                    .uri(URI.create("${clientController?.url}/api/dataStiker"))
+                    .POST(HttpRequest.BodyPublishers.ofString(body))
+                    .header("Content-Type", "application/json")
+
+                clientController?.buildAuthHeader()?.let { builder.header("Authorization", it) }
+
+                val req = builder.build()
+                val resp = client.send(req, HttpResponse.BodyHandlers.ofString())
+
+                if (resp.statusCode() in 200..299) {
+                    Platform.runLater {
+                        clientController?.showInfo("Stiker berhasil ditambahkan.")
+                        // bisa reload tabel stiker di sini kalau kamu punya tabelnya
+                    }
+                } else {
+                    Platform.runLater {
+                        clientController?.showError("Server Error ${resp.statusCode()}: ${resp.body()}")
+                    }
+                }
+            } catch (ex: Exception) {
+                Platform.runLater {
+                    println("Gagal menambahkan stiker: ${ex.message}")
+                    clientController?.showError("Gagal menambahkan stiker: ${ex.message}")
+                }
+            }
+        }.start()
+    }
+
 }

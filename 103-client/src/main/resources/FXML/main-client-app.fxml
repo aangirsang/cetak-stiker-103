@@ -21,6 +21,7 @@
             <Menu mnemonicParsing="false" text="Data UMKM">
               <items>
                 <MenuItem fx:id="mnUMKM" mnemonicParsing="false" text="Data UMKM" />
+                <MenuItem fx:id="mnDataStiker" mnemonicParsing="false" text="Data Stiker" />
               </items>
             </Menu>
             </menus>

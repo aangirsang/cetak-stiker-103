@@ -1,5 +1,6 @@
 package com.girsang.client.controller
 
+import client.DTO.PenggunaDTO
 import javafx.application.Platform
 import javafx.collections.FXCollections
 import javafx.fxml.FXML
@@ -8,7 +9,6 @@ import javafx.scene.control.Button
 import javafx.scene.control.TableColumn
 import javafx.scene.control.TableView
 import javafx.scene.control.TextField
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.net.URI
@@ -19,14 +19,6 @@ import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 import java.nio.charset.StandardCharsets
-
-@Serializable
-data class PenggunaDTO(
-    val id: Long? = null,
-    val namaLengkap: String,
-    val namaAkun: String,
-    val kataSandi: String
-)
 
 class PenggunaController : Initializable {
 
