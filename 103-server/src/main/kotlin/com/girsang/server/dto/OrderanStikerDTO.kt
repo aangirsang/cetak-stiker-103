@@ -1,5 +1,6 @@
 package com.girsang.server.dto
 
+import com.girsang.server.model.DataUmkm
 import com.girsang.server.model.OrderanStiker
 import com.girsang.server.model.OrderanStikerRinci
 import java.time.LocalDateTime
@@ -9,7 +10,8 @@ data class OrderanStikerRinciDTO(
     val jumlah: Int,
     val stikerId: Long?,
     val kodeStiker: String?,
-    val stikerNama: String?
+    val stikerNama: String?,
+    val ukuran: String
 ) {
     companion object {
         fun fromEntity(entity: OrderanStikerRinci): OrderanStikerRinciDTO =
@@ -18,7 +20,8 @@ data class OrderanStikerRinciDTO(
                 jumlah = entity.jumlah,
                 stikerId = entity.stiker?.id,
                 kodeStiker = entity.stiker?.kodeStiker,
-                stikerNama = entity.stiker?.namaStiker
+                stikerNama = entity.stiker?.namaStiker,
+                ukuran = "${entity.stiker?.panjang} x ${entity.stiker?.lebar}"
             )
     }
 }
@@ -28,6 +31,7 @@ data class OrderanStikerDTO(
     val faktur: String,
     val tanggal: LocalDateTime,
     val totalStiker: Int,
+    val umkm: DataUmkm,
     val umkmNama: String?,
     val rincian: List<OrderanStikerRinciDTO>
 ) {
@@ -38,6 +42,7 @@ data class OrderanStikerDTO(
                 faktur = entity.faktur,
                 tanggal = entity.tanggal,
                 totalStiker = entity.totalStiker,
+                umkm = entity.umkm,
                 umkmNama = entity.umkm?.namaUsaha,
                 rincian = entity.rincian.map { OrderanStikerRinciDTO.fromEntity(it) }
             )

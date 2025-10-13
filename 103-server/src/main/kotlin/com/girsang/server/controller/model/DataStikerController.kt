@@ -41,7 +41,7 @@ class DataStikerController(private val service: DataStikerService) {
         }
 
     @PutMapping("/{id}")
-    fun update(@PathVariable id: Long, @RequestBody stiker: DataStiker): ResponseEntity<Any> =
+    fun update(@PathVariable id: Long, @RequestBody stiker: DataStikerDTO): ResponseEntity<Any> =
         try {
             val updated = service.update(id, stiker)
             ResponseEntity.ok(updated)

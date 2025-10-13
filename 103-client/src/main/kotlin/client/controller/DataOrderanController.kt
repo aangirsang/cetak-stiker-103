@@ -19,12 +19,9 @@ import javafx.scene.control.TableView
 import javafx.scene.control.TextField
 import javafx.scene.control.cell.TextFieldTableCell
 import javafx.util.converter.IntegerStringConverter
-import kotlinx.serialization.builtins.MapSerializer
-import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
-import java.net.HttpURLConnection
 import java.net.URI
 import java.net.URL
 import java.net.http.HttpClient
@@ -93,11 +90,10 @@ class DataOrderanController : Initializable {
 
     override fun initialize(location: URL?, resources: ResourceBundle?) {
 
-        kolKodeStiker.setCellValueFactory { SimpleStringProperty(it.value.stiker?.kodeStiker ?: "") }
-        kolNamaStiker.setCellValueFactory { SimpleStringProperty(it.value.stiker?.namaStiker ?: "") }
+        kolKodeStiker.setCellValueFactory { SimpleStringProperty(it.value.kodeStiker) }
+        kolNamaStiker.setCellValueFactory { SimpleStringProperty(it.value.stikerNama) }
         kolUkuran.setCellValueFactory {
-            val stiker = it.value.stiker
-            SimpleStringProperty(if (stiker != null) "${stiker.panjang} x ${stiker.lebar}" else "")
+            SimpleStringProperty(it.value.ukuran)
         }
         tblStiker.isEditable = true
         kolJumlah.setCellValueFactory { SimpleIntegerProperty(it.value.jumlah).asObject() }
@@ -283,8 +279,11 @@ class DataOrderanController : Initializable {
             stage.showAndWait()
 
             // 🔹 Setelah popup ditutup
+            println("Response body: ${response.body()}")
             val selected = controller.selectedOrderan
             if (selected != null) {
+                println("Orderan yang dipilih ${selected.faktur}")
+                println("UMKM dalam orderan ${selected.umkm?.namaUsaha}")
                 selectedOrder = selected
                 selectedUmkm = selected.umkm
                 umkmTerpilih(selected.umkm!!)
@@ -292,7 +291,7 @@ class DataOrderanController : Initializable {
 
                 txtFaktur.text = selected.faktur
                 val formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy")
-                txtTanggal.text = selected.tanggal.format(formatter)
+                txtTanggal.text = selected.tanggal?.format(formatter)
                 lblTotalStiker.text = "Total Stiker = ${selected.totalStiker} Lembar"
                 btnSimpan.text = "Update"
             }
@@ -354,42 +353,65 @@ class DataOrderanController : Initializable {
             clientController?.showError("Error: ${e.message}")
         }
     }
-    fun loadDataOrderRinci(order: OrderanStikerDTO){
-        if(order == null){
+    fun loadDataOrderRinci(order: OrderanStikerDTO?) {
+        if (order == null) {
             tblStiker.items.clear()
-        } else {
-            Thread {
-                try {
-                    val id = order.id
-                    val builder = HttpRequest.newBuilder()
-                        .uri(URI.create("${clientController?.url}/api/orderan-stiker/$id"))
-                        .GET()
-                        .header("Content-Type", "application/json")
+            return
+        }
 
-                    clientController?.buildAuthHeader()?.let { builder.header("Authorization", it) }
+        // 🔹 Tambahkan indikator loading di tengah tabel
+        val loadingIndicator = javafx.scene.control.ProgressIndicator()
+        loadingIndicator.progress = -1.0
+        loadingIndicator.maxWidth = 50.0
+        loadingIndicator.maxHeight = 50.0
+        tblStiker.placeholder = loadingIndicator
 
-                    val request = builder.build()
-                    val response = client.send(request, HttpResponse.BodyHandlers.ofString())
-                    if (response.statusCode() in 200..299) {
-                        val list = json.decodeFromString<List<OrderanStikerRinciDTO>>(response.body())
-                        Platform.runLater {
-                            tblStiker.items = FXCollections.observableArrayList(list)
-                        }
-                    } else {
-                        Platform.runLater {
-                            println("Server Error ${response.statusCode()}")
-                            clientController?.showError("Server Error ${response.statusCode()}")
-                        }
-                    }
-                } catch (ex: Exception) {
+        Thread {
+            try {
+                val id = order.id ?: return@Thread
+
+                val builder = HttpRequest.newBuilder()
+                    .uri(URI.create("${clientController?.url}/api/orderan-stiker/$id"))
+                    .GET()
+                    .header("Content-Type", "application/json")
+
+                clientController?.buildAuthHeader()?.let { builder.header("Authorization", it) }
+
+                val request = builder.build()
+                val response = client.send(request, HttpResponse.BodyHandlers.ofString())
+
+                if (response.statusCode() in 200..299) {
+                    val body = response.body().trim()
+                    println("Response rincian: $body")
+
+                    // 🔹 Decode 1 orderan, bukan list!
+                    val orderan = json.decodeFromString<OrderanStikerDTO>(body)
+                    val rincianList = orderan.rincian ?: emptyList()
+
                     Platform.runLater {
-                        println(ex.message ?: "Gagal memeuat data UMKM")
-                        clientController?.showError(ex.message ?: "Gagal memeuat data UMKM")
+                        if (rincianList.isEmpty()) {
+                            tblStiker.placeholder = javafx.scene.control.Label("Tidak ada rincian orderan.")
+                        }
+                        tblStiker.items = FXCollections.observableArrayList(rincianList)
+                    }
+
+                } else {
+                    Platform.runLater {
+                        tblStiker.placeholder = javafx.scene.control.Label("Gagal memuat data (${response.statusCode()})")
+                        clientController?.showError("Server Error ${response.statusCode()}")
                     }
                 }
-            }.start()
-        }
+
+            } catch (ex: Exception) {
+                ex.printStackTrace()
+                Platform.runLater {
+                    tblStiker.placeholder = javafx.scene.control.Label("Gagal memuat rincian orderan.")
+                    clientController?.showError("Gagal memuat rincian orderan: ${ex.message}")
+                }
+            }
+        }.start()
     }
+
     fun fakturOtomatis(){
         Thread {
             try {
@@ -457,6 +479,7 @@ class DataOrderanController : Initializable {
                 stiker = selectedStiker!!,
                 kodeStiker = selectedStiker!!.kodeStiker,
                 stikerNama = selectedStiker!!.namaStiker,
+                ukuran = "${selectedStiker!!.panjang} x ${selectedStiker!!.lebar}",
                 jumlah = jumlah
             )
             currentItems.add(rinci)
@@ -496,52 +519,107 @@ class DataOrderanController : Initializable {
             clientController?.showError("Belum ada stiker yang ditambahkan!")
             return
         }
+        //simpan
+        if(btnSimpan.text == "Simpan"){
+            val orderan = OrderanStikerDTO(
+                id = null,
+                faktur = txtFaktur.text,
+                tanggal = LocalDateTime.now(),
+                umkm = DataUmkmDTO(id = selectedUmkm!!.id),
+                totalStiker = tblStiker.items.sumOf { it.jumlah },
+                rincian = tblStiker.items.map {
+                    OrderanStikerRinciDTO(
+                        id = null,
+                        stiker = DataStikerDTO(id = it.stiker?.id),
+                        kodeStiker = it.stiker?.kodeStiker ?: "",
+                        stikerNama = it.stiker?.namaStiker ?: "",
+                        ukuran = "${it.stiker?.panjang} x ${it.stiker?.lebar}",
+                        jumlah = it.jumlah
+                    )
+                }
+            )
 
-        val orderan = OrderanStikerDTO(
-            id = null,
-            faktur = txtFaktur.text,
-            tanggal = LocalDateTime.now(),
-            umkm = DataUmkmDTO(id = selectedUmkm!!.id),
-            totalStiker = tblStiker.items.sumOf { it.jumlah },
-            rincian = tblStiker.items.map {
-                OrderanStikerRinciDTO(
-                    id = null,
-                    stiker = DataStikerDTO(id = it.stiker?.id),
-                    kodeStiker = it.stiker?.kodeStiker ?: "",
-                    stikerNama = it.stiker?.namaStiker ?: "",
-                    jumlah = it.jumlah
-                )
-            }
-        )
+            Thread {
+                try {
+                    val body = json.encodeToString(orderan)
+                    val builder = HttpRequest.newBuilder()
+                        .uri(URI.create("${clientController?.url}/api/orderan-stiker"))
+                        .POST(HttpRequest.BodyPublishers.ofString(body))
+                        .header("Content-Type", "application/json")
 
-        Thread {
-            try {
-                val body = json.encodeToString(orderan)
-                val builder = HttpRequest.newBuilder()
-                    .uri(URI.create("${clientController?.url}/api/orderan-stiker"))
-                    .POST(HttpRequest.BodyPublishers.ofString(body))
-                    .header("Content-Type", "application/json")
+                    clientController?.buildAuthHeader()?.let { builder.header("Authorization", it) }
 
-                clientController?.buildAuthHeader()?.let { builder.header("Authorization", it) }
-
-                val req = builder.build()
-                val resp = clientController?.makeRequest(req)
-                if (resp?.statusCode() in 200..299) {
-                    Platform.runLater {
-                        clientController?.showInfo("Orderan berhasil disimpan!")
-                        bersih()
+                    val req = builder.build()
+                    val resp = clientController?.makeRequest(req)
+                    if (resp?.statusCode() in 200..299) {
+                        Platform.runLater {
+                            clientController?.showInfo("Orderan berhasil disimpan!")
+                            bersih()
+                        }
+                    } else {
+                        Platform.runLater {
+                            println("Gagal menyimpan orderan: ${resp?.statusCode()}")
+                            clientController?.showError("Gagal menyimpan orderan: ${resp?.statusCode()}")
+                        }
                     }
-                } else {
+                } catch (e: Exception) {
                     Platform.runLater {
-                        println("Gagal menyimpan orderan: ${resp?.statusCode()}")
-                        clientController?.showError("Gagal menyimpan orderan: ${resp?.statusCode()}")
+                        clientController?.showError("Error: ${e.message}")
                     }
                 }
-            } catch (e: Exception) {
-                Platform.runLater {
-                    clientController?.showError("Error: ${e.message}")
+            }.start()
+        }
+        //update
+        else {
+            val orderan = OrderanStikerDTO(
+                id = selectedOrder?.id,
+                faktur = selectedOrder?.faktur.toString(),
+                tanggal = selectedOrder?.tanggal,
+                umkm = DataUmkmDTO(id = selectedUmkm!!.id),
+                totalStiker = tblStiker.items.sumOf { it.jumlah },
+                rincian = tblStiker.items.map {
+                    OrderanStikerRinciDTO(
+                        id = null,
+                        stiker = DataStikerDTO(id = it.stiker?.id),
+                        kodeStiker = it.stiker?.kodeStiker ?: "",
+                        stikerNama = it.stiker?.namaStiker ?: "",
+                        ukuran = "${it.stiker?.panjang} x ${it.stiker?.lebar}",
+                        jumlah = it.jumlah
+                    )
                 }
-            }
-        }.start()
+            )
+            Thread {
+                try {
+                    val id = selectedOrder?.id
+                    val body = json.encodeToString(orderan)
+                    val builder = HttpRequest.newBuilder()
+                        .uri(URI.create("${clientController?.url}/api/orderan-stiker/$id"))
+                        .PUT(HttpRequest.BodyPublishers.ofString(body))
+                        .header("Content-Type", "application/json")
+
+                    clientController?.buildAuthHeader()?.let { builder.header("Authorization", it) }
+
+                    val req = builder.build()
+                    val resp = clientController?.makeRequest(req)
+                    if (resp?.statusCode() in 200..299) {
+                        Platform.runLater {
+                            clientController?.showInfo("Orderan berhasil disimpan!")
+                            bersih()
+                        }
+                    } else {
+                        Platform.runLater {
+                            println("Gagal menyimpan orderan: ${resp?.statusCode()}")
+                            clientController?.showError("Gagal menyimpan orderan: ${resp?.statusCode()}")
+                        }
+                    }
+                } catch (e: Exception) {
+                    Platform.runLater {
+                        clientController?.showError("Error: ${e.message}")
+                    }
+                }
+            }.start()
+        }
+
+
     }
 }

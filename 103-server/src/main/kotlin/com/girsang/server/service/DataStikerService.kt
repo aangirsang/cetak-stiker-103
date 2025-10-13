@@ -59,15 +59,21 @@ class DataStikerService(
         return ResponseEntity.ok(stiker)
     }
 
-    fun update(id: Long, stiker: DataStiker): DataStiker {
+    fun update(id: Long, @RequestBody dto: DataStikerDTO): ResponseEntity<DataStiker> {
         val existing = repo.findById(id).orElseThrow { NoSuchElementException("Stiker tidak ditemukan") }
-        existing.namaStiker = stiker.namaStiker
-        existing.panjang = stiker.panjang
-        existing.lebar = stiker.lebar
-        existing.catatan = stiker.catatan
-        existing.dataUmkm = stiker.dataUmkm
-        existing.tglPerubahan = LocalDateTime.now()
-        return repo.save(existing)
+        val umkm = umkmRepo.findById(dto.dataUmkmId)
+            .orElseThrow { RuntimeException("UMKM tidak ditemukan") }
+        existing.apply {
+            dataUmkm = umkm
+            namaStiker = dto.namaStiker
+            panjang = dto.panjang
+            lebar = dto.lebar
+            catatan = dto.catatan
+            tglPerubahan = LocalDateTime.now()
+        }
+
+        val updated = repo.save(existing)
+        return ResponseEntity.ok(updated)
     }
 
     fun hapus(id: Long) {

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.context.annotation.RequestScope
 
 @RestController
 @RequestMapping("/api/orderan-stiker")
@@ -32,40 +33,21 @@ class OrderanStikerController(private val service: OrderanStikerService) {
     fun create(@RequestBody orderan: OrderanStiker): OrderanStikerDTO =
         OrderanStikerDTO.fromEntity(service.save(orderan))
 
+
+    @PutMapping("/{id}")
+    fun update(
+        @PathVariable id: Long,
+        @RequestBody orderBaru: OrderanStiker): ResponseEntity<Any> {
+        return try {
+            val updated = service.update(id, orderBaru)
+            ResponseEntity.ok(updated)
+        } catch (e: NoSuchElementException) {
+            ResponseEntity.status(404).body(mapOf("message" to "Data Orderan tidak ditemukan"))
+        }
+    }
     @DeleteMapping("/{id}")
     fun delete(@PathVariable id: Long) {
         service.findById(id)?.let { service.delete(it) }
-    }
-
-    @PostMapping("/{id}/add-rinci")
-    fun addRinci(
-        @PathVariable id: Long,
-        @RequestBody rincian: OrderanStikerRinci
-    ): OrderanStikerDTO? {
-        val orderan = service.findById(id) ?: return null
-        service.addRinci(orderan, rincian)
-        return OrderanStikerDTO.fromEntity(orderan)
-    }
-
-    @PostMapping("/{id}/remove-rinci")
-    fun removeRinci(
-        @PathVariable id: Long,
-        @RequestBody rincian: OrderanStikerRinci
-    ): OrderanStikerDTO? {
-        val orderan = service.findById(id) ?: return null
-        service.removeRinci(orderan, rincian)
-        return OrderanStikerDTO.fromEntity(orderan)
-    }
-
-    @PutMapping("/{orderId}/update-rinci/{rinciId}")
-    fun updateRinci(
-        @PathVariable orderId: Long,
-        @PathVariable rinciId: Long,
-        @RequestBody rincianBaru: OrderanStikerRinci
-    ): OrderanStikerDTO? {
-        val orderan = service.findById(orderId) ?: return null
-        service.updateRinci(orderan, rinciId, rincianBaru)
-        return OrderanStikerDTO.fromEntity(orderan)
     }
 
     // Optional: endpoint hanya untuk lihat faktur berikutnya (preview)

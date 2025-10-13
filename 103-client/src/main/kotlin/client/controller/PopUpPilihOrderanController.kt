@@ -131,6 +131,7 @@ class PopUpPilihOrderanController : Initializable {
 
     fun bersih() {
         selectedOrderan = null
+
         txtCariFaktur.clear()
         txtCariNamaUMKM.clear()
         txtCariNamaStiker.clear()

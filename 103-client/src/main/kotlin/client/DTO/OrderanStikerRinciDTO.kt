@@ -8,5 +8,6 @@ class OrderanStikerRinciDTO (
     var stiker: DataStikerDTO? = null,
     val kodeStiker: String,
     val stikerNama: String,
-    var jumlah: Int = 0
+    var jumlah: Int = 0,
+    val ukuran: String
 )

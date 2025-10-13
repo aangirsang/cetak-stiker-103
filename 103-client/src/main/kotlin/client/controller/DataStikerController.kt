@@ -406,7 +406,7 @@ class DataStikerController : Initializable {
                 try {
                     val stiker = DataStikerDTO (
                         id = id,
-                        dataUmkm = umkm,
+                        dataUmkmId = umkm?.id,
                         namaStiker = namaStiker,
                         panjang = panjang,
                         lebar = lebar,

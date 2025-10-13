@@ -1,7 +1,9 @@
 package com.girsang.server.service
 
+import com.girsang.server.dto.OrderanStikerDTO
 import com.girsang.server.model.OrderanStiker
 import com.girsang.server.model.OrderanStikerRinci
+import com.girsang.server.repository.DataStikerRepository
 import com.girsang.server.repository.OrderanStikerRepository
 import com.girsang.server.repository.OrderanStikerRinciRepository
 import jakarta.transaction.Transactional
@@ -11,7 +13,8 @@ import java.time.LocalDateTime
 @Service
 class OrderanStikerService(
     private val repositoryOrderan: OrderanStikerRepository,
-    private val repositoryRinci: OrderanStikerRinciRepository) {
+    private val repositoryRinci: OrderanStikerRinciRepository,
+    private val repositoryStiker: DataStikerRepository) {
 
     fun findRinciByOrderanId(orderanId: Long): List<OrderanStikerRinci> {
         return repositoryRinci.findByOrderanId(orderanId)
@@ -30,37 +33,34 @@ class OrderanStikerService(
         return repositoryOrderan.save(orderan)
     }
 
+    fun update(id: Long, orderBaru: OrderanStiker): OrderanStiker{
+        val existing = repositoryOrderan.findById(id)
+            .orElseThrow { NoSuchElementException("Orderan tidak ditemukan") }
+
+        existing.tanggal = orderBaru.tanggal
+        existing.totalStiker = orderBaru.totalStiker
+
+        // Bersihkan rincian lama
+        existing.rincian.clear()
+
+        // Tambah rincian baru, tapi pastikan stiker diambil dari DB
+        for (rinci in orderBaru.rincian) {
+            val stikerEntity = repositoryStiker.findById(rinci.stiker?.id!!)
+                .orElseThrow { NoSuchElementException("Stiker tidak ditemukan") }
+
+            val rincianBaru = OrderanStikerRinci(
+                orderan = existing,
+                stiker = stikerEntity,
+                jumlah = rinci.jumlah
+            )
+            existing.rincian.add(rincianBaru)
+        }
+
+        updateTotal(existing)
+        return repositoryOrderan.save(existing)
+    }
+
     fun delete(orderan: OrderanStiker) = repositoryOrderan.delete(orderan)
-
-    // Tambah rincian
-    @Transactional
-    fun addRinci(orderan: OrderanStiker, rincian: OrderanStikerRinci) {
-        rincian.orderan = orderan
-        orderan.rincian.add(rincian)
-        updateTotal(orderan)
-        repositoryOrderan.save(orderan)
-    }
-
-    // Hapus rincian
-    @Transactional
-    fun removeRinci(orderan: OrderanStiker, rincian: OrderanStikerRinci) {
-        if (orderan.rincian.remove(rincian)) {
-            rincian.stiker
-            updateTotal(orderan)
-            repositoryOrderan.save(orderan)
-        }
-    }
-    // Edit rincian
-    @Transactional
-    fun updateRinci(orderan: OrderanStiker, rinciId: Long, rincianBaru: OrderanStikerRinci) {
-        val rincianLama = orderan.rincian.find { it.id == rinciId }
-        if (rincianLama != null) {
-            rincianLama.stiker = rincianBaru.stiker ?: rincianLama.stiker
-            rincianLama.jumlah = rincianBaru.jumlah
-            updateTotal(orderan)
-            repositoryOrderan.save(orderan)
-        }
-    }
 
     // Hitung ulang total stiker
     private fun updateTotal(orderan: OrderanStiker) {
