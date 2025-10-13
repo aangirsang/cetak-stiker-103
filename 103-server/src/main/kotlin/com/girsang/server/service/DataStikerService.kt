@@ -1,10 +1,13 @@
 package com.girsang.server.service
 
+import com.girsang.server.dto.DataStikerDTO
 import com.girsang.server.model.DataStiker
 import com.girsang.server.model.DataUmkm
 import com.girsang.server.repository.DataStikerRepository
 import com.girsang.server.repository.DataUmkmRepository
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
+import org.springframework.web.bind.annotation.RequestBody
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
@@ -23,26 +26,37 @@ class DataStikerService(
         repo.findByDataUmkm_Id(idUmkm)
 
     // 🔥 fungsi pembuat kode otomatis
-    private fun generateKodeStiker(namaUsaha: String, jumlahSebelumnya: Int): String {
+    private fun generateKodeStiker(umkm: DataUmkm): String {
         val tahun = LocalDate.now().year % 100  // ambil 2 digit tahun
-        val urutan = String.format("%03d", jumlahSebelumnya + 1) // 001, 002, dst
-        return "$namaUsaha - $tahun$urutan"
+        val lastKode = repo.findLastKodeStiker(umkm.id)
+        val nextUrut = if(lastKode != null && lastKode.length >= 9) {
+            val lastUrut = lastKode.takeLast(3).toIntOrNull() ?: 0
+            lastUrut + 1
+        } else {
+            1
+        }
+        val urutStr = String.format("%03d", nextUrut)
+        return "${umkm.namaUsaha} - $tahun$urutStr"
     }
+    fun simpan(@RequestBody dto: DataStikerDTO): ResponseEntity<DataStiker> {
+        val umkm = umkmRepo.findById(dto.dataUmkmId)
+            .orElseThrow { RuntimeException("UMKM tidak ditemukan") }
 
-    fun simpan(stiker: DataStiker): DataStiker {
-        val umkm = stiker.dataUmkm?.id?.let { umkmRepo.findById(it).orElseThrow() }
-            ?: throw IllegalArgumentException("Data UMKM tidak ditemukan")
+        //val jumlahSebelumnya = repo.findAll().count { it.dataUmkm?.id == umkm.id }
+        val umkmIdNonNull: Long = umkm.id ?: throw IllegalArgumentException("UMKM Id tidak boleh null")
+        val jumlahSebelumnya = repo.findLastKodeStiker(umkmIdNonNull)
 
-        // 🔥 Hitung jumlah stiker UMKM tersebut
-        val jumlahSebelumnya = repo.findAll().count { it.dataUmkm?.id == umkm.id }
+        val stiker = DataStiker(
+            dataUmkm = umkm,
+            kodeStiker = generateKodeStiker(umkm),
+            namaStiker = dto.namaStiker,
+            panjang = dto.panjang,
+            lebar = dto.lebar,
+            catatan = dto.catatan
+        )
 
-        // 🔥 Buat kode otomatis
-        stiker.kodeStiker = generateKodeStiker(umkm.namaUsaha, jumlahSebelumnya)
-        stiker.dataUmkm = umkm
-        stiker.tglPembuatan = LocalDateTime.now()
-        stiker.tglPerubahan = LocalDateTime.now()
-
-        return repo.save(stiker)
+        repo.save(stiker)
+        return ResponseEntity.ok(stiker)
     }
 
     fun update(id: Long, stiker: DataStiker): DataStiker {

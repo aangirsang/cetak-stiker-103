@@ -1,5 +1,6 @@
 package com.girsang.server.controller.model
 
+import com.girsang.server.dto.DataStikerDTO
 import com.girsang.server.model.DataStiker
 import com.girsang.server.model.DataUmkm
 import com.girsang.server.service.DataStikerService
@@ -29,7 +30,7 @@ class DataStikerController(private val service: DataStikerService) {
         ResponseEntity.ok(service.stikerPerUmkm(idUmkm))
 
     @PostMapping
-    fun simpan(@RequestBody stiker: DataStiker): ResponseEntity<Any> =
+    fun simpan(@RequestBody stiker: DataStikerDTO): ResponseEntity<Any> =
         try {
             val saved = service.simpan(stiker)
             ResponseEntity.status(201).body(saved)

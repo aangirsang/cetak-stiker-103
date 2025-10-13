@@ -8,6 +8,7 @@ data class OrderanStikerRinciDTO(
     val id: Long?,
     val jumlah: Int,
     val stikerId: Long?,
+    val kodeStiker: String?,
     val stikerNama: String?
 ) {
     companion object {
@@ -16,7 +17,8 @@ data class OrderanStikerRinciDTO(
                 id = entity.id,
                 jumlah = entity.jumlah,
                 stikerId = entity.stiker?.id,
-                stikerNama = entity.stiker?.namaStiker ?: entity.stiker?.toString()
+                kodeStiker = entity.stiker?.kodeStiker,
+                stikerNama = entity.stiker?.namaStiker
             )
     }
 }
@@ -26,6 +28,7 @@ data class OrderanStikerDTO(
     val faktur: String,
     val tanggal: LocalDateTime,
     val totalStiker: Int,
+    val umkmNama: String?,
     val rincian: List<OrderanStikerRinciDTO>
 ) {
     companion object {
@@ -35,7 +38,14 @@ data class OrderanStikerDTO(
                 faktur = entity.faktur,
                 tanggal = entity.tanggal,
                 totalStiker = entity.totalStiker,
+                umkmNama = entity.umkm?.namaUsaha,
                 rincian = entity.rincian.map { OrderanStikerRinciDTO.fromEntity(it) }
             )
     }
 }
+
+data class DataUmkmDTO(
+    val id: Long,
+    val namaUsaha: String,
+    val namaPemilik: String
+)

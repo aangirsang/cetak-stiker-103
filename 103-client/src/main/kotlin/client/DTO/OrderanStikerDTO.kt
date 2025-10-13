@@ -11,8 +11,9 @@ class OrderanStikerDTO (
     val faktur: String,
     @Serializable(with = LocalDateTimeSerializer::class)
     val tanggal: LocalDateTime,
-    val umkm: DataUmkmDTO,
+    val umkm: DataUmkmDTO? = null,
+    val umkmNama: String = "",
     val totalStiker: Int,
-    val rincian: List<OrderanStikerRinciDTO> = listOf()
+    val rincian: List<OrderanStikerRinciDTO> = emptyList()
 
 )

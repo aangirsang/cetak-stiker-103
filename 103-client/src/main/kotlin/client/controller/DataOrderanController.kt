@@ -115,8 +115,14 @@ class DataOrderanController : Initializable {
             }
         }
 
+        txtFaktur.setOnMouseClicked { event ->
+            if (event.clickCount == 2) {
+                showCariOrderaPopup()
+            }
+        }
+
         kolJumlah.setOnEditCommit { event ->
-            val stiker = event.rowValue
+            var stiker = event.rowValue
             val nilaiBaru = event.newValue ?: 0
 
             if (nilaiBaru <= 0) {
@@ -225,6 +231,76 @@ class DataOrderanController : Initializable {
 
         } catch (e: Exception) {
             clientController?.showError("Error: ${e.message}")
+        }
+    }
+    fun showCariOrderaPopup() {
+        try {
+            // 🔹 Ambil data orderan dari server
+            val builder = HttpRequest.newBuilder()
+                .uri(URI.create("${clientController?.url}/api/orderan-stiker"))
+                .GET()
+                .header("Content-Type", "application/json")
+
+            clientController?.buildAuthHeader()?.let { builder.header("Authorization", it) }
+
+            val response = client.send(builder.build(), HttpResponse.BodyHandlers.ofString())
+
+            if (response.statusCode() !in 200..299) {
+                clientController?.showError("Gagal memuat data orderan (${response.statusCode()})")
+                return
+            }
+
+            // 🔹 Cetak response untuk debug
+            println("Response orderan: ${response.body()}")
+
+            val list = json.decodeFromString<List<OrderanStikerDTO>>(response.body())
+
+            // 🔹 Muat FXML popup dengan pengecekan null
+            val fxmlUrl = javaClass.getResource("/fxml/popup-pilih-orderan.fxml")
+            println("FXML URL = $fxmlUrl")
+
+            if (fxmlUrl == null) {
+                clientController?.showError("FXML popup-pilih-orderan.fxml tidak ditemukan!")
+                return
+            }
+
+            val loader = javafx.fxml.FXMLLoader(fxmlUrl)
+            val root = loader.load<javafx.scene.Parent>()
+
+            val controller = loader.getController<PopUpPilihOrderanController>()
+            if (controller == null) {
+                clientController?.showError("Controller PopUpPilihOrderanController tidak ditemukan di FXML!")
+                return
+            }
+
+            controller.setClientController(clientController!!)
+            controller.setData(list) // pastikan method setData ada di PopUpPilihOrderanController
+
+            val stage = javafx.stage.Stage()
+            stage.title = "Pilih Data Orderan"
+            stage.scene = javafx.scene.Scene(root)
+            stage.initModality(javafx.stage.Modality.APPLICATION_MODAL)
+            stage.showAndWait()
+
+            // 🔹 Setelah popup ditutup
+            val selected = controller.selectedOrderan
+            if (selected != null) {
+                selectedOrder = selected
+                selectedUmkm = selected.umkm
+                umkmTerpilih(selected.umkm!!)
+                loadDataOrderRinci(selected)
+
+                txtFaktur.text = selected.faktur
+                val formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy")
+                txtTanggal.text = selected.tanggal.format(formatter)
+                lblTotalStiker.text = "Total Stiker = ${selected.totalStiker} Lembar"
+                btnSimpan.text = "Update"
+            }
+
+        } catch (e: Exception) {
+            // Cetak stack trace lengkap
+            e.printStackTrace()
+            clientController?.showError("Error PopUp Orderan: ${e.message ?: "Unknown"}")
         }
     }
     fun showCariStikerPopup() {
@@ -367,17 +443,27 @@ class DataOrderanController : Initializable {
             return
         }
 
-        val rinci = OrderanStikerRinciDTO(
-            id = null,
-            stiker = selectedStiker!!,
-            jumlah = jumlah
-        )
-
         val currentItems = tblStiker.items ?: FXCollections.observableArrayList()
-        currentItems.add(rinci)
+
+        // Cek apakah stiker sudah ada
+        val existing = currentItems.find { it.stiker?.id == selectedStiker?.id }
+        if (existing != null) {
+            // Jika sudah ada, tambahkan jumlahnya
+            existing.jumlah += jumlah
+        } else {
+            // Jika belum ada, buat baris baru
+            val rinci = OrderanStikerRinciDTO(
+                id = null,
+                stiker = selectedStiker!!,
+                kodeStiker = selectedStiker!!.kodeStiker,
+                stikerNama = selectedStiker!!.namaStiker,
+                jumlah = jumlah
+            )
+            currentItems.add(rinci)
+        }
 
         tblStiker.items = currentItems
-        println("🟢 STIKER ID = ${tblStiker.items.map { it.stiker?.id }}")
+        tblStiker.refresh()
         hitungTotalStiker()
 
         // Bersihkan input
@@ -421,6 +507,8 @@ class DataOrderanController : Initializable {
                 OrderanStikerRinciDTO(
                     id = null,
                     stiker = DataStikerDTO(id = it.stiker?.id),
+                    kodeStiker = it.stiker?.kodeStiker ?: "",
+                    stikerNama = it.stiker?.namaStiker ?: "",
                     jumlah = it.jumlah
                 )
             }

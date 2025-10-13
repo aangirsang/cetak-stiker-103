@@ -1,5 +1,6 @@
 package com.girsang.server.model
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
@@ -12,6 +13,7 @@ import jakarta.persistence.OneToMany
 import java.time.LocalDateTime
 
 @Entity
+@JsonIgnoreProperties("hibernateLazyInitializer", "handler")
 data class OrderanStiker(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +23,7 @@ data class OrderanStiker(
     var tanggal: LocalDateTime,
     var totalStiker: Int,
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "umkm_id")
     var umkm: DataUmkm,
 

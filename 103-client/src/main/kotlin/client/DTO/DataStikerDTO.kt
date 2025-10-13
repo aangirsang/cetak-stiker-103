@@ -10,6 +10,8 @@ data class DataStikerDTO(
 
     var dataUmkm: DataUmkmDTO? = null,
 
+    var dataUmkmId: Long? = null,
+
     var kodeStiker: String = "",
     var namaStiker: String = "",
     var panjang: Int = 0,

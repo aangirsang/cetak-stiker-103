@@ -18,4 +18,5 @@ interface OrderanStikerRepository : JpaRepository<OrderanStiker, Long>{
         nativeQuery = true
     )
     fun findLastFakturByYear(year: Int): String?
+
 }

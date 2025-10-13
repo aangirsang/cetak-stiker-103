@@ -360,7 +360,7 @@ class DataStikerController : Initializable {
             Thread{
                 try {
                     val stiker = DataStikerDTO (
-                        dataUmkm = umkm,
+                        dataUmkmId = umkm?.id,
                         namaStiker = namaStiker,
                         panjang = panjang,
                         lebar = lebar,

@@ -5,6 +5,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 class OrderanStikerRinciDTO (
     val id: Long? = null,
-    val stiker: DataStikerDTO,
-    var jumlah: Int
+    var stiker: DataStikerDTO? = null,
+    val kodeStiker: String,
+    val stikerNama: String,
+    var jumlah: Int = 0
 )

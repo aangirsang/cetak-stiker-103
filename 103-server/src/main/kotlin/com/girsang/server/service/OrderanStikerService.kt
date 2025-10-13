@@ -3,16 +3,23 @@ package com.girsang.server.service
 import com.girsang.server.model.OrderanStiker
 import com.girsang.server.model.OrderanStikerRinci
 import com.girsang.server.repository.OrderanStikerRepository
+import com.girsang.server.repository.OrderanStikerRinciRepository
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 
 @Service
-class OrderanStikerService(private val repository: OrderanStikerRepository) {
+class OrderanStikerService(
+    private val repositoryOrderan: OrderanStikerRepository,
+    private val repositoryRinci: OrderanStikerRinciRepository) {
 
-    fun findAll(): List<OrderanStiker> = repository.findAll()
+    fun findRinciByOrderanId(orderanId: Long): List<OrderanStikerRinci> {
+        return repositoryRinci.findByOrderanId(orderanId)
+    }
 
-    fun findById(id: Long): OrderanStiker? = repository.findById(id).orElse(null)
+    fun findAll(): List<OrderanStiker> = repositoryOrderan.findAll()
+
+    fun findById(id: Long): OrderanStiker? = repositoryOrderan.findById(id).orElse(null)
 
     fun save(orderan: OrderanStiker): OrderanStiker {
         if (orderan.faktur.isBlank()) {
@@ -20,10 +27,10 @@ class OrderanStikerService(private val repository: OrderanStikerRepository) {
         }
         orderan.rincian.forEach { it.orderan = orderan }
         updateTotal(orderan)
-        return repository.save(orderan)
+        return repositoryOrderan.save(orderan)
     }
 
-    fun delete(orderan: OrderanStiker) = repository.delete(orderan)
+    fun delete(orderan: OrderanStiker) = repositoryOrderan.delete(orderan)
 
     // Tambah rincian
     @Transactional
@@ -31,7 +38,7 @@ class OrderanStikerService(private val repository: OrderanStikerRepository) {
         rincian.orderan = orderan
         orderan.rincian.add(rincian)
         updateTotal(orderan)
-        repository.save(orderan)
+        repositoryOrderan.save(orderan)
     }
 
     // Hapus rincian
@@ -40,7 +47,7 @@ class OrderanStikerService(private val repository: OrderanStikerRepository) {
         if (orderan.rincian.remove(rincian)) {
             rincian.stiker
             updateTotal(orderan)
-            repository.save(orderan)
+            repositoryOrderan.save(orderan)
         }
     }
     // Edit rincian
@@ -51,7 +58,7 @@ class OrderanStikerService(private val repository: OrderanStikerRepository) {
             rincianLama.stiker = rincianBaru.stiker ?: rincianLama.stiker
             rincianLama.jumlah = rincianBaru.jumlah
             updateTotal(orderan)
-            repository.save(orderan)
+            repositoryOrderan.save(orderan)
         }
     }
 
@@ -67,7 +74,7 @@ class OrderanStikerService(private val repository: OrderanStikerRepository) {
         val bulan = String.format("%02d", now.monthValue)
 
         // Ambil faktur terakhir untuk tahun ini
-        val lastFaktur = repository.findLastFakturByYear(tahunFull)
+        val lastFaktur = repositoryOrderan.findLastFakturByYear(tahunFull)
 
         // Tentukan nomor urut berikutnya
         val nextUrut = if (lastFaktur != null && lastFaktur.length >= 9) {
