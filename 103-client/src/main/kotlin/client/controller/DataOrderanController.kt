@@ -103,6 +103,7 @@ class DataOrderanController : Initializable {
         btnRefresh.setOnAction { bersih() }
         btnTambahkan.setOnAction { tambahStiker() }
         btnSimpan.setOnAction { onSimpanOrderan() }
+        btnHapus.setOnAction { onHapusOrderan() }
         btnTutup.setOnAction { parentController?.tutupForm() }
 
         txtKodeStiker.setOnMouseClicked { event ->
@@ -411,7 +412,6 @@ class DataOrderanController : Initializable {
             }
         }.start()
     }
-
     fun fakturOtomatis(){
         Thread {
             try {
@@ -495,16 +495,6 @@ class DataOrderanController : Initializable {
         txtUkuranStiker.clear()
         txtJumlahStiker.clear()
         selectedStiker = null
-    }
-    fun hapusStiker(){
-        val selected = tblStiker.selectionModel.selectedItem
-        if (selected == null) {
-            clientController?.showError("Pilih stiker yang ingin dihapus!")
-            return
-        }
-
-        tblStiker.items.remove(selected)
-        hitungTotalStiker()
     }
     fun hitungTotalStiker() {
         val total = tblStiker.items.sumOf { it.jumlah }
@@ -621,5 +611,37 @@ class DataOrderanController : Initializable {
         }
 
 
+    }
+    fun onHapusOrderan(){
+        val order = selectedOrder
+        if (order == null) {
+            clientController?.showError("Tidak ada orderan yang dipilih.")
+            return
+        }
+        val id = order.id
+        try{
+            val builder = HttpRequest.newBuilder()
+                .uri(URI.create("${clientController?.url}/api/orderan-stiker/$id"))
+                .DELETE()
+
+            clientController?.buildAuthHeader()?.let { builder.header("Authorization", it) }
+
+            val request = builder.build()
+            val response = client.send(request, HttpResponse.BodyHandlers.ofString())
+
+            Platform.runLater {
+                if (response.statusCode() in 200..299) {
+                    bersih()
+                    clientController?.showInfo("Orderan berhasil dihapus.")
+                } else {
+                    clientController?.showError("Server returned ${response.statusCode()} : ${response.body()}")
+                }
+            }
+        } catch (ex: Exception) {
+            Platform.runLater {
+                println("Gagal menghapus orderan")
+                clientController?.showError(ex.message ?: "Gagal menghapus orderan")
+            }
+        }
     }
 }
