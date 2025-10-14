@@ -57,7 +57,7 @@ class PopUpPilihOrderanController : Initializable {
 
     val formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy", Locale("id", "ID"))
 
-    var selectedOrderan: OrderanStikerDTO? = null
+    var  selectedOrderan: OrderanStikerDTO? = null
 
     private val client = HttpClient.newBuilder().build()
     private val json = Json {

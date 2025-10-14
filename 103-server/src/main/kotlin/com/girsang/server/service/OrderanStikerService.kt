@@ -1,6 +1,7 @@
 package com.girsang.server.service
 
 import com.girsang.server.dto.OrderanStikerDTO
+import com.girsang.server.model.DataStiker
 import com.girsang.server.model.OrderanStiker
 import com.girsang.server.model.OrderanStikerRinci
 import com.girsang.server.repository.DataStikerRepository
@@ -33,30 +34,38 @@ class OrderanStikerService(
         return repositoryOrderan.save(orderan)
     }
 
-    fun update(id: Long, orderBaru: OrderanStiker): OrderanStiker{
+    fun update(id: Long, dto: OrderanStikerDTO): OrderanStiker {
         val existing = repositoryOrderan.findById(id)
             .orElseThrow { NoSuchElementException("Orderan tidak ditemukan") }
 
-        existing.tanggal = orderBaru.tanggal
-        existing.totalStiker = orderBaru.totalStiker
+        existing.tanggal = dto.tanggal
+        existing.totalStiker = dto.totalStiker
+        existing.faktur = dto.faktur
+        existing.umkm = dto.umkm
 
-        // Bersihkan rincian lama
+        // Hapus rincian lama (karena orphanRemoval = true)
         existing.rincian.clear()
 
-        // Tambah rincian baru, tapi pastikan stiker diambil dari DB
-        for (rinci in orderBaru.rincian) {
-            val stikerEntity = repositoryStiker.findById(rinci.stiker?.id!!)
-                .orElseThrow { NoSuchElementException("Stiker tidak ditemukan") }
+        // Tambahkan rincian baru
+        dto.rincian.forEach { rincianDTO ->
+            val stiker = rincianDTO.stikerId?.let { stikerId ->
+                repositoryStiker.findById(stikerId).orElseThrow {
+                    IllegalArgumentException("Stiker dengan id $stikerId tidak ditemukan")
+                }
+            }
 
             val rincianBaru = OrderanStikerRinci(
-                orderan = existing,
-                stiker = stikerEntity,
-                jumlah = rinci.jumlah
+                jumlah = rincianDTO.jumlah,
+                stiker = rincianDTO.stiker,
+                orderan = existing
             )
+            println("Stiker disimpan nama stiker: ${rincianBaru.stiker}, jumlah: ${rincianBaru.jumlah}, Orderan: ${rincianBaru.orderan?.faktur}")
             existing.rincian.add(rincianBaru)
         }
 
-        updateTotal(existing)
+        // Update total
+        existing.totalStiker = existing.rincian.sumOf { it.jumlah }
+
         return repositoryOrderan.save(existing)
     }
 

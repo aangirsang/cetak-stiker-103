@@ -23,5 +23,5 @@ data class OrderanStikerRinci(
     @JoinColumn(name = "stiker_id")
     var stiker: DataStiker? = null,
 
-    var jumlah: Int = 0
-)
+    var jumlah: Int = 0,
+    )
