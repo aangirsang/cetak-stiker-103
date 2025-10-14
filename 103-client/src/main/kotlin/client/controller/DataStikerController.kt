@@ -3,6 +3,7 @@ package client.controller
 import client.DTO.DataStikerDTO
 import client.DTO.DataUmkmDTO
 import client.util.LocalDateTimeSerializer
+import client.util.PesanPeringatan
 import com.girsang.client.controller.MainClientAppController
 import javafx.application.Platform
 import javafx.beans.property.SimpleStringProperty
@@ -75,20 +76,6 @@ class DataStikerController : Initializable {
     private var selectedUmkm: DataUmkmDTO? = null
     private var selectedStiker: DataStikerDTO? = null
 
-    fun setClientController(controller: MainClientAppController) {
-        this.clientController = controller  // ✅ simpan controller dulu
-
-        if (!controller.url.isNullOrBlank()) {
-            bersih() // ✅ baru panggil setelah URL diset
-        } else {
-            println("⚠️ URL belum di-set, data tidak bisa dimuat")
-        }
-    }
-
-    fun setParentController(controller: MainClientAppController) {
-        this.parentController = controller
-    }
-
     override fun initialize(p0: URL?, p1: ResourceBundle?) {
 
         kolKodeStiker.setCellValueFactory {SimpleStringProperty(it.value.kodeStiker)}
@@ -125,9 +112,23 @@ class DataStikerController : Initializable {
             }
         }
     }
+    fun setClientController(controller: MainClientAppController) {
+        this.clientController = controller  // ✅ simpan controller dulu
+
+        if (!controller.url.isNullOrBlank()) {
+            bersih() // ✅ baru panggil setelah URL diset
+        } else {
+            println("⚠️ URL belum di-set, data tidak bisa dimuat")
+        }
+    }
+    fun setParentController(controller: MainClientAppController) {
+        this.parentController = controller
+    }
     fun cariDataUmkm(paramName: String, keyword: String) {
         if (clientController?.url.isNullOrBlank()) {
-            Platform.runLater { clientController?.showError("URL server belum di set") }
+            Platform.runLater {
+                PesanPeringatan.error("Data Stiker", "URL server belum di set")
+            }
             return
         }
 
@@ -151,7 +152,7 @@ class DataStikerController : Initializable {
                         if (hasil.isEmpty()) {
                             // ⚠️ Kosongkan tabel jika tidak ada hasil
                             tblStiker.items = FXCollections.observableArrayList()
-                            clientController?.showInfo("Tidak ada data yang cocok untuk pencarian \"$keyword\"")
+                            PesanPeringatan.warning("Data Stiker", "Tidak ada data yang cocok untuk pencarian \"$keyword\"")
                         } else {
                             // ✅ Tampilkan hasil pencarian
                             tblStiker.items = FXCollections.observableArrayList(hasil)
@@ -159,13 +160,13 @@ class DataStikerController : Initializable {
                     }
                 } else {
                     Platform.runLater {
-                        clientController?.showError("Server Error ${response.statusCode()}")
+                        PesanPeringatan.error("Data Stiker", "Server Error ${response.statusCode()}")
                         tblStiker.items = FXCollections.observableArrayList() // kosongkan tabel juga
                     }
                 }
             } catch (ex: Exception) {
                 Platform.runLater {
-                    clientController?.showError(ex.message ?: "Gagal mencari data UMKM")
+                    PesanPeringatan.error("Data Stiker", ex.message ?: "Gagal mencari data UMKM")
                     tblStiker.items = FXCollections.observableArrayList() // kosongkan tabel jika error
                 }
             }
@@ -229,9 +230,9 @@ class DataStikerController : Initializable {
         loadDataStiker()
     }
     fun loadDataStiker(){
-        println("DEBUG: clientController = $clientController, url = ${clientController?.url}")
         if(clientController?.url.isNullOrBlank()){
-            Platform.runLater { clientController?.showError("URL server belum di set") }
+            Platform.runLater { PesanPeringatan.error("Data Stiker", "URL server belum di set")
+            }
             return
         }
         Thread {
@@ -252,12 +253,12 @@ class DataStikerController : Initializable {
                     }
                 } else {
                     Platform.runLater {
-                        clientController?.showError("Server Error ${response.statusCode()}")
+                        PesanPeringatan.warning("Data Stiker", "Server Error ${response.statusCode()}")
                     }
                 }
             } catch (ex: Exception){
                 Platform.runLater {
-                    clientController?.showError(ex.message ?: "Gagal memeuat data UMKM")
+                    PesanPeringatan.warning("Data Stiker", ex.message ?: "Gagal memeuat data UMKM")
                 }
             }
         }.start()
@@ -298,11 +299,10 @@ class DataStikerController : Initializable {
             val selected = controller.selectedUmkm
             if (selected != null) {
                 umkmTerpilih(selected)
-                println("UMKM yang dipilih ${selectedUmkm?.namaUsaha}")
             }
 
         } catch (e: Exception) {
-            clientController?.showError("Error: ${e.message}")
+            PesanPeringatan.error("Data Stiker", "Error: ${e.message}")
         }
     }
     fun umkmTerpilih(dto: DataUmkmDTO){
@@ -318,11 +318,11 @@ class DataStikerController : Initializable {
             umkmTerpilih(it) // isi field UMKM
         } ?: run {
             // Jika null, tampilkan error tapi tetap isi field lain
-            clientController?.showError("Data UMKM untuk stiker ini tidak tersedia!")
+            PesanPeringatan.error("Data Stiker", "Data UMKM untuk stiker ini tidak tersedia!")
         }
 
         // Isi field stiker
-        txtKodeStiker.text = dto.kodeStiker ?: ""
+        txtKodeStiker.text = dto.kodeStiker
         txtNamaStiker.text = dto.namaStiker
         txtPanjang.text = dto.panjang.toString()
         txtLebar.text = dto.lebar.toString()
@@ -350,10 +350,12 @@ class DataStikerController : Initializable {
         val lebar = txtLebar.text.toIntOrNull() ?: 0
         val catatan = txtCatatan.text.trim()
         if(selectedUmkm == null){
-            clientController?.showError("Data UMKM belum dipilih!")
+            PesanPeringatan.error("Data Stiker", "Data UMKM belum dipilih!")
             return
-        } else if(namaStiker.isEmpty()){
-            clientController?.showError("Data stiker belum lengkap!")
+        } else if(namaStiker.isEmpty()||
+            txtPanjang.text == ""||
+            txtLebar.text == ""){
+            PesanPeringatan.error("Data Stiker", "Data stiker belum lengkap!")
             return
         }
         if(btnSimpan.text == "Simpan"){
@@ -379,18 +381,17 @@ class DataStikerController : Initializable {
 
                     if(resp?.statusCode() in 200..299){
                         Platform.runLater {
-                            clientController?.showInfo("Data stiker berhasil disimpan.")
+                            PesanPeringatan.info("Data Stiker", "Data stiker berhasil disimpan.")
                             bersih()
                         }
                     }else {
                         Platform.runLater {
-                            println("Server returned ${resp?.statusCode()} : ${resp?.body()}")
-                            clientController?.showError("Server returned ${resp?.statusCode()} : ${resp?.body()}")
+                            PesanPeringatan.error("Data Stiker", "Server returned ${resp?.statusCode()} : ${resp?.body()}")
                         }
                     }
                 } catch (ex: Exception) {
                     Platform.runLater {
-                        clientController?.showError(ex.message ?: "Error saat menyimpan data")
+                        PesanPeringatan.error("Data Stiker", ex.message ?: "Error saat menyimpan data")
                     }
                 }
             }.start()
@@ -399,81 +400,90 @@ class DataStikerController : Initializable {
             val id = stiker?.id
 
             if (id==null) {
-                clientController?.showError("ID Stiker tidak tersedia")
+                PesanPeringatan.error("Data Stiker", "ID Stiker tidak tersedia")
                 return
             }
-            Thread{
-                try {
-                    val stiker = DataStikerDTO (
-                        id = id,
-                        dataUmkmId = umkm?.id,
-                        namaStiker = namaStiker,
-                        panjang = panjang,
-                        lebar = lebar,
-                        catatan = catatan,
-                    )
-                    val body = json.encodeToString(stiker)
-                    val builder = HttpRequest.newBuilder()
-                        .uri(URI.create("${clientController?.url}/api/dataStiker/${id}"))
-                        .PUT(HttpRequest.BodyPublishers.ofString(body))
-                        .header("Content-Type", "application/json")
+            val konfirm = PesanPeringatan.confirm("Data Stiker","Apakah anda yakin ingin merubah data ini?")
+            if (konfirm) {
+                Thread {
+                    try {
+                        val stiker = DataStikerDTO(
+                            id = id,
+                            dataUmkmId = umkm?.id,
+                            namaStiker = namaStiker,
+                            panjang = panjang,
+                            lebar = lebar,
+                            catatan = catatan,
+                        )
+                        val body = json.encodeToString(stiker)
+                        val builder = HttpRequest.newBuilder()
+                            .uri(URI.create("${clientController?.url}/api/dataStiker/${id}"))
+                            .PUT(HttpRequest.BodyPublishers.ofString(body))
+                            .header("Content-Type", "application/json")
 
-                    clientController?.buildAuthHeader()?.let { builder.header("Authorization", it) }
+                        clientController?.buildAuthHeader()?.let { builder.header("Authorization", it) }
 
-                    val req = builder.build()
-                    val resp = clientController?.makeRequest(req)
+                        val req = builder.build()
+                        val resp = clientController?.makeRequest(req)
 
-                    if(resp?.statusCode() in 200..299){
-                        Platform.runLater {
-                            clientController?.showInfo("Data stiker berhasil diubah.")
-                            bersih()
+                        if (resp?.statusCode() in 200..299) {
+                            Platform.runLater {
+                                PesanPeringatan.info("Data Stiker", "Data stiker berhasil diubah.")
+                                bersih()
+                            }
+                        } else {
+                            Platform.runLater {
+                                println("Server returned ${resp?.statusCode()} : ${resp?.body()}")
+                                PesanPeringatan.error("Simpan Data","Server returned ${resp?.statusCode()} : ${resp?.body()}")
+                            }
                         }
-                    }else {
+                    } catch (ex: Exception) {
                         Platform.runLater {
-                            println("Server returned ${resp?.statusCode()} : ${resp?.body()}")
-                            clientController?.showError("Server returned ${resp?.statusCode()} : ${resp?.body()}")
+                            PesanPeringatan.error("Simpan Data",ex.message ?:"Error saat memperbarui data" )
                         }
                     }
-                } catch (ex: Exception) {
-                    Platform.runLater {
-                        clientController?.showError(ex.message ?: "Error saat mengubah data")
-                    }
-                }
-            }.start()
+                }.start()
+            }
         }
     }
     fun hapusStiker(){
         val stiker = getStikerTerpilih()
         val id = stiker?.id
         if (stiker == null) {
-            clientController?.showError("Tidak ada data stiker yang dipilih!")
+            PesanPeringatan.error("Hapus Data", "Tidak ada data stiker yang dipilih.")
             return
         }
-        Thread{
-            try {
-                val builder = HttpRequest.newBuilder()
-                    .uri(URI.create("${clientController?.url}/api/dataStiker/${id}"))
-                    .DELETE()
+        val konfirm = PesanPeringatan.confirm("Hapus Data","Anda yakin ingin menghapus data ini?")
+        if (konfirm) {
+            Thread {
+                try {
+                    val builder = HttpRequest.newBuilder()
+                        .uri(URI.create("${clientController?.url}/api/dataStiker/${id}"))
+                        .DELETE()
 
-                clientController?.buildAuthHeader()?.let {  builder.header("Authorization", it) }
+                    clientController?.buildAuthHeader()?.let { builder.header("Authorization", it) }
 
-                val request = builder.build()
-                val response = client.send(request, HttpResponse.BodyHandlers.ofString())
+                    val request = builder.build()
+                    val response = client.send(request, HttpResponse.BodyHandlers.ofString())
 
-                Platform.runLater {
-                    if (response.statusCode() in 200..299) {
-                        bersih()
-                        clientController?.showInfo("Data stiker berhasil dihapus.")
-                    } else {
-                        clientController?.showError("Server returned ${response.statusCode()} : ${response.body()}")
+                    Platform.runLater {
+                        if (response.statusCode() in 200..299) {
+                            PesanPeringatan.info("Hapus Data", "Data stiker berhasil dihapus.")
+                            bersih()
+                        } else {
+                            PesanPeringatan.error(
+                                "Hapus Data",
+                                "Server returned ${response.statusCode()} : ${response.body()}"
+                            )
+                        }
+                    }
+                } catch (ex: Exception) {
+                    Platform.runLater {
+                        PesanPeringatan.error("Hapus Data", ex.message ?: "Gagal menghapus pengguna")
                     }
                 }
-            } catch (ex: Exception) {
-                Platform.runLater {
-                    clientController?.showError(ex.message ?: "Gagal menghapus data stiker")
-                }
-            }
-        }.start()
+            }.start()
+        }
     }
 
 

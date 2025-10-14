@@ -3,6 +3,7 @@ package com.girsang.client.controller
 import client.controller.DataOrderanController
 import client.controller.DataStikerController
 import client.controller.UmkmController
+import client.util.PesanPeringatan
 import javafx.application.Platform
 import javafx.fxml.FXML
 import javafx.fxml.FXMLLoader
@@ -84,22 +85,32 @@ class MainClientAppController : Initializable {
         mainPane.center = null
     }
 
+    fun konekServer(baseUrl: String){
+        val builder = HttpRequest.newBuilder()
+            .uri(URI.create("$baseUrl/api/pengguna/ping"))
+            .GET()
+        buildAuthHeader()?.let { builder.header("Authorization", it) }
+        val req = builder.build()
+        val resp = makeRequest(req)
+        Platform.runLater { lblStatusServer.text = "Aktif - Ping: ${resp.statusCode()} - ${resp.body()}" }
+    }
     fun pingServer() {
         val baseUrl = this.url.trim().removeSuffix("/")   // gunakan this.url, bukan url lokal
         lblStatusServer.text = "Pinging..."
         thread {
             try {
-                val builder = HttpRequest.newBuilder()
-                    .uri(URI.create("$baseUrl/api/pengguna/ping"))
-                    .GET()
-                buildAuthHeader()?.let { builder.header("Authorization", it) }
-                val req = builder.build()
-                val resp = makeRequest(req)
-                Platform.runLater { lblStatusServer.text = "Aktif - Ping: ${resp.statusCode()} - ${resp.body()}" }
+                konekServer(baseUrl)
             } catch (ex: Exception) {
                 Platform.runLater {
                     lblStatusServer.text = "Ping failed"
-                    showError(ex.message ?: "Error")
+                    val confirm = PesanPeringatan.confirm("Konfirmasi", "Koneksi ke server gagal.\nApakah ingin mencoba kembali?")
+                    if(confirm){
+                        pingServer()
+                    } else {
+                        println("User pilih tutup")
+                        val stage = lblWaktu.scene.window as javafx.stage.Stage
+                        stage.close()
+                    }
                 }
             }
         }

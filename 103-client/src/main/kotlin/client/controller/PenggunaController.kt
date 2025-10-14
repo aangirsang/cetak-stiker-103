@@ -1,6 +1,7 @@
 package com.girsang.client.controller
 
 import client.DTO.PenggunaDTO
+import client.util.PesanPeringatan
 import javafx.application.Platform
 import javafx.collections.FXCollections
 import javafx.fxml.FXML
@@ -43,20 +44,6 @@ class PenggunaController : Initializable {
     private var clientController: MainClientAppController? = null
     private var parentController: MainClientAppController? = null
 
-    fun setClientController(controller: MainClientAppController) {
-        this.clientController = controller  // ✅ simpan controller dulu
-
-        if (!controller.url.isNullOrBlank()) {
-            loadData() // ✅ baru panggil setelah URL diset
-        } else {
-            println("⚠️ URL belum di-set, data tidak bisa dimuat")
-        }
-    }
-
-    fun setParentController(controller: MainClientAppController) {
-        this.parentController = controller
-    }
-
     override fun initialize(p0: URL?, p1: ResourceBundle?) {
         colId.setCellValueFactory { javafx.beans.property.SimpleLongProperty(it.value.id ?: 0).asObject() }
         colNama.setCellValueFactory { javafx.beans.property.SimpleStringProperty(it.value.namaLengkap) }
@@ -76,7 +63,18 @@ class PenggunaController : Initializable {
         }
 
     }
+    fun setClientController(controller: MainClientAppController) {
+        this.clientController = controller  // ✅ simpan controller dulu
 
+        if (!controller.url.isNullOrBlank()) {
+            loadData() // ✅ baru panggil setelah URL diset
+        } else {
+            println("⚠️ URL belum di-set, data tidak bisa dimuat")
+        }
+    }
+    fun setParentController(controller: MainClientAppController) {
+        this.parentController = controller
+    }
     fun bersih() {
         txtNamaPengguna.clear()
         txtNamaAkun.clear()
@@ -88,11 +86,9 @@ class PenggunaController : Initializable {
 
         loadData()
     }
-
     fun tutup() {
         parentController?.tutupForm()
     }
-
     fun simpanPengguna() {
         if (btnSimpan.text == "Simpan"){
             val namaPengguna = txtNamaPengguna.text.trim()
@@ -101,11 +97,11 @@ class PenggunaController : Initializable {
             val ulangPassword = txtUlangPassword.text.trim()
 
             if (namaPengguna.isEmpty() || namaAkun.isEmpty() || password.isEmpty() || ulangPassword.isEmpty()) {
-                clientController?.showError("Semua field harus diisi!")
+                PesanPeringatan.warning("Peringatan","Semua field harus diisi!")
                 return
             }
             if (password != ulangPassword) {
-                clientController?.showError("Kata sandi tidak cocok!")
+                PesanPeringatan.warning("Peringatan","Kata sandi tidak cocok!")
                 return
             }
 
@@ -125,18 +121,18 @@ class PenggunaController : Initializable {
 
                     if (resp?.statusCode() in 200..299) {
                         Platform.runLater {
+                            PesanPeringatan.info("Simpan Data","Data pengguna berhasil disimpan.")
                             bersih()
-                            clientController?.showInfo("Data pengguna berhasil disimpan.")
                         }
                     } else {
                         Platform.runLater {
                             println("Server returned ${resp?.statusCode()} : ${resp?.body()}")
-                            clientController?.showError("Server returned ${resp?.statusCode()} : ${resp?.body()}")
+                            PesanPeringatan.error("Simpan Data","Server returned ${resp?.statusCode()} : ${resp?.body()}")
                         }
                     }
                 } catch (ex: Exception) {
                     Platform.runLater {
-                        clientController?.showError(ex.message ?: "Error saat menyimpan data")
+                        PesanPeringatan.error("Simpan Data",ex.message ?:"Error saat menyimpan data" )
                     }
                 }
             }.start()
@@ -149,92 +145,101 @@ class PenggunaController : Initializable {
             val ulangPassword = txtUlangPassword.text.trim()
 
             if (id == null) {
-                clientController?.showError("ID pengguna tidak tersedia.")
+                PesanPeringatan.error("Udah Data", "Data ID tidak ditemukan!")
                 return
             }
             if (namaPengguna.isEmpty() || namaAkun.isEmpty() || password.isEmpty() || ulangPassword.isEmpty()) {
-                clientController?.showError("Semua field harus diisi!")
+                PesanPeringatan.warning("Peringatan","Semua field harus diisi!")
                 return
             }
             if (password != ulangPassword) {
-                clientController?.showError("Kata sandi tidak cocok!")
+                PesanPeringatan.error("Udah Data", "Kata sandi tidak cocok!")
                 return
             }
 
-            Thread {
-                try {
-                    val dto = PenggunaDTO(id = id, namaLengkap = namaPengguna, namaAkun = namaAkun, kataSandi = password)
-                    val body = json.encodeToString(dto)
-                    val builder = HttpRequest.newBuilder()
-                        .uri(URI.create("${clientController?.url}/api/pengguna/${id}"))
-                        .PUT(HttpRequest.BodyPublishers.ofString(body))
-                        .header("Content-Type", "application/json")
+            val konfirm = PesanPeringatan.confirm("Ubah Data Pengguna", "Anda yakin ingi menyimpan perubahan data?")
+            if(konfirm) {
+                Thread {
+                    try {
+                        val dto =
+                            PenggunaDTO(id = id, namaLengkap = namaPengguna, namaAkun = namaAkun, kataSandi = password)
+                        val body = json.encodeToString(dto)
+                        val builder = HttpRequest.newBuilder()
+                            .uri(URI.create("${clientController?.url}/api/pengguna/${id}"))
+                            .PUT(HttpRequest.BodyPublishers.ofString(body))
+                            .header("Content-Type", "application/json")
 
-                    clientController?.buildAuthHeader()?.let { builder.header("Authorization", it) }
+                        clientController?.buildAuthHeader()?.let { builder.header("Authorization", it) }
 
-                    val req = builder.build()
-                    val resp = clientController?.makeRequest(req)
+                        val req = builder.build()
+                        val resp = clientController?.makeRequest(req)
 
-                    if (resp?.statusCode() in 200..299) {
-                        Platform.runLater {
-                            bersih()
-                            clientController?.showInfo("Data pengguna berhasil diperbarui.")
+                        if (resp?.statusCode() in 200..299) {
+                            Platform.runLater {
+                                PesanPeringatan.info("Udah Data", "Data pengguna berhasil diperbarui.")
+                                bersih()
+                            }
+                        } else {
+                            Platform.runLater {
+                                println("Server returned ${resp?.statusCode()} : ${resp?.body()}")
+                                PesanPeringatan.error("Simpan Data","Server returned ${resp?.statusCode()} : ${resp?.body()}")
+                            }
                         }
-                    } else {
+                    } catch (ex: Exception) {
                         Platform.runLater {
-                            println("Server returned ${resp?.statusCode()} : ${resp?.body()}")
-                            clientController?.showError("Server returned ${resp?.statusCode()} : ${resp?.body()}")
+                            PesanPeringatan.error("Simpan Data",ex.message ?:"Error saat memperbarui data" )
                         }
                     }
-                } catch (ex: Exception) {
-                    Platform.runLater {
-                        clientController?.showError(ex.message ?: "Error saat memperbarui data")
-                    }
-                }
-            }.start()
+                }.start()
+            }
         }
 
     }
     fun hapusData(){
         val pengguna = getPenggunaTerpilih()
         if (pengguna == null) {
-            clientController?.showError("Tidak ada pengguna yang dipilih.")
+            PesanPeringatan.error("Hapus Data", "Tidak ada pengguna yang dipilih.")
             return
         }
         val id = pengguna.id
         if (id == null) {
-            clientController?.showError("ID pengguna tidak tersedia.")
+            PesanPeringatan.error("Hapus Data", "ID pengguna tidak tersedia.")
             return
         }
 
-        Thread {
-            try {
-                val builder = HttpRequest.newBuilder()
-                    .uri(URI.create("${clientController?.url}/api/pengguna/$id"))
-                    .DELETE()
+        val konfirm = PesanPeringatan.confirm("Hapus Data","Anda yakin ingin menghapus data ini?")
+        if (konfirm) {
+            Thread {
+                try {
+                    val builder = HttpRequest.newBuilder()
+                        .uri(URI.create("${clientController?.url}/api/pengguna/$id"))
+                        .DELETE()
 
-                clientController?.buildAuthHeader()?.let { builder.header("Authorization", it) }
+                    clientController?.buildAuthHeader()?.let { builder.header("Authorization", it) }
 
-                val request = builder.build()
-                val response = client.send(request, HttpResponse.BodyHandlers.ofString())
+                    val request = builder.build()
+                    val response = client.send(request, HttpResponse.BodyHandlers.ofString())
 
-                Platform.runLater {
-                    if (response.statusCode() in 200..299) {
-                        bersih()
-                        clientController?.showInfo("Pengguna berhasil dihapus.")
-                    } else {
-                        clientController?.showError("Server returned ${response.statusCode()} : ${response.body()}")
+                    Platform.runLater {
+                        if (response.statusCode() in 200..299) {
+                            PesanPeringatan.info("Hapus Data", "Pengguna berhasil dihapus.")
+                            bersih()
+                        } else {
+                            PesanPeringatan.error(
+                                "Hapus Data",
+                                "Server returned ${response.statusCode()} : ${response.body()}"
+                            )
+                        }
+                    }
+                } catch (ex: Exception) {
+                    Platform.runLater {
+                        PesanPeringatan.error("Hapus Data", ex.message ?: "Gagal menghapus pengguna")
                     }
                 }
-            } catch (ex: Exception) {
-                Platform.runLater {
-                    clientController?.showError(ex.message ?: "Gagal menghapus pengguna")
-                }
-            }
-        }.start()
+            }.start()
+        }
     }
     fun loadData() {
-        println("DEBUG: clientController = $clientController, url = ${clientController?.url}")
         if (clientController?.url.isNullOrBlank()) {
             Platform.runLater {
                 clientController?.showError("URL server belum diset.")
@@ -262,20 +267,21 @@ class PenggunaController : Initializable {
                     }
                 } else {
                     Platform.runLater {
-                        clientController?.showError("Server error ${response.statusCode()}")
+                        PesanPeringatan.error("Load Data","Server error ${response.statusCode()}")
                     }
                 }
             } catch (ex: Exception) {
                 Platform.runLater {
-                    clientController?.showError(ex.message ?: "Gagal memuat data pengguna")
+                    PesanPeringatan.error("Load Data", ex.message ?: "Gagal menghapus pengguna")
                 }
             }
         }.start()
     }
-
     fun cariPenggunaByNamaAkun(namaAkun: String) {
         if (clientController?.url.isNullOrBlank()) {
-            clientController?.showError("URL server belum diset.")
+            Platform.runLater {
+                PesanPeringatan.error("Data Pengguna", "URL server belum di set")
+            }
             return
         }
 
@@ -284,12 +290,8 @@ class PenggunaController : Initializable {
                 // 🔹 Encode namaAkun agar URL valid, ganti + menjadi %20 supaya lebih rapi
                 val encodedNamaAkun = URLEncoder.encode(namaAkun, StandardCharsets.UTF_8.toString())
                     .replace("+", "%20")
-                val fullUrl = "${clientController?.url}/api/pengguna/cari?namaAkun=$encodedNamaAkun"
-                println("DEBUG: Mencari pengguna dengan namaAkun = $namaAkun")
-                println("DEBUG: URL request = $fullUrl")
-
                 val builder = HttpRequest.newBuilder()
-                    .uri(URI.create(fullUrl))
+                    .uri(URI.create("${clientController?.url}/api/pengguna/cari?namaAkun=$encodedNamaAkun"))
                     .GET()
                     .header("Content-Type", "application/json")
 
@@ -301,9 +303,6 @@ class PenggunaController : Initializable {
                 val request = builder.build()
                 val response = client.send(request, HttpResponse.BodyHandlers.ofString())
 
-                println("DEBUG: StatusCode = ${response.statusCode()}")
-                println("DEBUG: ResponseBody = ${response.body()}")
-
                 Platform.runLater {
                     if (response.statusCode() == 200) {
                         // Response 200 pasti berisi satu PenggunaDTO
@@ -311,19 +310,18 @@ class PenggunaController : Initializable {
                         tblPengguna.items = FXCollections.observableArrayList(pengguna)
                     } else if (response.statusCode() == 404) {
                         tblPengguna.items.clear()
-                        clientController?.showError("Pengguna tidak ditemukan.")
+                        PesanPeringatan.error("Data Pengguna", "Pengguna tidak ditemukan.")
                     } else {
-                        clientController?.showError("Server error ${response.statusCode()}")
+                        PesanPeringatan.error("Data Pengguna", "Server error ${response.statusCode()}")
                     }
                 }
             } catch (ex: Exception) {
                 Platform.runLater {
-                    clientController?.showError(ex.message ?: "Gagal mencari pengguna")
+                    PesanPeringatan.error("Data Pengguna", ex.message ?: "Gagal mencari pengguna")
                 }
             }
         }.start()
     }
-
     fun penggunaTerpilih(dto: PenggunaDTO){
         txtNamaPengguna.text = dto.namaLengkap
         txtNamaAkun.text = dto.namaAkun

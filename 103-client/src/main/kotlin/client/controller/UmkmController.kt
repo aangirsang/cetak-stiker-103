@@ -3,6 +3,7 @@ package client.controller
 import client.DTO.DataStikerDTO
 import client.DTO.DataUmkmDTO
 import client.util.LocalDateTimeSerializer
+import client.util.PesanPeringatan
 import com.girsang.client.controller.MainClientAppController
 import javafx.application.Platform
 import javafx.beans.property.SimpleIntegerProperty
@@ -72,42 +73,9 @@ class UmkmController : Initializable{
     @FXML private lateinit var kolInstagram: TableColumn<DataUmkmDTO, String>
     @FXML private lateinit var kolAlamat: TableColumn<DataUmkmDTO, String>
 
-    @FXML private lateinit var txtStikerKode: TextField
-    @FXML private lateinit var txtStikerNama: TextField
-    @FXML private lateinit var txtStikerPanjang: TextField
-    @FXML private lateinit var txtStikerLebar: TextField
-    @FXML private lateinit var txtStikerCatatan: TextArea
-    @FXML private lateinit var txtStikerDicetak: TextField
-    @FXML private lateinit var dpStikerPembuatan: DatePicker
-    @FXML private lateinit var dpStikerPerubahan: DatePicker
-
-    @FXML private lateinit var btnStikerTambah: Button
-    @FXML private lateinit var btnStikerHapus: Button
-
-    @FXML private lateinit var tblStiker: TableView<DataStikerDTO>
-    @FXML private lateinit var kolStikerNamaUMKM: TableColumn<DataStikerDTO, String>
-    @FXML private lateinit var kolStikerKodeStiker: TableColumn<DataStikerDTO, String>
-    @FXML private lateinit var kolStikerPanjang: TableColumn<DataStikerDTO, Int>
-    @FXML private lateinit var kolStikerLebar: TableColumn<DataStikerDTO, Int>
-
     private var clientController: MainClientAppController? = null
     private var parentController: MainClientAppController? = null
-
     private var searchThread: Thread? = null
-
-    fun setClientController(controller: MainClientAppController) {
-        this.clientController = controller  // ✅ simpan controller dulu
-
-        if (!controller.url.isNullOrBlank()) {
-            bersih() // ✅ baru panggil setelah URL diset
-        } else {
-            println("⚠️ URL belum di-set, data tidak bisa dimuat")
-        }
-    }
-
-    fun setParentController(controller: MainClientAppController) {
-        this.parentController = controller
-    }
 
     override fun initialize(p0: URL?, p1: ResourceBundle?) {
 
@@ -119,19 +87,10 @@ class UmkmController : Initializable{
         kolInstagram.setCellValueFactory {SimpleStringProperty(it.value.instagram)}
         kolAlamat.setCellValueFactory {SimpleStringProperty(it.value.alamat)}
 
-        //Tabel Stiker
-        kolStikerNamaUMKM.setCellValueFactory {
-            SimpleStringProperty(it.value.dataUmkm?.namaUsaha ?: "")
-        }
-        kolStikerKodeStiker.setCellValueFactory {SimpleStringProperty(it.value.kodeStiker)}
-        kolStikerPanjang.setCellValueFactory { SimpleIntegerProperty(it.value.panjang).asObject() }
-        kolStikerLebar.setCellValueFactory { SimpleIntegerProperty(it.value.lebar).asObject() }
-
         btnTutup.setOnAction { parentController?.tutupForm() }
         btnRefresh.setOnAction { bersih() }
         btnSimpan.setOnAction { simpanDataUmkm() }
         btnHapus.setOnAction { hapusData() }
-        btnStikerTambah.setOnAction { tambahStikerUntukUmkm() }
 
         tblUmkm.selectionModel.selectedItemProperty().addListener { _, _, newValue ->
             if (newValue != null) {
@@ -155,7 +114,18 @@ class UmkmController : Initializable{
             kolAlamat.prefWidth = w * 0.35
         }
     }
+    fun setClientController(controller: MainClientAppController) {
+        this.clientController = controller  // ✅ simpan controller dulu
 
+        if (!controller.url.isNullOrBlank()) {
+            bersih() // ✅ baru panggil setelah URL diset
+        } else {
+            println("⚠️ URL belum di-set, data tidak bisa dimuat")
+        }
+    }
+    fun setParentController(controller: MainClientAppController) {
+        this.parentController = controller
+    }
     private fun setupSearchListener(field: TextField, paramName: String) {
         field.textProperty().addListener { _, _, newValue ->
             searchThread?.interrupt() // hentikan thread sebelumnya jika user masih mengetik
@@ -175,7 +145,6 @@ class UmkmController : Initializable{
             searchThread?.start()
         }
     }
-
     fun bersih(){
         txtNamaPemilik.clear()
         txtNamaUsaha.clear()
@@ -199,25 +168,9 @@ class UmkmController : Initializable{
 
         btnSimpan.text = "Simpan"
 
-        txtStikerKode.clear()
-        txtStikerNama.clear()
-        txtStikerPanjang.clear()
-        txtStikerLebar.clear()
-        txtStikerCatatan.clear()
-        txtStikerDicetak.clear()
-        dpStikerPembuatan.value = java.time.LocalDate.now()
-        dpStikerPerubahan.value = java.time.LocalDate.now()
-
         loadDataUMKM()
-        loadDataStiker()
     }
-
     fun loadDataUMKM(){
-        println("DEBUG: clientController = $clientController, url = ${clientController?.url}")
-        if(clientController?.url.isNullOrBlank()){
-            Platform.runLater { clientController?.showError("URL server belum di set") }
-            return
-        }
         Thread {
             try {
                 val builder = HttpRequest.newBuilder()
@@ -236,52 +189,16 @@ class UmkmController : Initializable{
                     }
                 } else {
                     Platform.runLater {
-                        clientController?.showError("Server Error ${response.statusCode()}")
+                        PesanPeringatan.error("Load Data UMKM","Server Error ${response.statusCode()}")
                     }
                 }
             } catch (ex: Exception){
                 Platform.runLater {
-                    clientController?.showError(ex.message ?: "Gagal memeuat data UMKM")
+                    PesanPeringatan.error("Load Data UMKM",ex.message ?: "Gagal memeuat data UMKM")
                 }
             }
         }.start()
     }
-
-    fun loadDataStiker(){
-        println("DEBUG: clientController = $clientController, url = ${clientController?.url}")
-        if(clientController?.url.isNullOrBlank()){
-            Platform.runLater { clientController?.showError("URL server belum di set") }
-            return
-        }
-        Thread {
-            try {
-                val builder = HttpRequest.newBuilder()
-                    .uri(URI.create("${clientController?.url}/api/dataStiker"))
-                    .GET()
-                    .header("Content-Type", "application/json")
-
-                clientController?.buildAuthHeader()?.let { builder.header("Authorization", it) }
-
-                val request = builder.build()
-                val response = client.send(request, HttpResponse.BodyHandlers.ofString())
-                if(response.statusCode() in 200..299){
-                    val list = json.decodeFromString<List<DataStikerDTO>>(response.body())
-                    Platform.runLater {
-                        tblStiker.items = FXCollections.observableArrayList(list)
-                    }
-                } else {
-                    Platform.runLater {
-                        clientController?.showError("Server Error ${response.statusCode()}")
-                    }
-                }
-            } catch (ex: Exception){
-                Platform.runLater {
-                    clientController?.showError(ex.message ?: "Gagal memeuat data UMKM")
-                }
-            }
-        }.start()
-    }
-
     fun simpanDataUmkm() {
         val namaPemilik = txtNamaPemilik.text.trim()
         val namaUsaha = txtNamaUsaha.text.trim()
@@ -293,7 +210,7 @@ class UmkmController : Initializable{
             kontak.isEmpty() ||
             instagram.isEmpty()||
             alamat.isEmpty()){
-            clientController?.showError("Semua field harus diisi!")
+            PesanPeringatan.warning("Simpan Data UMKM","Semua field harus diisi!")
             return
         }
 
@@ -320,18 +237,17 @@ class UmkmController : Initializable{
 
                     if(resp?.statusCode() in 200..299){
                         Platform.runLater {
-                            clientController?.showInfo("Data UMKM berhasil disimpan.")
+                            PesanPeringatan.info("Simpan Data UMKM","Data UMKM berhasil disimpan.")
                             bersih()
                         }
                     }else {
                         Platform.runLater {
-                            println("Server returned ${resp?.statusCode()} : ${resp?.body()}")
-                            clientController?.showError("Server returned ${resp?.statusCode()} : ${resp?.body()}")
+                            PesanPeringatan.error("Simpan Data UMKM","Server returned ${resp?.statusCode()} : ${resp?.body()}")
                         }
                     }
                 } catch (ex: Exception) {
                     Platform.runLater {
-                        clientController?.showError(ex.message ?: "Error saat menyimpan data")
+                        PesanPeringatan.error("Simpan Data UMKM",ex.message ?: "Error saat menyimpan data")
                     }
                 }
             }.start()
@@ -340,91 +256,97 @@ class UmkmController : Initializable{
             val id = umkm?.id
 
             if (id==null) {
-                clientController?.showError("ID UMKM tidak tersedia")
+                PesanPeringatan.error("Ubah Data UMKM","ID UMKM tidak tersedia")
                 return
             }
 
-            Thread{
+            val konfirm = PesanPeringatan.confirm("Ubah Data UMKM", "Anda yakin ingi menyimpan perubahan data?")
+            if(konfirm) {
+                Thread {
+                    try {
+                        val dto = DataUmkmDTO(
+                            id = id,
+                            namaPemilik = namaPemilik,
+                            namaUsaha = namaUsaha,
+                            kontak = kontak,
+                            instagram = instagram,
+                            alamat = alamat
+                        )
+                        val body = json.encodeToString(dto)
+                        val builder = HttpRequest.newBuilder()
+                            .uri(URI.create("${clientController?.url}/api/dataUmkm/${id}"))
+                            .PUT(HttpRequest.BodyPublishers.ofString(body))
+                            .header("Content-Type", "application/json")
+
+                        clientController?.buildAuthHeader()?.let { builder.header("Authorization", it) }
+
+                        val req = builder.build()
+                        val resp = clientController?.makeRequest(req)
+
+                        if (resp?.statusCode() in 200..299) {
+                            Platform.runLater {
+                                PesanPeringatan.info("Udah Data UMKM", "Data UMKM berhasil diperbarui.")
+                                bersih()
+                            }
+                        } else {
+                            Platform.runLater {
+                                println("Server returned ${resp?.statusCode()} : ${resp?.body()}")
+                                PesanPeringatan.error("Ubah Data UMKM","Server returned ${resp?.statusCode()} : ${resp?.body()}")
+                            }
+                        }
+                    } catch (ex: Exception) {
+                        Platform.runLater {
+                            PesanPeringatan.error("Ubah Data UMKM",ex.message ?:"Error saat memperbarui data" )
+                        }
+                    }
+                }.start()
+            }
+        }
+    }
+    fun hapusData(){
+        val umkm = getUmkmTerpilih()
+        val id = umkm?.id
+        if (umkm == null) {
+            PesanPeringatan.error("Hapus Data", "Tidak ada UMKM yang dipilih.")
+            return
+        }
+
+        if(id == null) {
+            PesanPeringatan.error("Hapus Data", "ID UMKM tidak tersedia.")
+            return
+        }
+
+        val konfirm = PesanPeringatan.confirm("Hapus Data","Anda yakin ingin menghapus data ini?")
+        if (konfirm) {
+            Thread {
                 try {
-                    val dto = DataUmkmDTO(
-                        id = id,
-                        namaPemilik = namaPemilik,
-                        namaUsaha = namaUsaha,
-                        kontak = kontak,
-                        instagram = instagram,
-                        alamat = alamat
-                    )
-                    val body = json.encodeToString(dto)
                     val builder = HttpRequest.newBuilder()
                         .uri(URI.create("${clientController?.url}/api/dataUmkm/${id}"))
-                        .PUT(HttpRequest.BodyPublishers.ofString(body))
-                        .header("Content-Type", "application/json")
+                        .DELETE()
 
                     clientController?.buildAuthHeader()?.let { builder.header("Authorization", it) }
 
-                    val req = builder.build()
-                    val resp = clientController?.makeRequest(req)
+                    val request = builder.build()
+                    val response = client.send(request, HttpResponse.BodyHandlers.ofString())
 
-                    if(resp?.statusCode() in 200..299){
-                        Platform.runLater {
-                            clientController?.showInfo("Data UMKM berhasil diperbarui.")
+                    Platform.runLater {
+                        if (response.statusCode() in 200..299) {
+                            PesanPeringatan.info("Hapus Data", "UMKM berhasil dihapus.")
                             bersih()
-                        }
-                    }else {
-                        Platform.runLater {
-                            println("Server returned ${resp?.statusCode()} : ${resp?.body()}")
-                            clientController?.showError("Server returned ${resp?.statusCode()} : ${resp?.body()}")
+                        } else {
+                            PesanPeringatan.error(
+                                "Hapus Data",
+                                "Server returned ${response.statusCode()} : ${response.body()}")
                         }
                     }
                 } catch (ex: Exception) {
                     Platform.runLater {
-                        clientController?.showError(ex.message ?: "Error saat memperbarui data")
+                        PesanPeringatan.error("Hapus Data", ex.message ?: "Gagal menghapus UMKM")
                     }
                 }
             }.start()
         }
     }
-
-    fun hapusData(){
-        val umkm = getUmkmTerpilih()
-        val id = umkm?.id
-        if (umkm == null) {
-            clientController?.showError("Tidak ada data UMKM yang dipilih!")
-            return
-        }
-
-        if(id == null) {
-            clientController?.showError("ID data UMKM tidak tersedia!")
-            return
-        }
-
-        Thread{
-            try {
-                val builder = HttpRequest.newBuilder()
-                    .uri(URI.create("${clientController?.url}/api/dataUmkm/${id}"))
-                    .DELETE()
-
-                clientController?.buildAuthHeader()?.let {  builder.header("Authorization", it) }
-
-                val request = builder.build()
-                val response = client.send(request, HttpResponse.BodyHandlers.ofString())
-
-                Platform.runLater {
-                    if (response.statusCode() in 200..299) {
-                        bersih()
-                        clientController?.showInfo("Data UMKM berhasil dihapus.")
-                    } else {
-                        clientController?.showError("Server returned ${response.statusCode()} : ${response.body()}")
-                    }
-                }
-            } catch (ex: Exception) {
-                Platform.runLater {
-                    clientController?.showError(ex.message ?: "Gagal menghapus data UMKM")
-                }
-            }
-        }.start()
-    }
-
     fun cariDataUmkm(paramName: String, keyword: String) {
         if (clientController?.url.isNullOrBlank()) {
             Platform.runLater { clientController?.showError("URL server belum di set") }
@@ -471,7 +393,6 @@ class UmkmController : Initializable{
             }
         }.start()
     }
-
     fun umkmTerpilih(dto: DataUmkmDTO){
         txtNamaPemilik.text = dto.namaPemilik
         txtNamaUsaha.text = dto.namaUsaha
@@ -480,59 +401,8 @@ class UmkmController : Initializable{
         txtAlamat.text = dto.alamat
         btnSimpan.text = "Ubah"
     }
-
     fun getUmkmTerpilih(): DataUmkmDTO? {
         return tblUmkm.selectionModel.selectedItem
-    }
-
-    fun tambahStikerUntukUmkm() {
-        val umkm = getUmkmTerpilih()
-        if (umkm == null) {
-            clientController?.showError("Pilih data UMKM terlebih dahulu.")
-            return
-        }
-
-        val stiker = DataStikerDTO(
-            dataUmkm = umkm,
-            kodeStiker = txtStikerKode.text.trim(),
-            namaStiker = txtStikerNama.text.trim(),
-            panjang = txtStikerPanjang.text.toIntOrNull() ?: 0,
-            lebar = txtStikerLebar.text.toIntOrNull() ?: 0,
-            catatan = txtStikerCatatan.text.trim(),
-            tglPembuatan = dpStikerPembuatan.value?.atStartOfDay() ?: LocalDateTime.now(),
-            tglPerubahan = dpStikerPerubahan.value?.atStartOfDay() ?: LocalDateTime.now()
-        )
-
-        Thread {
-            try {
-                val body = json.encodeToString(stiker)
-                val builder = HttpRequest.newBuilder()
-                    .uri(URI.create("${clientController?.url}/api/dataStiker"))
-                    .POST(HttpRequest.BodyPublishers.ofString(body))
-                    .header("Content-Type", "application/json")
-
-                clientController?.buildAuthHeader()?.let { builder.header("Authorization", it) }
-
-                val req = builder.build()
-                val resp = client.send(req, HttpResponse.BodyHandlers.ofString())
-
-                if (resp.statusCode() in 200..299) {
-                    Platform.runLater {
-                        clientController?.showInfo("Stiker berhasil ditambahkan.")
-                        // bisa reload tabel stiker di sini kalau kamu punya tabelnya
-                    }
-                } else {
-                    Platform.runLater {
-                        clientController?.showError("Server Error ${resp.statusCode()}: ${resp.body()}")
-                    }
-                }
-            } catch (ex: Exception) {
-                Platform.runLater {
-                    println("Gagal menambahkan stiker: ${ex.message}")
-                    clientController?.showError("Gagal menambahkan stiker: ${ex.message}")
-                }
-            }
-        }.start()
     }
 
 }
