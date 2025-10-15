@@ -1,0 +1,26 @@
+2025-10-15 18:28:04 | [INFO] Memuat semua data UMKM
+2025-10-15 18:28:28 | [INFO] Menyimpan Data UMKM baru: {DataUmkm(id=null, namaPemilik=a, namaUsaha=a, kontak=a, instagram=a, alamat=a, daftarStiker=[])}
+2025-10-15 18:28:29 | [INFO] Memuat semua data UMKM
+2025-10-15 18:29:02 | [INFO] Mengupdate Data UMKM dengan id=12
+2025-10-15 18:29:03 | [INFO] Memuat semua data UMKM
+2025-10-15 18:30:49 | [INFO] Memuat semua data UMKM
+2025-10-15 18:30:55 | [INFO] Mengupdate Data UMKM dengan id=DataUmkm(id=12, namaPemilik=ab, namaUsaha=abc, kontak=ab, instagram=ab, alamat=ab, daftarStiker=[])
+2025-10-15 18:30:56 | [INFO] Memuat semua data UMKM
+2025-10-15 18:31:20 | [INFO] Memuat semua data UMKM
+2025-10-15 18:31:26 | [INFO] Memuat semua data UMKM
+2025-10-15 18:31:33 | [INFO] Menghapus Data UMKM dengan id=12
+2025-10-15 18:31:34 | [INFO] Memuat semua data UMKM
+2025-10-15 18:33:06 | [INFO] Memuat semua data UMKM
+2025-10-15 18:33:10 | [INFO] Menyimpan Data UMKM baru: {DataUmkm(id=null, namaPemilik=a, namaUsaha=a, kontak=a, instagram=a, alamat=a, daftarStiker=[])}
+2025-10-15 18:33:11 | [INFO] Memuat semua data UMKM
+2025-10-15 18:33:23 | [INFO] Menghapus Data UMKM dengan id=DataUmkm(id=13, namaPemilik=a, namaUsaha=a, kontak=a, instagram=a, alamat=a, daftarStiker=[])
+2025-10-15 18:33:25 | [INFO] Memuat semua data UMKM
+2025-10-15 18:33:39 | [INFO] Menyimpan Data UMKM baru: {DataUmkm(id=null, namaPemilik=a, namaUsaha=a, kontak=a, instagram=a, alamat=a, daftarStiker=[])}
+2025-10-15 18:33:40 | [INFO] Memuat semua data UMKM
+2025-10-15 18:33:44 | [INFO] Memuat semua data UMKM
+2025-10-15 18:33:44 | [INFO] Memuat semua data UMKM
+2025-10-15 18:34:04 | [INFO] Memuat semua data UMKM
+2025-10-15 18:34:08 | [INFO] Mengupdate Data UMKM dengan id=DataUmkm(id=14, namaPemilik=a, namaUsaha=ab, kontak=a, instagram=a, alamat=a, daftarStiker=[])
+2025-10-15 18:34:09 | [INFO] Memuat semua data UMKM
+2025-10-15 18:35:09 | [INFO] Memuat semua data UMKM
+2025-10-15 18:35:24 | [INFO] Memuat semua data UMKM

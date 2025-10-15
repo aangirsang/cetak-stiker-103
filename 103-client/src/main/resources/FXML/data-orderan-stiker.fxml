@@ -28,11 +28,7 @@
                   </HBox>
                   <HBox alignment="CENTER" layoutX="13.0" layoutY="209.0" prefHeight="80.0" prefWidth="937.0" spacing="30.0" style="-fx-border-color: #BABABA;      /* warna garis border */                         -fx-border-width: 1.3;           /* ketebalan border */                         -fx-border-radius: 8;         /* sudut border melengkung */                         -fx-background-radius: 8;     /* sudut background melengkung */                         -fx-border-style: solid;       /* jenis garis solid */                         -fx-background-color: #f4f4f4;">
                      <children>
-                        <TextField fx:id="txtKodeStiker" editable="false" prefHeight="25.0" prefWidth="208.0" />
-                        <TextField fx:id="txtNamaStiker" editable="false" prefHeight="25.0" prefWidth="351.0" />
-                        <TextField fx:id="txtUkuranStiker" editable="false" prefHeight="25.0" prefWidth="86.0" />
-                        <TextField fx:id="txtJumlahStiker" prefHeight="25.0" prefWidth="44.0" />
-                        <Button fx:id="btnTambahkan" mnemonicParsing="false" prefHeight="25.0" prefWidth="94.0" text="Tambahkan" />
+                        <Button fx:id="btnTambahkan" mnemonicParsing="false" prefHeight="25.0" prefWidth="481.0" text="Pilih Stiker" />
                      </children>
                   </HBox>
                   <Pane layoutX="13.0" layoutY="14.0" maxWidth="939.0" minWidth="376.0" prefHeight="186.0" prefWidth="939.0" style="-fx-border-color: #BABABA;      /* warna garis border */                         -fx-border-width: 1.3;           /* ketebalan border */                         -fx-border-radius: 8;         /* sudut border melengkung */                         -fx-background-radius: 8;     /* sudut background melengkung */                         -fx-border-style: solid;       /* jenis garis solid */                         -fx-background-color: #f4f4f4;">

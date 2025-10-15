@@ -5,6 +5,7 @@ import client.DTO.DataUmkmDTO
 import client.DTO.OrderanStikerDTO
 import client.DTO.OrderanStikerRinciDTO
 import client.util.LocalDateTimeSerializer
+import client.util.PesanPeringatan
 import com.girsang.client.controller.MainClientAppController
 import javafx.application.Platform
 import javafx.beans.property.SimpleIntegerProperty
@@ -48,7 +49,6 @@ class DataOrderanController : Initializable {
     }
     private var clientController: MainClientAppController? = null
     private var parentController: MainClientAppController? = null
-    private var searchThread: Thread? = null
 
     fun setClientController(controller: MainClientAppController) {
         this.clientController = controller  // ✅ simpan controller dulu
@@ -67,10 +67,6 @@ class DataOrderanController : Initializable {
     @FXML private lateinit var txtNamaUsaha: TextField
     @FXML private lateinit var txtNamaPemilik: TextField
     @FXML private lateinit var txtInstagram: TextField
-    @FXML private lateinit var txtKodeStiker: TextField
-    @FXML private lateinit var txtNamaStiker: TextField
-    @FXML private lateinit var txtUkuranStiker: TextField
-    @FXML private lateinit var txtJumlahStiker: TextField
     @FXML private lateinit var txtTanggal: TextField
     @FXML private lateinit var txtFaktur: TextField
     @FXML private lateinit var txtKontak: TextField
@@ -101,16 +97,10 @@ class DataOrderanController : Initializable {
 
         btnCariUMKM.setOnAction {showCariUmkmPopup()}
         btnRefresh.setOnAction { bersih() }
-        btnTambahkan.setOnAction { tambahStiker() }
+        btnTambahkan.setOnAction { showCariStikerPopup() }
         btnSimpan.setOnAction { onSimpanOrderan() }
         btnHapus.setOnAction { onHapusOrderan() }
         btnTutup.setOnAction { parentController?.tutupForm() }
-
-        txtKodeStiker.setOnMouseClicked { event ->
-            if (event.clickCount == 2) {
-                showCariStikerPopup()
-            }
-        }
 
         txtFaktur.setOnMouseClicked { event ->
             if (event.clickCount == 2) {
@@ -149,20 +139,12 @@ class DataOrderanController : Initializable {
         txtNamaUsaha.clear()
         txtNamaPemilik.clear()
         txtInstagram.clear()
-        txtKodeStiker.clear()
-        txtNamaStiker.clear()
-        txtUkuranStiker.clear()
-        txtJumlahStiker.clear()
         txtFaktur.clear()
         txtKontak.clear()
 
         txtNamaUsaha.promptText = "Nama Usaha"
         txtNamaPemilik.promptText = "Nama Pemilik Usaha"
         txtInstagram.promptText = "Akun Instagram Usaha"
-        txtKodeStiker.promptText = "Kode Stiker"
-        txtNamaStiker.promptText = "Nama Stiker"
-        txtUkuranStiker.promptText = "Ukuran Stiker"
-        txtJumlahStiker.promptText = "Jumlah Stiker"
         txtKontak.promptText = "Kontak Pemilik Usaha"
         txtFaktur.clear()
 
@@ -181,9 +163,6 @@ class DataOrderanController : Initializable {
     }
     fun stikerTerpilih(dto: DataStikerDTO){
         selectedStiker = dto
-        txtKodeStiker.text = selectedStiker?.kodeStiker
-        txtNamaStiker.text = selectedStiker?.namaStiker
-        txtUkuranStiker.text = "${selectedStiker?.panjang} x ${selectedStiker?.lebar}"
     }
     fun showCariUmkmPopup() {
         selectedUmkm = null
@@ -222,12 +201,10 @@ class DataOrderanController : Initializable {
             val selected = controller.selectedUmkm
             if (selected != null) {
                 umkmTerpilih(selected)
-                println("🟢 UMKM ID = ${selectedUmkm?.id}")
-                println("UMKM yang dipilih ${selectedUmkm?.namaUsaha}")
             }
 
         } catch (e: Exception) {
-            clientController?.showError("Error: ${e.message}")
+            PesanPeringatan.error("Data UMKM", "Error: ${e.message}")
         }
     }
     fun showCariOrderaPopup() {
@@ -243,32 +220,17 @@ class DataOrderanController : Initializable {
             val response = client.send(builder.build(), HttpResponse.BodyHandlers.ofString())
 
             if (response.statusCode() !in 200..299) {
-                clientController?.showError("Gagal memuat data orderan (${response.statusCode()})")
+                PesanPeringatan.error("Data Orderan", "Gagal memuat data orderan (${response.statusCode()})")
                 return
             }
-
-            // 🔹 Cetak response untuk debug
-            println("Response orderan: ${response.body()}")
 
             val list = json.decodeFromString<List<OrderanStikerDTO>>(response.body())
 
             // 🔹 Muat FXML popup dengan pengecekan null
             val fxmlUrl = javaClass.getResource("/fxml/popup-pilih-orderan.fxml")
-            println("FXML URL = $fxmlUrl")
-
-            if (fxmlUrl == null) {
-                clientController?.showError("FXML popup-pilih-orderan.fxml tidak ditemukan!")
-                return
-            }
-
             val loader = javafx.fxml.FXMLLoader(fxmlUrl)
             val root = loader.load<javafx.scene.Parent>()
-
             val controller = loader.getController<PopUpPilihOrderanController>()
-            if (controller == null) {
-                clientController?.showError("Controller PopUpPilihOrderanController tidak ditemukan di FXML!")
-                return
-            }
 
             controller.setClientController(clientController!!)
             controller.setData(list) // pastikan method setData ada di PopUpPilihOrderanController
@@ -280,11 +242,8 @@ class DataOrderanController : Initializable {
             stage.showAndWait()
 
             // 🔹 Setelah popup ditutup
-            println("Response body: ${response.body()}")
             val selected = controller.selectedOrderan
             if (selected != null) {
-                println("Orderan yang dipilih ${selected.faktur}")
-                println("UMKM dalam orderan ${selected.umkm?.namaUsaha}")
                 selectedOrder = selected
                 selectedUmkm = selected.umkm
                 umkmTerpilih(selected.umkm!!)
@@ -300,18 +259,17 @@ class DataOrderanController : Initializable {
         } catch (e: Exception) {
             // Cetak stack trace lengkap
             e.printStackTrace()
-            clientController?.showError("Error PopUp Orderan: ${e.message ?: "Unknown"}")
+            PesanPeringatan.error("Data Orderan", "Error PopUp Orderan: ${e.printStackTrace()}")
         }
     }
     fun showCariStikerPopup() {
         try {
             // 🔹 Ambil data dari server
             if(selectedUmkm==null){
-                clientController?.showError("Pilih UMKM terlebih dahulu!")
+                PesanPeringatan.error("Pilih Setiker", "Pilih UMKM terlebih dahulu!")
                 return
             }
             val idUMKM = selectedUmkm?.id
-            println("${clientController?.url}/api/dataStiker/umkm/$idUMKM")
             val builder = HttpRequest.newBuilder()
                 .uri(URI.create("${clientController?.url}/api/dataStiker/umkm/$idUMKM"))
                 .GET()
@@ -322,8 +280,7 @@ class DataOrderanController : Initializable {
             val response = client.send(request, HttpResponse.BodyHandlers.ofString())
 
             if (response.statusCode() !in 200..299) {
-                println("Gagal memuat data stiker (${response.statusCode()})")
-                clientController?.showError("Gagal memuat data stiker (${response.statusCode()})")
+                PesanPeringatan.error("Pilih Stiker", "Gagal memuat data stiker (${response.statusCode()})")
                 return
             }
 
@@ -346,12 +303,11 @@ class DataOrderanController : Initializable {
             val selected = controller.selectedStiker
             if (selected != null) {
                 stikerTerpilih(selected)
-                println("Stiker yang dipilih ${selectedUmkm?.namaUsaha}")
+                tambahStiker()
             }
 
         } catch (e: Exception) {
-            println("Error: ${e.message}")
-            clientController?.showError("Error: ${e.message}")
+            PesanPeringatan.error("Pilih Setiker", "Error: ${e.message}")
         }
     }
     fun loadDataOrderRinci(order: OrderanStikerDTO?) {
@@ -383,7 +339,6 @@ class DataOrderanController : Initializable {
 
                 if (response.statusCode() in 200..299) {
                     val body = response.body().trim()
-                    println("Response rincian: $body")
 
                     // 🔹 Decode 1 orderan, bukan list!
                     val orderan = json.decodeFromString<OrderanStikerDTO>(body)
@@ -391,23 +346,23 @@ class DataOrderanController : Initializable {
 
                     Platform.runLater {
                         if (rincianList.isEmpty()) {
-                            tblStiker.placeholder = javafx.scene.control.Label("Tidak ada rincian orderan.")
+                            tblStiker.placeholder = Label("Tidak ada rincian orderan.")
                         }
                         tblStiker.items = FXCollections.observableArrayList(rincianList)
                     }
 
                 } else {
                     Platform.runLater {
-                        tblStiker.placeholder = javafx.scene.control.Label("Gagal memuat data (${response.statusCode()})")
-                        clientController?.showError("Server Error ${response.statusCode()}")
+                        tblStiker.placeholder = Label("Gagal memuat data (${response.statusCode()})")
+                        PesanPeringatan.error("Data Orderan", "Server Error ${response.statusCode()}")
                     }
                 }
 
             } catch (ex: Exception) {
                 ex.printStackTrace()
                 Platform.runLater {
-                    tblStiker.placeholder = javafx.scene.control.Label("Gagal memuat rincian orderan.")
-                    clientController?.showError("Gagal memuat rincian orderan: ${ex.message}")
+                    tblStiker.placeholder = Label("Gagal memuat rincian orderan.")
+                    PesanPeringatan.error("Data Orderan", "Gagal memuat rincian orderan: ${ex.message}")
                 }
             }
         }.start()
@@ -435,35 +390,26 @@ class DataOrderanController : Initializable {
                     }
                 } else if (response.statusCode() == 401) {
                     Platform.runLater {
-                        clientController?.showError("Akses ditolak (401). Silakan login terlebih dahulu.")
+                        PesanPeringatan.error("Faktur Otomatis","Akses ditolak (401). Silakan login terlebih dahulu.")
                     }
                 } else {
                     Platform.runLater {
-                        clientController?.showError("Server Error ${response.statusCode()}")
+                        PesanPeringatan.error("Faktur Otomatis", "Server Error ${response.statusCode()}")
                     }
                 }
-
             } catch (ex: Exception) {
                 Platform.runLater {
-                    clientController?.showError(ex.message ?: "Gagal mengambil nomor faktur otomatis")
+                    PesanPeringatan.error("Faktur Otomatis", ex.message ?: "Gagal mengambil nomor faktur otomatis")
                 }
             }
         }.start()
     }
     fun tambahStiker(){
-        if (selectedStiker == null) {
-            clientController?.showError("Pilih stiker terlebih dahulu!")
-            return
-        }
         if (selectedUmkm == null) {
-            clientController?.showError("Pilih UMKM terlebih dahulu!")
+            PesanPeringatan.warning("Pilih Stiker", "Pilih UMKM terlebih dahulu!")
             return
         }
-        val jumlah = txtJumlahStiker.text.toIntOrNull()
-        if (jumlah == null || jumlah <= 0) {
-            clientController?.showError("Masukkan jumlah stiker yang valid!")
-            return
-        }
+        val jumlah = 1
 
         val currentItems = tblStiker.items ?: FXCollections.observableArrayList()
 
@@ -489,11 +435,6 @@ class DataOrderanController : Initializable {
         tblStiker.refresh()
         hitungTotalStiker()
 
-        // Bersihkan input
-        txtKodeStiker.clear()
-        txtNamaStiker.clear()
-        txtUkuranStiker.clear()
-        txtJumlahStiker.clear()
         selectedStiker = null
     }
     fun hitungTotalStiker() {
@@ -502,11 +443,11 @@ class DataOrderanController : Initializable {
     }
     fun onSimpanOrderan() {
         if (selectedUmkm == null) {
-            clientController?.showError("Pilih UMKM terlebih dahulu!")
+            PesanPeringatan.warning("Simpan Data", "Pilih UMKM terlebih dahulu!")
             return
         }
         if (tblStiker.items.isEmpty()) {
-            clientController?.showError("Belum ada stiker yang ditambahkan!")
+            PesanPeringatan.warning("Simpan Data", "Belum ada stiker yang ditambahkan!")
             return
         }
         //simpan
@@ -543,18 +484,17 @@ class DataOrderanController : Initializable {
                     val resp = clientController?.makeRequest(req)
                     if (resp?.statusCode() in 200..299) {
                         Platform.runLater {
-                            clientController?.showInfo("Orderan berhasil disimpan!")
+                            PesanPeringatan.info("Simpan Data", "Orderan berhasil disimpan!")
                             bersih()
                         }
                     } else {
                         Platform.runLater {
-                            println("Gagal menyimpan orderan: ${resp?.statusCode()}")
-                            clientController?.showError("Gagal menyimpan orderan: ${resp?.statusCode()}")
+                            PesanPeringatan.error("Simpan Data","Gagal menyimpan orderan: ${resp?.statusCode()}")
                         }
                     }
                 } catch (e: Exception) {
                     Platform.runLater {
-                        clientController?.showError("Error: ${e.message}")
+                        PesanPeringatan.error("Simpan Data", "Error: ${e.message}")
                     }
                 }
             }.start()
@@ -578,70 +518,75 @@ class DataOrderanController : Initializable {
                     )
                 }
             )
-            Thread {
-                try {
-                    val id = selectedOrder?.id
-                    val body = json.encodeToString(orderan)
-                    val builder = HttpRequest.newBuilder()
-                        .uri(URI.create("${clientController?.url}/api/orderan-stiker/$id"))
-                        .PUT(HttpRequest.BodyPublishers.ofString(body))
-                        .header("Content-Type", "application/json")
+            val konfirm = PesanPeringatan.confirm("Ubah Data", "Apakah anda yajin ingin menyimpan perubahan data ini?")
+            if (konfirm){
+                Thread {
+                    try {
+                        val id = selectedOrder?.id
+                        val body = json.encodeToString(orderan)
+                        val builder = HttpRequest.newBuilder()
+                            .uri(URI.create("${clientController?.url}/api/orderan-stiker/$id"))
+                            .PUT(HttpRequest.BodyPublishers.ofString(body))
+                            .header("Content-Type", "application/json")
 
-                    clientController?.buildAuthHeader()?.let { builder.header("Authorization", it) }
+                        clientController?.buildAuthHeader()?.let { builder.header("Authorization", it) }
 
-                    val req = builder.build()
-                    val resp = clientController?.makeRequest(req)
-                    if (resp?.statusCode() in 200..299) {
-                        Platform.runLater {
-                            clientController?.showInfo("Orderan berhasil disimpan!")
-                            bersih()
+                        val req = builder.build()
+                        val resp = clientController?.makeRequest(req)
+                        if (resp?.statusCode() in 200..299) {
+                            Platform.runLater {
+                                PesanPeringatan.info("Ubah Data", "Orderan berhasil disimpan!")
+                                bersih()
+                            }
+                        } else {
+                            Platform.runLater {
+                                PesanPeringatan.error("Ubah Data","Gagal menyimpan orderan: ${resp?.statusCode()}")
+                            }
                         }
-                    } else {
+                    } catch (e: Exception) {
                         Platform.runLater {
-                            println("Gagal menyimpan orderan: ${resp?.statusCode()}")
-                            clientController?.showError("Gagal menyimpan orderan: ${resp?.statusCode()}")
+                            PesanPeringatan.error("Simpan Data", "Error: ${e.message}")
                         }
                     }
-                } catch (e: Exception) {
-                    Platform.runLater {
-                        clientController?.showError("Error: ${e.message}")
-                    }
-                }
-            }.start()
+                }.start()
+            }
         }
 
 
     }
     fun onHapusOrderan(){
         val order = selectedOrder
+        val id = order?.id
         if (order == null) {
-            clientController?.showError("Tidak ada orderan yang dipilih.")
+            PesanPeringatan.warning("Hapus Data", "Tidak ada orderan yang dipilih.")
             return
         }
-        val id = order.id
-        try{
-            val builder = HttpRequest.newBuilder()
-                .uri(URI.create("${clientController?.url}/api/orderan-stiker/$id"))
-                .DELETE()
+        val konfirm = PesanPeringatan.confirm("Hapus Data", "Anda yakin ingin menghapus data ini?")
+            if (konfirm) {
+                try {
+                    val builder = HttpRequest.newBuilder()
+                        .uri(URI.create("${clientController?.url}/api/orderan-stiker/$id"))
+                        .DELETE()
 
-            clientController?.buildAuthHeader()?.let { builder.header("Authorization", it) }
+                    clientController?.buildAuthHeader()?.let { builder.header("Authorization", it) }
 
-            val request = builder.build()
-            val response = client.send(request, HttpResponse.BodyHandlers.ofString())
+                    val request = builder.build()
+                    val response = client.send(request, HttpResponse.BodyHandlers.ofString())
 
-            Platform.runLater {
-                if (response.statusCode() in 200..299) {
-                    bersih()
-                    clientController?.showInfo("Orderan berhasil dihapus.")
-                } else {
-                    clientController?.showError("Server returned ${response.statusCode()} : ${response.body()}")
+                    Platform.runLater {
+                        if (response.statusCode() in 200..299) {
+                            bersih()
+                            clientController?.showInfo("Orderan berhasil dihapus.")
+                        } else {
+                            clientController?.showError("Server returned ${response.statusCode()} : ${response.body()}")
+                        }
+                    }
+                } catch (ex: Exception) {
+                    Platform.runLater {
+                        println("Gagal menghapus orderan")
+                        clientController?.showError(ex.message ?: "Gagal menghapus orderan")
+                    }
                 }
             }
-        } catch (ex: Exception) {
-            Platform.runLater {
-                println("Gagal menghapus orderan")
-                clientController?.showError(ex.message ?: "Gagal menghapus orderan")
-            }
-        }
     }
 }
