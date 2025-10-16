@@ -72,5 +72,11 @@ class DataUmkmController(private val service: DataUmkmService) {
         } catch (e: NoSuchElementException) {
             SimpanFileLogger.error("Gagal hapus: Data UMKM dengan id=$id tidak ditemukan")
             ResponseEntity.status(404).body(mapOf("message" to "Data UMKM tidak ditemukan"))
+        } catch (e: org.springframework.dao.DataIntegrityViolationException) {
+            SimpanFileLogger.error("Gagal hapus: Data UMKM id=$id masih digunakan di tabel lain")
+            ResponseEntity.status(409).body(mapOf("message" to "Data UMKM masih digunakan di data lain"))
+        } catch (e: Exception) {
+            SimpanFileLogger.error("Error tidak terduga saat menghapus UMKM id=$id: ${e.message}")
+            ResponseEntity.status(500).body(mapOf("message" to "Terjadi kesalahan pada server"))
         }
 }

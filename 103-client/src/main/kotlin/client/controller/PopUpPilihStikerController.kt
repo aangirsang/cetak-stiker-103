@@ -3,6 +3,7 @@ package client.controller
 import client.DTO.DataStikerDTO
 import client.DTO.DataUmkmDTO
 import client.util.LocalDateTimeSerializer
+import client.util.PesanPeringatan
 import com.girsang.client.controller.MainClientAppController
 import javafx.application.Platform
 import javafx.beans.property.SimpleStringProperty
@@ -21,9 +22,7 @@ import java.net.URL
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
-import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.util.ResourceBundle
 
 class PopUpPilihStikerController : Initializable{
@@ -76,7 +75,7 @@ class PopUpPilihStikerController : Initializable{
         }
         btnPilih.setOnAction {
             if(selectedStiker == null){
-                clientController?.showError("Tidak ada data yang dipilih. Silakan pilih salah satu UMKM dari tabel terlebih dahulu.")
+                PesanPeringatan.error("Pilih Stiker","Tidak ada data yang dipilih. Silakan pilih salah satu UMKM dari tabel terlebih dahulu.")
             }
             val stage = btnTutup.scene?.window as? Stage
             stage?.close()
@@ -93,7 +92,6 @@ class PopUpPilihStikerController : Initializable{
                 if (event.clickCount == 2 && !row.isEmpty) {
                     val stiker = row.item
                     selectedStiker = stiker
-                    println("🟢 Stiker dipilih lewat double-click: ${stiker.namaStiker}")
 
                     // Tutup popup
                     val stage = tblStiker.scene.window as? javafx.stage.Stage
@@ -109,8 +107,6 @@ class PopUpPilihStikerController : Initializable{
 
         if (!controller.url.isNullOrBlank()) {
             bersih() // ✅ baru panggil setelah URL diset
-        } else {
-            println("⚠️ URL belum di-set, data tidak bisa dimuat")
         }
     }
     fun bersih(){
@@ -129,7 +125,6 @@ class PopUpPilihStikerController : Initializable{
         loadDataStiker()
     }
     fun loadDataStiker(){
-        println("DEBUG: clientController = $clientController, url = ${clientController?.url}")
         if(clientController?.url.isNullOrBlank()){
             Platform.runLater { clientController?.showError("URL server belum di set") }
             return
@@ -137,7 +132,6 @@ class PopUpPilihStikerController : Initializable{
         Thread {
             try {
                 val idUMKM = selectedUmkm?.id
-                println("${clientController?.url}/api/dataStiker/umkm/$idUMKM")
                 val builder = HttpRequest.newBuilder()
                     .uri(URI.create("${clientController?.url}/api/dataStiker/umkm/$idUMKM"))
                     .GET()
@@ -154,12 +148,12 @@ class PopUpPilihStikerController : Initializable{
                     }
                 } else {
                     Platform.runLater {
-                        clientController?.showError("Server Error ${response.statusCode()}")
+                        PesanPeringatan.error("Pilih Stiker", "Server Error ${response.statusCode()}")
                     }
                 }
             } catch (ex: Exception){
                 Platform.runLater {
-                    clientController?.showError(ex.message ?: "Gagal memeuat data UMKM")
+                    PesanPeringatan.error("Pilih Stiker","Gagal memeuat data UMKM")
                 }
             }
         }.start()
@@ -209,7 +203,7 @@ class PopUpPilihStikerController : Initializable{
                         if (hasil.isEmpty()) {
                             // ⚠️ Kosongkan tabel jika tidak ada hasil
                             tblStiker.items = FXCollections.observableArrayList()
-                            clientController?.showInfo("Tidak ada data yang cocok untuk pencarian \"$keyword\"")
+                            PesanPeringatan.warning("Pilih Stiker", "Tidak ada data yang cocok untuk pencarian \"$keyword\"")
                         } else {
                             // ✅ Tampilkan hasil pencarian
                             tblStiker.items = FXCollections.observableArrayList(hasil)
@@ -217,13 +211,13 @@ class PopUpPilihStikerController : Initializable{
                     }
                 } else {
                     Platform.runLater {
-                        clientController?.showError("Server Error ${response.statusCode()}")
+                        PesanPeringatan.error("Pilih Stiker", "Server Error ${response.statusCode()}")
                         tblStiker.items = FXCollections.observableArrayList() // kosongkan tabel juga
                     }
                 }
             } catch (ex: Exception) {
                 Platform.runLater {
-                    clientController?.showError(ex.message ?: "Gagal mencari data UMKM")
+                    PesanPeringatan.error("Pilih Stiker", "Gagal mencari data UMKM")
                     tblStiker.items = FXCollections.observableArrayList() // kosongkan tabel jika error
                 }
             }

@@ -2,8 +2,8 @@ package com.girsang.server.controller.model
 
 import com.girsang.server.dto.DataStikerDTO
 import com.girsang.server.model.DataStiker
-import com.girsang.server.model.DataUmkm
 import com.girsang.server.service.DataStikerService
+import com.girsang.server.util.SimpanFileLogger
 import org.slf4j.LoggerFactory
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.*
 @CrossOrigin(origins = ["*"])
 class DataStikerController(private val service: DataStikerService) {
 
-    private val logger = LoggerFactory.getLogger(DataUmkmController::class.java)
-
     @GetMapping
-    fun semua(): ResponseEntity<List<DataStiker>> =
-        ResponseEntity.ok(service.semuaStiker())
+    fun semua(): ResponseEntity<List<DataStiker>> {
+        SimpanFileLogger.info("Memuat semua data Pengguna")
+        return ResponseEntity.ok(service.semuaStiker())
+    }
 
     @GetMapping("/{id}")
     fun byId(@PathVariable id: Long): ResponseEntity<DataStiker> =
@@ -32,6 +32,7 @@ class DataStikerController(private val service: DataStikerService) {
     @PostMapping
     fun simpan(@RequestBody stiker: DataStikerDTO): ResponseEntity<Any> =
         try {
+            SimpanFileLogger.info("Simpan data Stiker $stiker")
             val saved = service.simpan(stiker)
             ResponseEntity.status(201).body(saved)
         } catch (e: IllegalArgumentException) {
@@ -43,6 +44,7 @@ class DataStikerController(private val service: DataStikerService) {
     @PutMapping("/{id}")
     fun update(@PathVariable id: Long, @RequestBody stiker: DataStikerDTO): ResponseEntity<Any> =
         try {
+            SimpanFileLogger.info("Simpan perubahan data Stiker $stiker")
             val updated = service.update(id, stiker)
             ResponseEntity.ok(updated)
         } catch (e: NoSuchElementException) {
@@ -52,6 +54,7 @@ class DataStikerController(private val service: DataStikerService) {
     @DeleteMapping("/{id}")
     fun hapus(@PathVariable id: Long): ResponseEntity<Map<String, String>> =
         try {
+            SimpanFileLogger.info("Hapus data Stiker ID $id")
             service.hapus(id)
             ResponseEntity.ok(mapOf("message" to "Data stiker berhasil dihapus"))
         } catch (e: NoSuchElementException) {
@@ -63,8 +66,7 @@ class DataStikerController(private val service: DataStikerService) {
         @RequestParam(required = false) namaUsaha: String?,
         @RequestParam(required = false) namaStiker: String?,
     ): ResponseEntity<List<DataStiker>> {
-        logger.info("Mencari data stiker berdasarkan filter: namaUsaha='{}',  namaStiker='{}'",
-            namaUsaha, namaStiker)
+        SimpanFileLogger.info("Mencari data stiker berdasarkan filter: namaUsaha='{$namaUsaha}',  namaStiker='{$namaStiker}'")
 
         val hasil = when {
             !namaUsaha.isNullOrBlank() -> service.cariNamaUsahaLike(namaUsaha)
