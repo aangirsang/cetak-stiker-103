@@ -1,5 +1,8 @@
 package com.girsang.server.controller.model
 
+import com.fasterxml.jackson.databind.SerializationFeature
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.girsang.server.dto.DataStikerDTO
 import com.girsang.server.model.DataStiker
 import com.girsang.server.service.DataStikerService
@@ -7,11 +10,14 @@ import com.girsang.server.util.SimpanFileLogger
 import org.slf4j.LoggerFactory
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import java.text.SimpleDateFormat
 
 @RestController
 @RequestMapping("/api/dataStiker")
 @CrossOrigin(origins = ["*"])
 class DataStikerController(private val service: DataStikerService) {
+
+
 
     @GetMapping
     fun semua(): ResponseEntity<List<DataStiker>> {
@@ -32,7 +38,11 @@ class DataStikerController(private val service: DataStikerService) {
     @PostMapping
     fun simpan(@RequestBody stiker: DataStikerDTO): ResponseEntity<Any> =
         try {
-            SimpanFileLogger.info("Simpan data Stiker $stiker")
+            val mapper = jacksonObjectMapper()
+            mapper.registerModule(JavaTimeModule())
+            mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+            mapper.dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+            SimpanFileLogger.info("Simpan data Stiker ${mapper.writeValueAsString(stiker)}")
             val saved = service.simpan(stiker)
             ResponseEntity.status(201).body(saved)
         } catch (e: IllegalArgumentException) {
@@ -44,7 +54,11 @@ class DataStikerController(private val service: DataStikerService) {
     @PutMapping("/{id}")
     fun update(@PathVariable id: Long, @RequestBody stiker: DataStikerDTO): ResponseEntity<Any> =
         try {
-            SimpanFileLogger.info("Simpan perubahan data Stiker $stiker")
+            val mapper = jacksonObjectMapper()
+            mapper.registerModule(JavaTimeModule())
+            mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+            mapper.dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+            SimpanFileLogger.info("Simpan perubahab data Stiker ${mapper.writeValueAsString(stiker)}")
             val updated = service.update(id, stiker)
             ResponseEntity.ok(updated)
         } catch (e: NoSuchElementException) {

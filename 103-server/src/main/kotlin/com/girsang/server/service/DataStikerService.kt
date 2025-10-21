@@ -5,6 +5,7 @@ import com.girsang.server.model.DataStiker
 import com.girsang.server.model.DataUmkm
 import com.girsang.server.repository.DataStikerRepository
 import com.girsang.server.repository.DataUmkmRepository
+import com.girsang.server.util.SimpanFileLogger
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import org.springframework.web.bind.annotation.RequestBody
@@ -65,6 +66,7 @@ class DataStikerService(
             .orElseThrow { RuntimeException("UMKM tidak ditemukan") }
         existing.apply {
             dataUmkm = umkm
+            kodeStiker = dto.kodeStiker
             namaStiker = dto.namaStiker
             panjang = dto.panjang
             lebar = dto.lebar
