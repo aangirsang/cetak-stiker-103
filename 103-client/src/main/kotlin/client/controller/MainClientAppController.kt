@@ -104,13 +104,22 @@ class MainClientAppController : Initializable {
             } catch (ex: Exception) {
                 Platform.runLater {
                     lblStatusServer.text = "Ping failed"
-                    val confirm = PesanPeringatan.confirm("Konfirmasi", "Koneksi ke server gagal.\nApakah ingin mencoba kembali?")
-                    if(confirm){
-                        pingServer()
-                    } else {
-                        println("User pilih tutup")
-                        val stage = lblWaktu.scene.window as javafx.stage.Stage
-                        stage.close()
+                    val confirm = PesanPeringatan.confirmWithSettings("Konfirmasi", "Koneksi ke server gagal.\nApakah ingin mencoba kembali?")
+
+                    when (confirm) {
+                        "OK" -> {
+                            pingServer()
+                        }
+                        "SETTING" -> {
+                            tampilSettings()
+                            val stage = lblWaktu.scene.window as javafx.stage.Stage
+                            stage.close()
+                        }
+                        "CANCEL" -> {
+                            println("User pilih tutup")
+                            val stage = lblWaktu.scene.window as javafx.stage.Stage
+                            stage.close()
+                        }
                     }
                 }
             }
@@ -139,5 +148,12 @@ class MainClientAppController : Initializable {
         alert.headerText = null
         alert.contentText = pesan
         alert.showAndWait()
+    }
+    private fun tampilSettings() {
+        val stage = javafx.stage.Stage()
+        val loader = FXMLLoader(javaClass.getResource("/fxml/settings.fxml"))
+        stage.scene = javafx.scene.Scene(loader.load())
+        stage.title = "Pengaturan Koneksi"
+        stage.show()
     }
 }

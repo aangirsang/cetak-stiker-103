@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+
+
+<TitledPane animated="false" collapsible="false" prefHeight="292.0" prefWidth="363.0" text="Pengaturan Server" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.girsang.server.controller.UI.ConfigServerController">
+   <content>
+      <Pane prefHeight="266.0" prefWidth="488.0">
+         <children>
+         
+                            <Label layoutX="14.0" layoutY="14.0" style="-fx-font-size:18; -fx-font-weight:bold" text="Pengaturan Server" />
+         
+                            <HBox layoutX="14.0" layoutY="51.0" spacing="10">
+                 <Label prefWidth="120" text="Port:" />
+                 <TextField fx:id="txtPort" prefWidth="200" />
+             </HBox>
+         
+                            <HBox layoutX="14.0" layoutY="86.0" spacing="10">
+                 <Label prefWidth="120" text="Username:" />
+                 <TextField fx:id="txtUser" prefWidth="200" />
+             </HBox>
+         
+                            <HBox layoutX="14.0" layoutY="121.0" spacing="10">
+                 <Label prefWidth="120" text="Password Baru:" />
+                 <PasswordField fx:id="txtNewPass" prefWidth="200" />
+             </HBox>
+         
+                            <HBox layoutX="14.0" layoutY="156.0" spacing="10">
+                 <Label prefWidth="120" text="Ulangi Password:" />
+                 <PasswordField fx:id="txtConfirmPass" prefWidth="200" />
+             </HBox>
+         
+                            <HBox layoutX="14.0" layoutY="191.0" spacing="10">
+                 <Label prefWidth="120" text="Roles (comma):" />
+                 <TextField fx:id="txtRoles" prefWidth="200" />
+             </HBox>
+         
+                            <Button layoutX="71.0" layoutY="227.0" onAction="#saveConfig" prefWidth="200" text="Simpan Pengaturan" />
+         </children>
+      </Pane>
+   </content>
+</TitledPane>

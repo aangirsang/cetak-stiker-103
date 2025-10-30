@@ -1,5 +1,6 @@
 package client.controller
 
+import client.util.PesanPeringatan
 import com.girsang.client.config.ClientConfig
 import javafx.fxml.FXML
 import javafx.scene.control.PasswordField
@@ -24,13 +25,19 @@ class SettingsController {
         ClientConfig.setUrl(txtUrl.text)
         ClientConfig.setUser(txtUser.text)
         ClientConfig.setPass(txtPass.text)
-        ClientConfig.save()
-
-        javafx.scene.control.Alert(
-            javafx.scene.control.Alert.AlertType.INFORMATION,
-            "Konfigurasi disimpan.\nSilakan restart aplikasi."
-        ).showAndWait()
-
+        val confirm = PesanPeringatan.confirm(
+            "Simpan Setting Server",
+            "Apakah anda yakin ingin menyimpan settingan ini?\n\n" +
+                    "Settingan yang salah dapat menyebabkan aplikasi tidak bisa terhubung ke server!"
+        )
+        if(confirm){
+            ClientConfig.save()
+            PesanPeringatan.info("Simpan Setting Server","Konfigurasi disimpan.\nSilakan restart aplikasi.")
+            (txtUrl.scene.window as Stage).close()
+        }
+    }
+    @FXML
+    fun batal() {
         (txtUrl.scene.window as Stage).close()
     }
 }

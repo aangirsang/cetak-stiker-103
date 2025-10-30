@@ -1,0 +1,11 @@
+2025-10-30 10:49:29 | [INFO] Client terhubung
+2025-10-30 10:49:31 | [INFO] Memuat semua data Pengguna
+2025-10-30 10:49:35 | [INFO] Memuat semua data UMKM
+2025-10-30 10:49:38 | [INFO] Memuat semua data Pengguna
+2025-10-30 10:49:41 | [INFO] Memuat semua data Orderan
+2025-10-30 10:49:41 | [INFO] Memuat semua data Orderan
+2025-10-30 10:49:42 | [INFO] Memuat semua data Orderan
+2025-10-30 13:11:03 | [INFO] Client terhubung
+2025-10-30 13:11:11 | [INFO] Memuat semua data Orderan
+2025-10-30 13:11:11 | [INFO] Memuat semua data Orderan
+2025-10-30 13:11:13 | [INFO] Memuat semua data Orderan

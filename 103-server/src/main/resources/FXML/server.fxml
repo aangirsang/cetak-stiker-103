@@ -14,6 +14,7 @@
             <Label fx:id="lblIPServer" layoutX="113.0" layoutY="40.0" text="IP Server" />
             <Button fx:id="btnStartServer" layoutX="76.0" layoutY="117.0" mnemonicParsing="false" text="Aktifkan Server" />
             <Button fx:id="btnStopServer" layoutX="197.0" layoutY="117.0" mnemonicParsing="false" text="Matikan Server" />
+            <Button fx:id="btnPengaturan" layoutX="76.0" layoutY="149.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="218.0" text="Pengaturan Server" />
          </children>
       </AnchorPane>
    </children>
