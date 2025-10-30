@@ -66,7 +66,6 @@ class DataStikerService(
             .orElseThrow { RuntimeException("UMKM tidak ditemukan") }
         existing.apply {
             dataUmkm = umkm
-            kodeStiker = dto.kodeStiker
             namaStiker = dto.namaStiker
             panjang = dto.panjang
             lebar = dto.lebar

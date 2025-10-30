@@ -1,7 +1,0 @@
-2025-10-30 08:44:22 | [INFO] Memuat semua data Orderan
-2025-10-30 08:56:14 | [INFO] Client terhubung
-2025-10-30 08:56:18 | [INFO] Memuat semua data Orderan
-2025-10-30 08:56:19 | [INFO] Memuat semua data Orderan
-2025-10-30 08:56:24 | [INFO] Memuat semua data Orderan
-2025-10-30 09:16:36 | [INFO] Client terhubung
-2025-10-30 09:16:40 | [INFO] Memuat semua data UMKM

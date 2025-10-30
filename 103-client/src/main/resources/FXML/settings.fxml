@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="231.0" prefWidth="197.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/24.0.1" fx:controller="client.controller.SettingsController">
+    <children>
+        <VBox layoutX="20" layoutY="20" spacing="10">
+            <children>
+                <Label text="Server URL" />
+                <TextField fx:id="txtUrl" />
+
+                <Label text="Username" />
+                <TextField fx:id="txtUser" />
+
+                <Label text="Password" />
+                <PasswordField fx:id="txtPass" />
+
+                <Button onAction="#simpan" text="Simpan" />
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>

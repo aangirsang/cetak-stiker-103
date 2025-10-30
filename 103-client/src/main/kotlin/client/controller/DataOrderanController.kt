@@ -149,6 +149,7 @@ class DataOrderanController : Initializable {
         txtFaktur.clear()
 
         btnSimpan.text = "Simpan"
+        btnCariUMKM.isDisable = false
 
         tblStiker.selectionModel.clearSelection()
         fakturOtomatis()
@@ -254,6 +255,7 @@ class DataOrderanController : Initializable {
                 txtTanggal.text = selected.tanggal?.format(formatter)
                 lblTotalStiker.text = "Total Stiker = ${selected.totalStiker} Lembar"
                 btnSimpan.text = "Update"
+                btnCariUMKM.isDisable = true
             }
 
         } catch (e: Exception) {

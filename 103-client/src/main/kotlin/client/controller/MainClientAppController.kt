@@ -2,8 +2,9 @@ package com.girsang.client.controller
 
 import client.controller.DataOrderanController
 import client.controller.DataStikerController
-import client.controller.UmkmController
+import client.controller.DataUmkmController
 import client.util.PesanPeringatan
+import com.girsang.client.config.ClientConfig
 import javafx.application.Platform
 import javafx.fxml.FXML
 import javafx.fxml.FXMLLoader
@@ -37,9 +38,9 @@ class MainClientAppController : Initializable {
     @FXML private lateinit var mnDataStiker: MenuItem
     @FXML private lateinit var mnOrderStiker: MenuItem
 
-    val user = "admin"
-    val pass = "secret"
-    var url: String = "http://localhost:8080"
+    var user = ClientConfig.getUser()
+    var pass = ClientConfig.getPass()
+    var url = ClientConfig.getUrl()
 
     override fun initialize(location: URL?, resources: ResourceBundle?) {
         mnPengguna.setOnAction { tampilFormPengguna() }
@@ -60,7 +61,7 @@ class MainClientAppController : Initializable {
     private fun tampilFormUMKM() {
         val fxmlLoader = FXMLLoader(javaClass.getResource("/fxml/data-umkm.fxml"))
         val content: AnchorPane = fxmlLoader.load()
-        val controller = fxmlLoader.getController<UmkmController>()
+        val controller = fxmlLoader.getController<DataUmkmController>()
         controller.setClientController(this)  // kirim parent controller
         controller.setParentController(this)     // sudah ada ✅
         mainPane.center = content

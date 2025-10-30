@@ -469,3 +469,9 @@ Caused by: org.h2.mvstore.MVStoreException: The file is locked: D:/Andri/Belajar
 	at org.h2.mvstore.SingleFileStore.open(SingleFileStore.java:81)
 	at org.h2.mvstore.MVStore.<init>(MVStore.java:286)
 	... 62 more
+2025-10-30 09:38:53.666214+07:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "create table app_config ([*]key varchar(255) not null, value varchar(255), primary key (key))"; expected "identifier"; SQL statement:
+create table app_config (key varchar(255) not null, value varchar(255), primary key (key)) [42001-232]
+2025-10-30 09:38:54.169187+07:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "select ac1_0.[*]key,ac1_0.value from app_config ac1_0 where ac1_0.key=?"; expected "identifier"; SQL statement:
+select ac1_0.key,ac1_0.value from app_config ac1_0 where ac1_0.key=? [42001-232]

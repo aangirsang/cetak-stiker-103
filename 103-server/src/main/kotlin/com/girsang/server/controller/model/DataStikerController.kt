@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.text.SimpleDateFormat
+import org.springframework.http.HttpStatus
 
 @RestController
 @RequestMapping("/api/dataStiker")
@@ -66,14 +67,30 @@ class DataStikerController(private val service: DataStikerService) {
         }
 
     @DeleteMapping("/{id}")
-    fun hapus(@PathVariable id: Long): ResponseEntity<Map<String, String>> =
-        try {
-            SimpanFileLogger.info("Hapus data Stiker ID $id")
+    fun delete(@PathVariable id: Long): ResponseEntity<Map<String, String>> {
+        return try {
+            SimpanFileLogger.info("Hapus data Stiker ID: $id")
             service.hapus(id)
             ResponseEntity.ok(mapOf("message" to "Data stiker berhasil dihapus"))
-        } catch (e: NoSuchElementException) {
-            ResponseEntity.status(404).body(mapOf("message" to e.message!!))
+
+        } catch (ex: Exception) {
+            // Cek error Foreign Key
+            val isFK = ex.cause?.cause is org.hibernate.exception.ConstraintViolationException
+                    || ex.message?.contains("Referential integrity") == true
+
+            val msg = if (isFK) {
+                "Data tidak bisa dihapus karena masih digunakan pada Data Lain"
+            } else {
+                ex.message ?: "Gagal menghapus data"
+            }
+            SimpanFileLogger.error(msg)
+            ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(mapOf("Error " to msg))
         }
+    }
+
+
 
     @GetMapping("/cari")
     fun cari(

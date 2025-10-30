@@ -1,32 +1,21 @@
 package client.controller
 
-import client.DTO.DataStikerDTO
 import client.DTO.DataUmkmDTO
 import client.util.LocalDateTimeSerializer
 import client.util.PesanPeringatan
 import com.girsang.client.controller.MainClientAppController
 import javafx.application.Platform
-import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleLongProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections
 import javafx.fxml.FXML
 import javafx.fxml.Initializable
 import javafx.scene.control.Button
-import javafx.scene.control.DatePicker
 import javafx.scene.control.TableColumn
 import javafx.scene.control.TableView
 import javafx.scene.control.TextArea
 import javafx.scene.control.TextField
-import kotlinx.serialization.Contextual
-import kotlinx.serialization.KSerializer
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.descriptors.PrimitiveKind
-import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
-import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encodeToString
-import kotlinx.serialization.encoding.Decoder
-import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
 import java.net.URI
@@ -35,10 +24,9 @@ import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.util.ResourceBundle
 
-class UmkmController : Initializable{
+class DataUmkmController : Initializable{
 
     private val client = HttpClient.newBuilder().build()
     private val json = Json {

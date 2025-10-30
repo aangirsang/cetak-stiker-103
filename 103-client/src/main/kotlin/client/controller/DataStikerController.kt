@@ -224,6 +224,7 @@ class DataStikerController : Initializable {
         txtCariStiker.promptText = "Cari Nama Stiker"
 
         btnSimpan.text = "Simpan"
+        btnCariUMKM.isDisable = false
 
         tblStiker.selectionModel.clearSelection()
 
@@ -338,6 +339,8 @@ class DataStikerController : Initializable {
 
         // Simpan DTO yang sedang dipilih supaya bisa update nanti
         selectedStiker = dto
+
+        btnCariUMKM.isDisable = true
 
     }
     fun getStikerTerpilih(): DataStikerDTO?{
@@ -471,15 +474,14 @@ class DataStikerController : Initializable {
                             PesanPeringatan.info("Hapus Data", "Data stiker berhasil dihapus.")
                             bersih()
                         } else {
-                            PesanPeringatan.error(
-                                "Hapus Data",
-                                "Server returned ${response.statusCode()} : ${response.body()}"
-                            )
+                            val body = response.body()
+                            PesanPeringatan.error("Hapus Data", body)
                         }
+
                     }
                 } catch (ex: Exception) {
                     Platform.runLater {
-                        PesanPeringatan.error("Hapus Data", ex.message ?: "Gagal menghapus pengguna")
+                        PesanPeringatan.error("Hapus Data", ex.message ?: "Gagal menghapus data Stiker")
                     }
                 }
             }.start()
