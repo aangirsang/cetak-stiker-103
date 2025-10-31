@@ -1,13 +1,13 @@
-package com.girsang.client.config
+package com.girsang.server.config
 
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileWriter
 import java.util.*
 
-object ClientConfig {
+object ServerConfig {
 
-    private const val FILE_PATH = "./config/client-config.properties" // file external di folder aplikasi
+    private const val FILE_PATH = "/config/config.properties" // file external di folder aplikasi
 
     private val props = Properties()
 
@@ -23,7 +23,7 @@ object ClientConfig {
             } else {
                 // fallback ke classpath
                 val defaultProps = Properties()
-                javaClass.classLoader.getResourceAsStream("./config/client-config.properties")?.use {
+                javaClass.classLoader.getResourceAsStream("application.properties")?.use {
                     defaultProps.load(it)
                 }
 

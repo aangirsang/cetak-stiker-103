@@ -87,6 +87,9 @@ class MainClientAppController : Initializable {
     }
 
     fun konekServer(baseUrl: String){
+        println("Server: $url")
+        println("User: $user")
+        println("Password: $pass")
         val builder = HttpRequest.newBuilder()
             .uri(URI.create("$baseUrl/api/pengguna/ping"))
             .GET()

@@ -6,8 +6,10 @@ import javafx.fxml.FXML
 import javafx.scene.control.PasswordField
 import javafx.scene.control.TextField
 import javafx.stage.Stage
+import org.mindrot.jbcrypt.BCrypt
 
 class SettingsController {
+
 
     @FXML private lateinit var txtUrl: TextField
     @FXML private lateinit var txtUser: TextField
@@ -22,9 +24,10 @@ class SettingsController {
 
     @FXML
     fun simpan() {
+        val pass = BCrypt.hashpw(txtPass.text, BCrypt.gensalt())
         ClientConfig.setUrl(txtUrl.text)
         ClientConfig.setUser(txtUser.text)
-        ClientConfig.setPass(txtPass.text)
+        ClientConfig.setPass(pass)
         val confirm = PesanPeringatan.confirm(
             "Simpan Setting Server",
             "Apakah anda yakin ingin menyimpan settingan ini?\n\n" +

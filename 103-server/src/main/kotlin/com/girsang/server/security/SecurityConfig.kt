@@ -32,6 +32,9 @@ class SecurityConfig(
 
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
+        println("username: $username")
+        println("password: $password")
+        println("roles: $roles")
         http
             .csrf { it.disable() }
             .headers { it.frameOptions { frame -> frame.sameOrigin() } }

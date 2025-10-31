@@ -17,6 +17,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
     implementation("org.openjfx:javafx-controls:20")
     implementation("org.openjfx:javafx-fxml:20")
+    implementation("org.mindrot:jbcrypt:0.4")
 }
 
 javafx {
