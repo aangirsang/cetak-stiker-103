@@ -18,7 +18,7 @@ class ConfigServerController {
     @FXML private lateinit var txtConfirmPass: PasswordField
     @FXML private lateinit var txtRoles: TextField
 
-    private val configPath = Paths.get("config", "application.properties")
+    private val configPath = Paths.get("config", "server-config.properties")
     private val encoder = BCryptPasswordEncoder()
 
     @FXML
@@ -33,7 +33,7 @@ class ConfigServerController {
                 val defaultProps = Properties().apply {
                     setProperty("server.port", "8080")
                     setProperty("app.security.user", "admin")
-                    setProperty("app.security.password", encoder.encode("admin"))
+                    setProperty("app.security.password", encoder.encode("secret"))
                     setProperty("app.security.roles", "USER")
                 }
 

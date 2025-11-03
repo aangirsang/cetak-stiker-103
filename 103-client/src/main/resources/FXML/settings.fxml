@@ -10,39 +10,45 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 
-<AnchorPane prefHeight="191.0" prefWidth="328.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.controller.SettingsController">
+<AnchorPane prefHeight="215.0" prefWidth="328.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.controller.SettingsController">
     <children>
-      <TitledPane collapsible="false" prefHeight="207.0" prefWidth="328.0" text="Setting Server">
+      <TitledPane collapsible="false" prefHeight="220.0" prefWidth="328.0" text="Setting Server">
          <content>
-            <Pane prefHeight="472.0" prefWidth="415.0">
+            <Pane prefHeight="292.0" prefWidth="326.0">
                <children>
-                      <Label layoutX="16.0" layoutY="20.0" prefHeight="27.0" prefWidth="116.0" text="Server URL">
-                     <padding>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                     </padding>
-                  </Label>
-                      <TextField fx:id="txtUrl" layoutX="149.0" layoutY="21.0" />
       
-                                  <Label layoutX="17.0" layoutY="46.0" prefHeight="27.0" prefWidth="74.0" text="Username">
+                                  <Label layoutX="21.0" layoutY="72.0" prefHeight="27.0" prefWidth="74.0" text="Username">
                      <padding>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </padding>
                   </Label>
-                      <TextField fx:id="txtUser" layoutX="149.0" layoutY="47.0" />
+                      <TextField fx:id="txtUser" layoutX="153.0" layoutY="73.0" />
       
-                                  <Label layoutX="17.0" layoutY="73.0" text="Password">
+                                  <Label layoutX="21.0" layoutY="99.0" text="Password">
                      <padding>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </padding>
                   </Label>
-                      <PasswordField fx:id="txtPass" layoutX="149.0" layoutY="74.0" />
-                  <HBox alignment="CENTER" layoutX="19.0" layoutY="117.0" prefHeight="45.0" prefWidth="279.0" spacing="20.0">
+                      <PasswordField fx:id="txtPass" layoutX="153.0" layoutY="100.0" />
+                  <HBox alignment="CENTER" layoutX="24.0" layoutY="140.0" prefHeight="45.0" prefWidth="279.0" spacing="20.0">
                      <children>
             
                                         <Button alignment="CENTER" contentDisplay="CENTER" onAction="#simpan" prefWidth="80.0" text="Simpan" />
                         <Button alignment="CENTER" contentDisplay="CENTER" onAction="#batal" prefWidth="80.0" text="Batal" />
                      </children>
                   </HBox>
+                  <Label layoutX="20.0" layoutY="20.0" prefHeight="27.0" prefWidth="116.0" text="Server IP">
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                  </Label>
+                  <TextField fx:id="txtIP" layoutX="153.0" layoutY="21.0" />
+                  <Label layoutX="20.0" layoutY="46.0" prefHeight="27.0" prefWidth="116.0" text="Server Port">
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                  </Label>
+                  <TextField fx:id="txtPort" layoutX="153.0" layoutY="47.0" />
                </children>
             </Pane>
          </content>

@@ -6,28 +6,29 @@ import javafx.fxml.FXML
 import javafx.scene.control.PasswordField
 import javafx.scene.control.TextField
 import javafx.stage.Stage
-import org.mindrot.jbcrypt.BCrypt
 
 class SettingsController {
 
 
-    @FXML private lateinit var txtUrl: TextField
+    @FXML private lateinit var txtIP: TextField
+    @FXML private lateinit var txtPort: TextField
     @FXML private lateinit var txtUser: TextField
     @FXML private lateinit var txtPass: PasswordField
 
     @FXML
     fun initialize() {
-        txtUrl.text = ClientConfig.getUrl()
+        txtIP.text = ClientConfig.getIP()
+        txtPort.text = ClientConfig.getPort()
         txtUser.text = ClientConfig.getUser()
         txtPass.text = ClientConfig.getPass()
     }
 
     @FXML
     fun simpan() {
-        val pass = BCrypt.hashpw(txtPass.text, BCrypt.gensalt())
-        ClientConfig.setUrl(txtUrl.text)
+        ClientConfig.setIP(txtIP.text)
+        ClientConfig.setPort(txtPort.text)
         ClientConfig.setUser(txtUser.text)
-        ClientConfig.setPass(pass)
+        ClientConfig.setPass(txtPass.text)
         val confirm = PesanPeringatan.confirm(
             "Simpan Setting Server",
             "Apakah anda yakin ingin menyimpan settingan ini?\n\n" +
@@ -36,11 +37,11 @@ class SettingsController {
         if(confirm){
             ClientConfig.save()
             PesanPeringatan.info("Simpan Setting Server","Konfigurasi disimpan.\nSilakan restart aplikasi.")
-            (txtUrl.scene.window as Stage).close()
+            (txtIP.scene.window as Stage).close()
         }
     }
     @FXML
     fun batal() {
-        (txtUrl.scene.window as Stage).close()
+        (txtIP.scene.window as Stage).close()
     }
 }

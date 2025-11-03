@@ -47,6 +47,8 @@ dependencies {
 
     // DateTime (Jackson)
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
+
+    implementation("org.mindrot:jbcrypt:0.4")
 }
 
 kotlin {

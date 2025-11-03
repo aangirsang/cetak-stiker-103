@@ -33,20 +33,24 @@ class MainClientAppController : Initializable {
     @FXML private lateinit var mainPane: BorderPane
     @FXML lateinit var lblWaktu: Label
     @FXML private lateinit var lblStatusServer: Label
+    @FXML private lateinit var lblURL: Label
     @FXML private lateinit var mnPengguna: MenuItem
     @FXML private lateinit var mnUMKM: MenuItem
     @FXML private lateinit var mnDataStiker: MenuItem
     @FXML private lateinit var mnOrderStiker: MenuItem
 
-    var user = ClientConfig.getUser()
-    var pass = ClientConfig.getPass()
-    var url = ClientConfig.getUrl()
+    val user = ClientConfig.getUser()
+    val pass = ClientConfig.getPass()
+    val ip = ClientConfig.getIP()
+    val port = ClientConfig.getPort()
+    val url = "http://$ip:$port"
 
     override fun initialize(location: URL?, resources: ResourceBundle?) {
         mnPengguna.setOnAction { tampilFormPengguna() }
         mnUMKM.setOnAction { tampilFormUMKM() }
         mnDataStiker.setOnAction { tampilFormStiker() }
         mnOrderStiker.setOnAction { tampilOrdertiker() }
+        lblURL.text = ""
         pingServer()
     }
 
@@ -96,7 +100,10 @@ class MainClientAppController : Initializable {
         buildAuthHeader()?.let { builder.header("Authorization", it) }
         val req = builder.build()
         val resp = makeRequest(req)
-        Platform.runLater { lblStatusServer.text = "Aktif - Ping: ${resp.statusCode()} - ${resp.body()}" }
+        Platform.runLater {
+            lblStatusServer.text = "Aktif - Ping: ${resp.statusCode()} - ${resp.body()}"
+            lblURL.text = "URL Server:   $url"
+        }
     }
     fun pingServer() {
         val baseUrl = this.url.trim().removeSuffix("/")   // gunakan this.url, bukan url lokal

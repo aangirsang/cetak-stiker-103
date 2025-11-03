@@ -1,21 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="192.0" prefWidth="370.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.girsang.server.controller.UI.ServerAppController">
+<AnchorPane prefHeight="294.0" prefWidth="482.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.girsang.server.controller.UI.ServerAppController">
    <children>
-    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="188.0" prefWidth="413.0">
-         <children>
-            <Label layoutX="14.0" layoutY="14.0" text="Status Server" />
-            <Label layoutX="14.0" layoutY="40.0" text="IP Server" />
-            <Label fx:id="lblStatusServer" layoutX="113.0" layoutY="14.0" text="Status Server" />
-            <Label fx:id="lblIPServer" layoutX="113.0" layoutY="40.0" text="IP Server" />
-            <Button fx:id="btnStartServer" layoutX="76.0" layoutY="117.0" mnemonicParsing="false" text="Aktifkan Server" />
-            <Button fx:id="btnStopServer" layoutX="197.0" layoutY="117.0" mnemonicParsing="false" text="Matikan Server" />
-            <Button fx:id="btnPengaturan" layoutX="76.0" layoutY="149.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="218.0" text="Pengaturan Server" />
-         </children>
-      </AnchorPane>
+      <Label layoutX="24.0" layoutY="29.0" prefHeight="37.0" prefWidth="134.0" text="Status Server">
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
+      </Label>
+      <Label layoutX="24.0" layoutY="66.0" prefHeight="37.0" prefWidth="134.0" text="IP Server">
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
+      </Label>
+      <TextField fx:id="txtStatusServer" editable="false" layoutX="211.0" layoutY="35.0" prefHeight="25.0" prefWidth="231.0" />
+      <TextField fx:id="txtIPServer" editable="false" layoutX="211.0" layoutY="72.0" prefHeight="25.0" prefWidth="231.0" />
+      <Label layoutX="24.0" layoutY="103.0" prefHeight="37.0" prefWidth="134.0" text="Port Server">
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
+      </Label>
+      <TextField fx:id="txtPortServer" editable="false" layoutX="211.0" layoutY="109.0" prefHeight="25.0" prefWidth="231.0" />
+      <Label layoutX="24.0" layoutY="140.0" prefHeight="37.0" prefWidth="134.0" text="URL Server">
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
+      </Label>
+      <TextField fx:id="txtURLServer" editable="false" layoutX="211.0" layoutY="146.0" prefHeight="25.0" prefWidth="231.0" />
+      <Button fx:id="btnStartServer" layoutX="109.0" layoutY="197.0" mnemonicParsing="false" text="Aktifkan Server" />
+      <Button fx:id="btnStopServer" layoutX="230.0" layoutY="197.0" mnemonicParsing="false" text="Matikan Server" />
+      <Button fx:id="btnPengaturan" layoutX="109.0" layoutY="229.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="218.0" text="Pengaturan Server" />
    </children>
 </AnchorPane>

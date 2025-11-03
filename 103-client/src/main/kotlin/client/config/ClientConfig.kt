@@ -41,11 +41,13 @@ object ClientConfig {
         }
     }
 
-    fun getUrl(): String = props.getProperty("client.server.url", "")
+    fun getIP(): String = props.getProperty("client.server.ip", "")
+    fun getPort(): String = props.getProperty("client.server.port", "")
     fun getUser(): String = props.getProperty("client.server.user", "")
     fun getPass(): String = props.getProperty("client.server.pass", "")
 
-    fun setUrl(v: String) { props.setProperty("client.server.url", v) }
+    fun setIP(v: String) { props.setProperty("client.server.ip", v) }
+    fun setPort(v: String) { props.setProperty("client.server.port", v) }
     fun setUser(v: String) { props.setProperty("client.server.user", v) }
     fun setPass(v: String) { props.setProperty("client.server.pass", v) }
 }

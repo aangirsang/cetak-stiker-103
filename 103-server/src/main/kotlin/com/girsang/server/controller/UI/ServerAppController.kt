@@ -1,6 +1,7 @@
 package com.girsang.server.controller.UI
 
 import com.girsang.server.SpringApp
+import com.girsang.server.config.ServerPort
 import javafx.application.Platform
 import javafx.fxml.FXML
 import javafx.fxml.FXMLLoader
@@ -8,6 +9,7 @@ import javafx.fxml.Initializable
 import javafx.scene.Scene
 import javafx.scene.control.Button
 import javafx.scene.control.Label
+import javafx.scene.control.TextField
 import javafx.stage.Stage
 import kotlinx.coroutines.*
 import org.springframework.boot.SpringApplication
@@ -19,8 +21,10 @@ import java.util.*
 
 class ServerAppController : Initializable {
 
-    @FXML private lateinit var lblStatusServer: Label
-    @FXML private lateinit var lblIPServer: Label
+    @FXML private lateinit var txtStatusServer: TextField
+    @FXML private lateinit var txtIPServer: TextField
+    @FXML private lateinit var txtPortServer: TextField
+    @FXML private lateinit var txtURLServer: TextField
     @FXML private lateinit var btnStartServer: Button
     @FXML private lateinit var btnStopServer: Button
     @FXML private lateinit var btnPengaturan: Button
@@ -29,9 +33,15 @@ class ServerAppController : Initializable {
     private var serverJob: Job? = null
     private val controllerScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
+    private var port = 0
+    private val ip = getLocalIPv4Address()
+
+
     override fun initialize(location: URL?, resources: ResourceBundle?) {
-        lblStatusServer.text = "Server belum berjalan"
-        lblIPServer.text = getLocalIPv4Address() ?: "Tidak ditemukan"
+        txtStatusServer.text = "Server belum berjalan"
+        txtIPServer.text = getLocalIPv4Address() ?: "Tidak ditemukan"
+        txtPortServer.text = "-"
+        txtURLServer.text = "-"
         btnStopServer.isDisable = true
 
         btnStartServer.setOnAction { startServer() }
@@ -52,7 +62,11 @@ class ServerAppController : Initializable {
             try {
                 updateStatus("Menjalankan server...")
                 serverContext = SpringApplication.run(SpringApp::class.java)
-                updateStatus("Server berjalan di http://localhost:8080")
+
+                port = ServerPort.port
+                updateStatus("Server sudah berjalan")
+                txtPortServer.text = "$port"
+                txtURLServer.text = "http://$ip:$port"
             } catch (e: Exception) {
                 e.printStackTrace()
                 updateStatus("Gagal menjalankan server: ${e.message}")
@@ -74,6 +88,8 @@ class ServerAppController : Initializable {
                 Platform.runLater {
                     btnStartServer.isDisable = false
                     btnStopServer.isDisable = true
+                    txtPortServer.text = "-"
+                    txtURLServer.text = "-"
                 }
             } catch (e: Exception) {
                 updateStatus("Gagal menghentikan server: ${e.message}")
@@ -83,7 +99,7 @@ class ServerAppController : Initializable {
 
     private fun updateStatus(text: String) {
         Platform.runLater {
-            lblStatusServer.text = text
+            txtStatusServer.text = text
         }
     }
 

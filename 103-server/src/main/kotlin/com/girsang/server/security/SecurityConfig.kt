@@ -3,6 +3,7 @@ package com.girsang.server.security
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.PropertySource
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.core.userdetails.User
 import org.springframework.security.core.userdetails.UserDetailsService
@@ -11,6 +12,7 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager
 import org.springframework.security.web.SecurityFilterChain
 
 @Configuration
+@PropertySource("file:./config/server-config.properties")
 class SecurityConfig(
     @Value("\${app.security.user}") private val username: String,
     @Value("\${app.security.password}") private val password: String,

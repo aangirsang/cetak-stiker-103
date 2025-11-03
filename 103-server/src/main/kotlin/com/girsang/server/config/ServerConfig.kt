@@ -7,7 +7,7 @@ import java.util.*
 
 object ServerConfig {
 
-    private const val FILE_PATH = "/config/config.properties" // file external di folder aplikasi
+    private const val FILE_PATH = "./config/server-config.properties" // file external di folder aplikasi
 
     private val props = Properties()
 
@@ -23,7 +23,7 @@ object ServerConfig {
             } else {
                 // fallback ke classpath
                 val defaultProps = Properties()
-                javaClass.classLoader.getResourceAsStream("application.properties")?.use {
+                javaClass.classLoader.getResourceAsStream("./config/client-config.properties")?.use {
                     defaultProps.load(it)
                 }
 
@@ -37,15 +37,15 @@ object ServerConfig {
 
     fun save() {
         FileWriter(FILE_PATH).use { writer ->
-            props.store(writer, "Client Configuration")
+            props.store(writer, "Server Configuration")
         }
     }
 
-    fun getUrl(): String = props.getProperty("client.server.url", "")
-    fun getUser(): String = props.getProperty("client.server.user", "")
-    fun getPass(): String = props.getProperty("client.server.pass", "")
+    fun getUrl(): String = props.getProperty("server.server.url", "")
+    fun getUser(): String = props.getProperty("server.server.user", "")
+    fun getPass(): String = props.getProperty("server.server.pass", "")
 
-    fun setUrl(v: String) { props.setProperty("client.server.url", v) }
-    fun setUser(v: String) { props.setProperty("client.server.user", v) }
-    fun setPass(v: String) { props.setProperty("client.server.pass", v) }
+    fun setUrl(v: String) { props.setProperty("server.server.url", v) }
+    fun setUser(v: String) { props.setProperty("server.server.user", v) }
+    fun setPass(v: String) { props.setProperty("server.server.pass", v) }
 }

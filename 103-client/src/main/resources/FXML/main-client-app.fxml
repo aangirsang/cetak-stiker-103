@@ -39,6 +39,7 @@
 
     <bottom>
         <HBox spacing="10" style="-fx-padding: 10;">
+         <Label fx:id="lblURL" text="lblURL" />
             <Label text="Status Server:" />
             <Label fx:id="lblStatusServer" text="Offline" />
             <Region HBox.hgrow="ALWAYS" />

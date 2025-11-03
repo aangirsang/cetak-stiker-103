@@ -1,0 +1,17 @@
+2025-11-03 10:39:34 | [INFO] Client terhubung
+2025-11-03 11:16:24 | [INFO] Client terhubung
+2025-11-03 13:15:54 | [INFO] Client terhubung
+2025-11-03 13:16:29 | [INFO] Memuat semua data Pengguna
+2025-11-03 13:30:47 | [INFO] Client terhubung
+2025-11-03 13:31:02 | [INFO] Client terhubung
+2025-11-03 13:32:37 | [INFO] Client terhubung
+2025-11-03 13:35:25 | [INFO] Client terhubung
+2025-11-03 13:40:40 | [INFO] Client terhubung
+2025-11-03 13:42:05 | [INFO] Client terhubung
+2025-11-03 13:42:31 | [INFO] Memuat semua data Orderan
+2025-11-03 13:42:31 | [INFO] Memuat semua data Orderan
+2025-11-03 13:42:42 | [INFO] Simpan perubahan data Orderan OrderanStikerDTO(id=14, faktur=RBBB-2510014, tanggal=2025-10-14T11:48:03.341267, totalStiker=30, umkm=DataUmkm(id=4, namaPemilik=, namaUsaha=, kontak=, instagram=, alamat=, daftarStiker=[]), umkmNama=, rincian=[OrderanStikerRinciDTO(id=null, jumlah=15, stiker=DataStiker(id=5, dataUmkm=null, kodeStiker=, namaStiker=, panjang=0, lebar=0, catatan=, tglPembuatan=2025-11-03T13:42:41.041966100, tglPerubahan=2025-11-03T13:42:41.041966100), stikerId=null, kodeStiker=Dapurnyaa Ria - 002, stikerNama=Bulat, ukuran=1 x 1), OrderanStikerRinciDTO(id=null, jumlah=15, stiker=DataStiker(id=4, dataUmkm=null, kodeStiker=, namaStiker=, panjang=0, lebar=0, catatan=, tglPembuatan=2025-11-03T13:42:41.041966100, tglPerubahan=2025-11-03T13:42:41.041966100), stikerId=null, kodeStiker=Dapurnyaa Ria - 25001, stikerNama=Panjang, ukuran=13 x 1)])
+2025-11-03 13:42:45 | [INFO] Memuat semua data Orderan
+2025-11-03 13:42:45 | [INFO] Memuat semua data Orderan
+2025-11-03 13:43:40 | [INFO] Memuat semua data Orderan
+2025-11-03 13:43:41 | [INFO] Memuat semua data Orderan
