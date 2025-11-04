@@ -11,9 +11,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="756.0" prefWidth="1042.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.girsang.server.controller.UI.ServerAppController">
+<AnchorPane prefHeight="787.0" prefWidth="1042.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.girsang.server.controller.UI.ServerAppController">
    <children>
-      <TextArea fx:id="txtConsole" layoutX="14.0" layoutY="328.0" prefHeight="408.0" prefRowCount="20" prefWidth="1002.0" wrapText="false" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="328.0" >
+      <TextArea fx:id="txtConsole" layoutX="14.0" layoutY="353.0" prefHeight="414.0" prefRowCount="20" prefWidth="1002.0" wrapText="false" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="353.0">
          <font>
             <Font name="Consolas" size="12.0" />
          </font></TextArea>
@@ -49,12 +49,18 @@
             </Pane>
          </children>
       </HBox>
-      <VBox alignment="CENTER" layoutX="292.0" layoutY="210.0" prefHeight="98.0" prefWidth="459.0" spacing="10.0" style="-fx-border-color: #BABABA;      /* warna garis border */                         -fx-border-width: 1.3;           /* ketebalan border */                         -fx-border-radius: 8;         /* sudut border melengkung */                         -fx-background-radius: 8;     /* sudut background melengkung */                         -fx-border-style: solid;       /* jenis garis solid */                         -fx-background-color: #f4f4f4;" AnchorPane.leftAnchor="292.0" AnchorPane.rightAnchor="291.0">
+      <VBox alignment="CENTER" layoutX="292.0" layoutY="210.0" prefHeight="131.0" prefWidth="459.0" spacing="10.0" style="-fx-border-color: #BABABA;      /* warna garis border */                         -fx-border-width: 1.3;           /* ketebalan border */                         -fx-border-radius: 8;         /* sudut border melengkung */                         -fx-background-radius: 8;     /* sudut background melengkung */                         -fx-border-style: solid;       /* jenis garis solid */                         -fx-background-color: #f4f4f4;" AnchorPane.leftAnchor="292.0" AnchorPane.rightAnchor="291.0">
          <children>
             <HBox alignment="CENTER" prefHeight="20.0" prefWidth="399.0" spacing="30.0">
                <children>
                   <Button fx:id="btnStartServer" mnemonicParsing="false" text="Aktifkan Server" />
                   <Button fx:id="btnStopServer" mnemonicParsing="false" text="Matikan Server" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="25.0" prefWidth="375.0" spacing="30.0">
+               <children>
+                  <Button fx:id="btnBackUp" mnemonicParsing="false" prefHeight="25.0" prefWidth="140.0" text="Backup Database" />
+                  <Button fx:id="btnRestore" mnemonicParsing="false" prefHeight="25.0" prefWidth="140.0" text="Restore Database" />
                </children>
             </HBox>
             <Button fx:id="btnPengaturan" mnemonicParsing="false" prefHeight="25.0" prefWidth="218.0" text="Pengaturan Server" />

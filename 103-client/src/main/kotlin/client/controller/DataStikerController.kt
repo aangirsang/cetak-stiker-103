@@ -97,8 +97,8 @@ class DataStikerController : Initializable {
         txtPembuatan.isEditable = false
         txtPerubahan.isEditable = false
 
-        setupSearchListener(txtCariUMKM, "namaUsaha")
-        setupSearchListener(txtCariStiker, "namaStiker")
+        setupSearchListener(txtCariUMKM)
+        setupSearchListener(txtCariStiker)
 
         txtPanjang.textFormatter = TextFormatter<String> { change ->
             if (change.controlNewText.matches(Regex("\\d*"))) change else null
@@ -112,6 +112,7 @@ class DataStikerController : Initializable {
             }
         }
     }
+
     fun setClientController(controller: MainClientAppController) {
         this.clientController = controller  // ✅ simpan controller dulu
 
@@ -124,7 +125,7 @@ class DataStikerController : Initializable {
     fun setParentController(controller: MainClientAppController) {
         this.parentController = controller
     }
-    fun cariDataUmkm(paramName: String, keyword: String) {
+    fun cariDataUmkm(namaStiker: String, namaUsaha: String) {
         if (clientController?.url.isNullOrBlank()) {
             Platform.runLater {
                 PesanPeringatan.error("Data Stiker", "URL server belum di set")
@@ -134,7 +135,7 @@ class DataStikerController : Initializable {
 
         Thread {
             try {
-                val uri = "${clientController?.url}/api/dataStiker/cari?$paramName=${keyword}"
+                val uri = "${clientController?.url}/api/dataStiker/cari?namaStiker=${namaStiker}&namaUsaha=${namaUsaha}"
                 val builder = HttpRequest.newBuilder()
                     .uri(URI.create(uri))
                     .GET()
@@ -152,7 +153,7 @@ class DataStikerController : Initializable {
                         if (hasil.isEmpty()) {
                             // ⚠️ Kosongkan tabel jika tidak ada hasil
                             tblStiker.items = FXCollections.observableArrayList()
-                            PesanPeringatan.warning("Data Stiker", "Tidak ada data yang cocok untuk pencarian \"$keyword\"")
+                            PesanPeringatan.warning("Data Stiker", "Tidak ada data yang cocok untuk pencarian \"$namaStiker\" dan \"$namaUsaha\"")
                         } else {
                             // ✅ Tampilkan hasil pencarian
                             tblStiker.items = FXCollections.observableArrayList(hasil)
@@ -172,8 +173,8 @@ class DataStikerController : Initializable {
             }
         }.start()
     }
-    private fun setupSearchListener(field: TextField, paramName: String) {
-        field.textProperty().addListener { _, _, newValue ->
+    private fun setupSearchListener(textFiled: TextField) {
+        textFiled.textProperty().addListener { _, _, newValue ->
             searchThread?.interrupt() // hentikan thread sebelumnya jika user masih mengetik
             searchThread = Thread {
                 try {
@@ -183,7 +184,7 @@ class DataStikerController : Initializable {
                     if (newValue.isNullOrBlank()) {
                         Platform.runLater { loadDataStiker() }
                     } else {
-                        cariDataUmkm(paramName, newValue)
+                        cariDataUmkm(txtCariStiker.text, txtCariUMKM.text)
                     }
                 } catch (_: InterruptedException) {
                 }
@@ -331,8 +332,8 @@ class DataStikerController : Initializable {
 
         // Format tanggal pembuatan dan perubahan, aman jika null
         val formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy")
-        txtPembuatan.text = dto.tglPembuatan?.format(formatter) ?: ""
-        txtPerubahan.text = dto.tglPerubahan?.format(formatter) ?: ""
+        txtPembuatan.text = dto.tglPembuatan.format(formatter) ?: ""
+        txtPerubahan.text = dto.tglPerubahan.format(formatter) ?: ""
 
         // Ubah tombol menjadi "Ubah" agar tahu user sedang edit
         btnSimpan.text = "Ubah"
@@ -410,7 +411,7 @@ class DataStikerController : Initializable {
             if (konfirm) {
                 Thread {
                     try {
-                        val stiker = DataStikerDTO(
+                        val stikerDTO = DataStikerDTO(
                             id = id,
                             dataUmkmId = umkm?.id,
                             namaStiker = namaStiker,
@@ -418,7 +419,7 @@ class DataStikerController : Initializable {
                             lebar = lebar,
                             catatan = catatan,
                         )
-                        val body = json.encodeToString(stiker)
+                        val body = json.encodeToString(stikerDTO)
                         val builder = HttpRequest.newBuilder()
                             .uri(URI.create("${clientController?.url}/api/dataStiker/${id}"))
                             .PUT(HttpRequest.BodyPublishers.ofString(body))

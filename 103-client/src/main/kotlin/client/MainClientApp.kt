@@ -13,12 +13,20 @@ import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import javafx.event.ActionEvent
 import javafx.event.EventHandler
+import javafx.scene.image.Image
 import javafx.scene.layout.BorderPane
 import kotlin.jvm.java
 import kotlin.jvm.javaClass
 
 class MainClientApp : Application() {
     override fun start(stage: Stage) {
+        val icons = listOf(
+            Image("/img/icon/app-16.png"),
+            Image("/img/icon/app-32.png"),
+            Image("/img/icon/app-64.png"),
+            Image("/img/icon/app-128.png"),
+            Image("/img/icon/app-256.png")
+        )
         val loader = FXMLLoader(javaClass.getResource("/fxml/main-client-app.fxml"))
         val root = loader.load<BorderPane>()
         val controller = loader.getController<MainClientAppController>()
@@ -46,6 +54,7 @@ class MainClientApp : Application() {
         stage.title = "Aplikasi Client Data Cetak Stiker"
         stage.scene = Scene(root)
         stage.isMaximized = true
+        stage.icons.addAll(icons)
         stage.show()
     }
 }

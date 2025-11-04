@@ -18,11 +18,11 @@ class ServerUI : Application() {
 
     override fun start(primaryStage: Stage) {
         val icons = listOf(
-            Image("/img/app-16.png"),
-            Image("/img/app-32.png"),
-            Image("/img/app-64.png"),
-            Image("/img/app-128.png"),
-            Image("/img/app-256.png")
+            Image("/img/icon/app-16.png"),
+            Image("/img/icon/app-32.png"),
+            Image("/img/icon/app-64.png"),
+            Image("/img/icon/app-128.png"),
+            Image("/img/icon/app-256.png")
         )
         val fxml = javaClass.getResource("/FXML/server.fxml")
         val root = FXMLLoader.load<AnchorPane>(fxml)

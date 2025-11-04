@@ -90,20 +90,13 @@ class DataStikerController(private val service: DataStikerService) {
         }
     }
 
-
-
     @GetMapping("/cari")
-    fun cari(
-        @RequestParam(required = false) namaUsaha: String?,
+    fun search(
         @RequestParam(required = false) namaStiker: String?,
-    ): ResponseEntity<List<DataStiker>> {
-        SimpanFileLogger.info("Mencari data stiker berdasarkan filter: namaUsaha='{$namaUsaha}',  namaStiker='{$namaStiker}'")
-
-        val hasil = when {
-            !namaUsaha.isNullOrBlank() -> service.cariNamaUsahaLike(namaUsaha)
-            !namaStiker.isNullOrBlank() -> service.cariNamaStikerLike(namaStiker)
-            else -> emptyList()
-        }
-        return ResponseEntity.ok(hasil)
+        @RequestParam(required = false) namaUsaha: String?
+    ): List<DataStiker> {
+        return service.cariStiker(namaStiker, namaUsaha)
     }
+
+
 }

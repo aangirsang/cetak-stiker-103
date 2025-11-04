@@ -86,9 +86,9 @@ class DataUmkmController : Initializable{
             }
         }
 
-        setupSearchListener(txtCariNamaPemilik, "namaPemilik")
-        setupSearchListener(txtCariNamaUsaha, "namaUsaha")
-        setupSearchListener(txtCariAlamat, "alamat")
+        setupSearchListener(txtCariNamaPemilik)
+        setupSearchListener(txtCariNamaUsaha)
+        setupSearchListener(txtCariAlamat)
 
         tblUmkm.columnResizePolicy = TableView.UNCONSTRAINED_RESIZE_POLICY
 
@@ -114,7 +114,7 @@ class DataUmkmController : Initializable{
     fun setParentController(controller: MainClientAppController) {
         this.parentController = controller
     }
-    private fun setupSearchListener(field: TextField, paramName: String) {
+    private fun setupSearchListener(field: TextField) {
         field.textProperty().addListener { _, _, newValue ->
             searchThread?.interrupt() // hentikan thread sebelumnya jika user masih mengetik
             searchThread = Thread {
@@ -125,7 +125,9 @@ class DataUmkmController : Initializable{
                     if (newValue.isNullOrBlank()) {
                         Platform.runLater { loadDataUMKM() }
                     } else {
-                        cariDataUmkm(paramName, newValue)
+                        cariDataUmkm(txtCariNamaPemilik.text,
+                            txtCariNamaUsaha.text,
+                            txtAlamat.text)
                     }
                 } catch (_: InterruptedException) {
                 }
@@ -335,7 +337,7 @@ class DataUmkmController : Initializable{
             }.start()
         }
     }
-    fun cariDataUmkm(paramName: String, keyword: String) {
+    fun cariDataUmkm(namaPemilik: String, namaUsaha: String, alamat: String) {
         if (clientController?.url.isNullOrBlank()) {
             Platform.runLater { clientController?.showError("URL server belum di set") }
             return
@@ -343,7 +345,8 @@ class DataUmkmController : Initializable{
 
         Thread {
             try {
-                val uri = "${clientController?.url}/api/dataUmkm/cari?$paramName=${keyword}"
+                val uri = "${clientController?.url}/api/dataUmkm/cari?" +
+                        "namaPemilik=${namaPemilik}&namaUsaha=${namaUsaha}&alamat=${alamat}"
                 val builder = HttpRequest.newBuilder()
                     .uri(URI.create(uri))
                     .GET()
@@ -361,7 +364,9 @@ class DataUmkmController : Initializable{
                         if (hasil.isEmpty()) {
                             // ⚠️ Kosongkan tabel jika tidak ada hasil
                             tblUmkm.items = FXCollections.observableArrayList()
-                            clientController?.showInfo("Tidak ada data yang cocok untuk pencarian \"$keyword\"")
+                            clientController?.showInfo(
+                                "Tidak ada data yang cocok untuk pencarian " +
+                                        "\"$namaPemilik\" & \"$namaUsaha\"& \"$alamat\"")
                         } else {
                             // ✅ Tampilkan hasil pencarian
                             tblUmkm.items = FXCollections.observableArrayList(hasil)

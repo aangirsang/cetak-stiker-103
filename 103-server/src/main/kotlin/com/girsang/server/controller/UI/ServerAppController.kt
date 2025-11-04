@@ -2,6 +2,7 @@ package com.girsang.server.controller.UI
 
 import com.girsang.server.SpringApp
 import com.girsang.server.config.ServerPort
+import com.girsang.server.service.DatabaseBackupService
 import javafx.application.Platform
 import javafx.fxml.FXML
 import javafx.fxml.FXMLLoader
@@ -11,8 +12,10 @@ import javafx.scene.control.Button
 import javafx.scene.control.Label
 import javafx.scene.control.TextArea
 import javafx.scene.control.TextField
+import javafx.stage.FileChooser
 import javafx.stage.Stage
 import kotlinx.coroutines.*
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.SpringApplication
 import org.springframework.context.ConfigurableApplicationContext
 import java.net.Inet4Address
@@ -22,6 +25,9 @@ import java.util.*
 
 class ServerAppController : Initializable {
 
+    @Autowired
+    lateinit var backupService: DatabaseBackupService
+
     @FXML private lateinit var txtStatusServer: TextField
     @FXML private lateinit var txtIPServer: TextField
     @FXML private lateinit var txtPortServer: TextField
@@ -30,11 +36,14 @@ class ServerAppController : Initializable {
     @FXML private lateinit var btnStartServer: Button
     @FXML private lateinit var btnStopServer: Button
     @FXML private lateinit var btnPengaturan: Button
+    @FXML private lateinit var btnBackUp: Button
+    @FXML private lateinit var btnRestore: Button
 
     private var serverContext: ConfigurableApplicationContext? = null
     private var serverJob: Job? = null
     private val controllerScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
-
+    private fun appendConsole(msg: String) =
+        Platform.runLater { txtConsole.appendText(msg + "\n") }
     private var port = 0
     private val ip = getLocalIPv4Address()
 
@@ -52,6 +61,8 @@ class ServerAppController : Initializable {
         btnStartServer.setOnAction { startServer() }
         btnStopServer.setOnAction { stopServer() }
         btnPengaturan.setOnAction { tampilSettings() }
+        btnBackUp.setOnAction { manualBackup() }
+        btnRestore.setOnAction { pilihRestoreFile() }
 
         redirectConsoleToTextArea()
         println("Aplikasi GUI siap...")
@@ -154,5 +165,29 @@ class ServerAppController : Initializable {
 
         System.setOut(ps)
         System.setErr(ps)
+    }
+
+    @OptIn(DelicateCoroutinesApi::class)
+    private fun manualBackup() {
+        GlobalScope.launch {
+            appendConsole("🔄 Manual backup berjalan...")
+            val sql = backupService.backupSql()
+            val file = backupService.backupFile()
+            appendConsole("✅ Backup SQL: $sql")
+            appendConsole("✅ Backup DB: $file")
+        }
+    }
+
+    private fun pilihRestoreFile() {
+        val chooser = FileChooser()
+        chooser.extensionFilters.add(FileChooser.ExtensionFilter("SQL File", "*.sql"))
+        val file = chooser.showOpenDialog(null)
+        if (file != null) {
+            GlobalScope.launch {
+                appendConsole("♻️ Restore database...")
+                backupService.restoreFrom(file)
+                appendConsole("✅ Restore selesai. Restart server.")
+            }
+        }
     }
 }

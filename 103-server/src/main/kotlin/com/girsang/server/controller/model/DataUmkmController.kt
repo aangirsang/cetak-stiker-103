@@ -27,23 +27,23 @@ class DataUmkmController(private val service: DataUmkmService) {
             ResponseEntity.status(404).body(mapOf("message" to "Data UMKM dengan id $id tidak ditemukan"))
         }
 
-    @GetMapping("/cari")
-    fun cari(
-        @RequestParam(required = false) namaPemilik: String?,
-        @RequestParam(required = false) namaUsaha: String?,
-        @RequestParam(required = false) alamat: String?
-    ): ResponseEntity<List<DataUmkm>> {
-        SimpanFileLogger.info("Mencari data UMKM berdasarkan filter: namaPemilik='{$namaPemilik}', " +
-                "namaUsaha='{$namaUsaha}', alamat='{$alamat}'")
-
-        val hasil = when {
-            !namaPemilik.isNullOrBlank() -> service.cariNamaPemilikLike(namaPemilik)
-            !namaUsaha.isNullOrBlank() -> service.cariNamaUsahaLike(namaUsaha)
-            !alamat.isNullOrBlank() -> service.cariAlamatLike(alamat)
-            else -> emptyList()
-        }
-        return ResponseEntity.ok(hasil)
-    }
+//    @GetMapping("/cari")
+//    fun cari(
+//        @RequestParam(required = false) namaPemilik: String?,
+//        @RequestParam(required = false) namaUsaha: String?,
+//        @RequestParam(required = false) alamat: String?
+//    ): ResponseEntity<List<DataUmkm>> {
+//        SimpanFileLogger.info("Mencari data UMKM berdasarkan filter: namaPemilik='{$namaPemilik}', " +
+//                "namaUsaha='{$namaUsaha}', alamat='{$alamat}'")
+//
+//        val hasil = when {
+//            !namaPemilik.isNullOrBlank() -> service.cariNamaPemilikLike(namaPemilik)
+//            !namaUsaha.isNullOrBlank() -> service.cariNamaUsahaLike(namaUsaha)
+//            !alamat.isNullOrBlank() -> service.cariAlamatLike(alamat)
+//            else -> emptyList()
+//        }
+//        return ResponseEntity.ok(hasil)
+//    }
 
     @PostMapping
     fun simpan(@RequestBody dataUmkm: DataUmkm): ResponseEntity<DataUmkm> {
@@ -79,4 +79,13 @@ class DataUmkmController(private val service: DataUmkmService) {
             SimpanFileLogger.error("Error tidak terduga saat menghapus UMKM id=$id: ${e.message}")
             ResponseEntity.status(500).body(mapOf("message" to "Terjadi kesalahan pada server"))
         }
+
+    @GetMapping("/cari")
+    fun cariUMKM(
+        @RequestParam(required = false) namaPemilik: String?,
+        @RequestParam(required = false) namaUsaha: String?,
+        @RequestParam(required = false) alamat: String?
+    ): List<DataUmkm> {
+        return service.cariUMKM(namaPemilik, namaUsaha, alamat)
+    }
 }

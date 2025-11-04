@@ -12,14 +12,14 @@ class DataUmkmService(private val repo: DataUmkmRepository) {
     fun cariById(id: Long): DataUmkm =
         repo.findById(id).orElseThrow { NoSuchElementException("Data UMKM dengan id $id tidak ditemukan") }
 
-    fun cariNamaPemilikLike(keyword: String): List<DataUmkm> =
-        repo.findByNamaPemilikContainingIgnoreCase(keyword.trim())
-
-    fun cariNamaUsahaLike(keyword: String): List<DataUmkm> =
-        repo.findByNamaUsahaContainingIgnoreCase(keyword.trim())
-
-    fun cariAlamatLike(keyword: String): List<DataUmkm> =
-        repo.findByAlamatContainingIgnoreCase(keyword.trim())
+//    fun cariNamaPemilikLike(keyword: String): List<DataUmkm> =
+//        repo.findByNamaPemilikContainingIgnoreCase(keyword.trim())
+//
+//    fun cariNamaUsahaLike(keyword: String): List<DataUmkm> =
+//        repo.findByNamaUsahaContainingIgnoreCase(keyword.trim())
+//
+//    fun cariAlamatLike(keyword: String): List<DataUmkm> =
+//        repo.findByAlamatContainingIgnoreCase(keyword.trim())
 
     fun simpan(dataUmkm: DataUmkm): DataUmkm =
         repo.save(dataUmkm)
@@ -45,5 +45,13 @@ class DataUmkmService(private val repo: DataUmkmRepository) {
         } else {
             throw NoSuchElementException("Data UMKM dengan id $id tidak ditemukan")
         }
+    }
+
+    fun cariUMKM(namaPemilik: String?, namaUsaha: String?, alamat: String?): List<DataUmkm>{
+        val keyPemilik = namaPemilik?.trim()?.takeIf { it.isNotEmpty() }
+        val keyUsaha = namaUsaha?.trim()?.takeIf { it.isNotEmpty() }
+        val keyAlamat = alamat?.trim()?.takeIf { it.isNotEmpty() }
+
+        return repo.cariUMKM(keyPemilik, keyUsaha, keyAlamat)
     }
 }

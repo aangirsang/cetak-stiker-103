@@ -45,7 +45,7 @@ class DataStikerService(
 
         //val jumlahSebelumnya = repo.findAll().count { it.dataUmkm?.id == umkm.id }
         val umkmIdNonNull: Long = umkm.id ?: throw IllegalArgumentException("UMKM Id tidak boleh null")
-        val jumlahSebelumnya = repo.findLastKodeStiker(umkmIdNonNull)
+        //val jumlahSebelumnya = repo.findLastKodeStiker(umkmIdNonNull)
 
         val stiker = DataStiker(
             dataUmkm = umkm,
@@ -82,10 +82,10 @@ class DataStikerService(
         repo.deleteById(id)
     }
 
-    fun cariNamaStikerLike(keyword: String): List<DataStiker> =
-        repo.findByNamaStikerContainingIgnoreCase(keyword.trim())
+    fun cariStiker(namaStiker: String?, namaUsaha: String?): List<DataStiker> {
+        val keyStiker = namaStiker?.trim()?.takeIf { it.isNotEmpty() }
+        val keyUmkm = namaUsaha?.trim()?.takeIf { it.isNotEmpty() }
 
-    fun cariNamaUsahaLike(keyword: String): List<DataStiker> =
-        repo.findByDataUmkm_NamaUsahaContainingIgnoreCase(keyword.trim())
-
+        return repo.cariStiker(keyStiker, keyUmkm)
+    }
 }

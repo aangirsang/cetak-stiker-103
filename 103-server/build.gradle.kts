@@ -30,6 +30,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 
     // Database
+    implementation("com.h2database:h2")
     runtimeOnly("com.h2database:h2")
 
     // Testing
