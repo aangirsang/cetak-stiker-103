@@ -9,6 +9,7 @@ import javafx.fxml.Initializable
 import javafx.scene.Scene
 import javafx.scene.control.Button
 import javafx.scene.control.Label
+import javafx.scene.control.TextArea
 import javafx.scene.control.TextField
 import javafx.stage.Stage
 import kotlinx.coroutines.*
@@ -25,6 +26,7 @@ class ServerAppController : Initializable {
     @FXML private lateinit var txtIPServer: TextField
     @FXML private lateinit var txtPortServer: TextField
     @FXML private lateinit var txtURLServer: TextField
+    @FXML private lateinit var txtConsole: TextArea
     @FXML private lateinit var btnStartServer: Button
     @FXML private lateinit var btnStopServer: Button
     @FXML private lateinit var btnPengaturan: Button
@@ -43,10 +45,16 @@ class ServerAppController : Initializable {
         txtPortServer.text = "-"
         txtURLServer.text = "-"
         btnStopServer.isDisable = true
+        txtConsole.isEditable = false
+        txtConsole.style = "-fx-control-inner-background: black; -fx-text-fill: white; -fx-font-family: Consolas; -fx-font-size: 12px;"
+
 
         btnStartServer.setOnAction { startServer() }
         btnStopServer.setOnAction { stopServer() }
         btnPengaturan.setOnAction { tampilSettings() }
+
+        redirectConsoleToTextArea()
+        println("Aplikasi GUI siap...")
     }
 
     private fun startServer() {
@@ -57,6 +65,7 @@ class ServerAppController : Initializable {
 
         btnStartServer.isDisable = true
         btnStopServer.isDisable = false
+        txtConsole.clear()
 
         serverJob = controllerScope.launch {
             try {
@@ -120,5 +129,30 @@ class ServerAppController : Initializable {
         val loader = FXMLLoader(javaClass.getResource("/fxml/config_server.fxml"))
         stage.scene = Scene(loader.load())
         stage.show()
+    }
+
+    //menampilkan isi consol kedalam txtConsol
+    private fun redirectConsoleToTextArea() {
+        val buffer = StringBuilder()
+
+        val ps = java.io.PrintStream(object : java.io.OutputStream() {
+            override fun write(b: Int) {
+                val char = b.toChar()
+                buffer.append(char)
+
+                if (char == '\n') {
+                    val line = buffer.toString()
+                    buffer.clear()
+
+                    Platform.runLater {
+                        var clean = line.replace(Regex("\u001B\\[[;\\d]*m"), "")
+                        txtConsole.appendText(clean)
+                    }
+                }
+            }
+        })
+
+        System.setOut(ps)
+        System.setErr(ps)
     }
 }

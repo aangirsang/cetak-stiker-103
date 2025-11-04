@@ -93,7 +93,7 @@ class OrderanStikerService(
             1
         }
 
-        val urutStr = String.format("%03d", nextUrut)
+        val urutStr = String.format("%04d", nextUrut)
         return "RBBB-${tahunShort}${bulan}${urutStr}"
     }
 }

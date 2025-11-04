@@ -1,0 +1,15 @@
+2025-11-04 09:36:46 | [INFO] Client terhubung
+2025-11-04 09:36:53 | [INFO] Memuat semua data UMKM
+2025-11-04 09:39:16 | [INFO] Client terhubung
+2025-11-04 10:11:22 | [INFO] Memuat semua data Orderan
+2025-11-04 10:13:25 | [INFO] Client terhubung
+2025-11-04 10:27:29 | [INFO] Client terhubung
+2025-11-04 10:27:32 | [INFO] Memuat semua data Pengguna
+2025-11-04 10:28:05 | [INFO] Memuat semua data Orderan
+2025-11-04 10:31:39 | [INFO] Client terhubung
+2025-11-04 10:31:57 | [INFO] Memuat semua data UMKM
+2025-11-04 10:31:57 | [INFO] Memuat semua data UMKM
+2025-11-04 10:32:10 | [INFO] Simpan data Orderan RBBB-25110015, 2025-11-04T10:32:10.424729100, ,  3
+2025-11-04 10:32:14 | [INFO] Memuat semua data Orderan
+2025-11-04 10:32:15 | [INFO] Memuat semua data Orderan
+2025-11-04 10:32:21 | [INFO] Memuat semua data Orderan

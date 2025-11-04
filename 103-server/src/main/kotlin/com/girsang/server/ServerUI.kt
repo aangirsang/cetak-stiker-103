@@ -4,6 +4,7 @@ import javafx.application.Application
 import javafx.application.Platform
 import javafx.fxml.FXMLLoader
 import javafx.scene.Scene
+import javafx.scene.image.Image
 import javafx.scene.layout.AnchorPane
 import javafx.stage.Stage
 import kotlinx.coroutines.Dispatchers
@@ -16,11 +17,19 @@ class ServerUI : Application() {
 
 
     override fun start(primaryStage: Stage) {
+        val icons = listOf(
+            Image("/img/app-16.png"),
+            Image("/img/app-32.png"),
+            Image("/img/app-64.png"),
+            Image("/img/app-128.png"),
+            Image("/img/app-256.png")
+        )
         val fxml = javaClass.getResource("/FXML/server.fxml")
         val root = FXMLLoader.load<AnchorPane>(fxml)
         val scene = Scene(root)
         primaryStage.title = "Server Data Cetak Stiker"
         primaryStage.scene = scene
+        primaryStage.icons.addAll(icons)
         primaryStage.show()
         primaryStage.setOnCloseRequest {
             println("Aplikasi ditutup, menjalankan cleanup...")

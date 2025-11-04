@@ -1,305 +1,106 @@
-2025-11-03 13:16:29 DEBUG [http-nio-8090-exec-5] org.hibernate.SQL - select p1_0.id,p1_0.kata_sandi,p1_0.nama_akun,p1_0.nama_lengkap from pengguna p1_0
-2025-11-03 13:42:28 DEBUG [http-nio-8090-exec-4] org.hibernate.SQL - 
+2026-01-04 10:34:11 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
             SELECT faktur 
             FROM orderan_stiker 
             WHERE YEAR(tanggal) = ? 
             ORDER BY faktur DESC 
             LIMIT 1
         
-2025-11-03 13:42:28 TRACE [http-nio-8090-exec-4] org.hibernate.orm.jdbc.bind - binding parameter (1:INTEGER) <- [2025]
-2025-11-03 13:42:31 DEBUG [http-nio-8090-exec-5] org.hibernate.SQL - select os1_0.id,os1_0.faktur,os1_0.tanggal,os1_0.total_stiker,os1_0.umkm_id from orderan_stiker os1_0
-2025-11-03 13:42:31 DEBUG [http-nio-8090-exec-5] org.hibernate.SQL - select du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha from data_umkm du1_0 where du1_0.id=?
-2025-11-03 13:42:31 TRACE [http-nio-8090-exec-5] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [2]
-2025-11-03 13:42:31 DEBUG [http-nio-8090-exec-5] org.hibernate.SQL - select du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha from data_umkm du1_0 where du1_0.id=?
-2025-11-03 13:42:31 TRACE [http-nio-8090-exec-5] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [3]
-2025-11-03 13:42:31 DEBUG [http-nio-8090-exec-5] org.hibernate.SQL - select du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha from data_umkm du1_0 where du1_0.id=?
-2025-11-03 13:42:31 TRACE [http-nio-8090-exec-5] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [4]
-2025-11-03 13:42:31 DEBUG [http-nio-8090-exec-5] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:42:31 TRACE [http-nio-8090-exec-5] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
-2025-11-03 13:42:31 DEBUG [http-nio-8090-exec-5] org.hibernate.SQL - select ds1_0.id,ds1_0.catatan,ds1_0.data_umkm_id,du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha,ds1_0.kode_stiker,ds1_0.lebar,ds1_0.nama_stiker,ds1_0.panjang,ds1_0.tgl_pembuatan,ds1_0.tgl_perubahan from data_stiker ds1_0 join data_umkm du1_0 on du1_0.id=ds1_0.data_umkm_id where ds1_0.id=?
-2025-11-03 13:42:31 TRACE [http-nio-8090-exec-5] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
-2025-11-03 13:42:31 DEBUG [http-nio-8090-exec-5] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:42:31 TRACE [http-nio-8090-exec-5] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [2]
-2025-11-03 13:42:31 DEBUG [http-nio-8090-exec-5] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:42:31 TRACE [http-nio-8090-exec-5] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [3]
-2025-11-03 13:42:31 DEBUG [http-nio-8090-exec-5] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:42:31 TRACE [http-nio-8090-exec-5] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [4]
-2025-11-03 13:42:31 DEBUG [http-nio-8090-exec-5] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:42:31 TRACE [http-nio-8090-exec-5] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [5]
-2025-11-03 13:42:31 DEBUG [http-nio-8090-exec-5] org.hibernate.SQL - select ds1_0.id,ds1_0.catatan,ds1_0.data_umkm_id,du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha,ds1_0.kode_stiker,ds1_0.lebar,ds1_0.nama_stiker,ds1_0.panjang,ds1_0.tgl_pembuatan,ds1_0.tgl_perubahan from data_stiker ds1_0 join data_umkm du1_0 on du1_0.id=ds1_0.data_umkm_id where ds1_0.id=?
-2025-11-03 13:42:31 TRACE [http-nio-8090-exec-5] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [2]
-2025-11-03 13:42:31 DEBUG [http-nio-8090-exec-5] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:42:31 TRACE [http-nio-8090-exec-5] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [6]
-2025-11-03 13:42:31 DEBUG [http-nio-8090-exec-5] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:42:31 TRACE [http-nio-8090-exec-5] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [7]
-2025-11-03 13:42:31 DEBUG [http-nio-8090-exec-5] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:42:31 TRACE [http-nio-8090-exec-5] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [8]
-2025-11-03 13:42:31 DEBUG [http-nio-8090-exec-5] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:42:31 TRACE [http-nio-8090-exec-5] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [9]
-2025-11-03 13:42:31 DEBUG [http-nio-8090-exec-5] org.hibernate.SQL - select ds1_0.id,ds1_0.catatan,ds1_0.data_umkm_id,du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha,ds1_0.kode_stiker,ds1_0.lebar,ds1_0.nama_stiker,ds1_0.panjang,ds1_0.tgl_pembuatan,ds1_0.tgl_perubahan from data_stiker ds1_0 join data_umkm du1_0 on du1_0.id=ds1_0.data_umkm_id where ds1_0.id=?
-2025-11-03 13:42:31 TRACE [http-nio-8090-exec-5] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [4]
-2025-11-03 13:42:31 DEBUG [http-nio-8090-exec-5] org.hibernate.SQL - select ds1_0.id,ds1_0.catatan,ds1_0.data_umkm_id,du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha,ds1_0.kode_stiker,ds1_0.lebar,ds1_0.nama_stiker,ds1_0.panjang,ds1_0.tgl_pembuatan,ds1_0.tgl_perubahan from data_stiker ds1_0 join data_umkm du1_0 on du1_0.id=ds1_0.data_umkm_id where ds1_0.id=?
-2025-11-03 13:42:31 TRACE [http-nio-8090-exec-5] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [5]
-2025-11-03 13:42:31 DEBUG [http-nio-8090-exec-5] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:42:31 TRACE [http-nio-8090-exec-5] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [10]
-2025-11-03 13:42:31 DEBUG [http-nio-8090-exec-5] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:42:31 TRACE [http-nio-8090-exec-5] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [12]
-2025-11-03 13:42:31 DEBUG [http-nio-8090-exec-5] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:42:31 TRACE [http-nio-8090-exec-5] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [13]
-2025-11-03 13:42:31 DEBUG [http-nio-8090-exec-5] org.hibernate.SQL - select ds1_0.id,ds1_0.catatan,ds1_0.data_umkm_id,du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha,ds1_0.kode_stiker,ds1_0.lebar,ds1_0.nama_stiker,ds1_0.panjang,ds1_0.tgl_pembuatan,ds1_0.tgl_perubahan from data_stiker ds1_0 join data_umkm du1_0 on du1_0.id=ds1_0.data_umkm_id where ds1_0.id=?
-2025-11-03 13:42:31 TRACE [http-nio-8090-exec-5] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [7]
-2025-11-03 13:42:31 DEBUG [http-nio-8090-exec-5] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:42:31 TRACE [http-nio-8090-exec-5] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [14]
-2025-11-03 13:42:31 DEBUG [http-nio-8090-exec-6] org.hibernate.SQL - select os1_0.id,os1_0.faktur,os1_0.tanggal,os1_0.total_stiker,os1_0.umkm_id from orderan_stiker os1_0
-2025-11-03 13:42:31 DEBUG [http-nio-8090-exec-6] org.hibernate.SQL - select du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha from data_umkm du1_0 where du1_0.id=?
-2025-11-03 13:42:31 TRACE [http-nio-8090-exec-6] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [2]
-2025-11-03 13:42:31 DEBUG [http-nio-8090-exec-6] org.hibernate.SQL - select du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha from data_umkm du1_0 where du1_0.id=?
-2025-11-03 13:42:31 TRACE [http-nio-8090-exec-6] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [3]
-2025-11-03 13:42:31 DEBUG [http-nio-8090-exec-6] org.hibernate.SQL - select du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha from data_umkm du1_0 where du1_0.id=?
-2025-11-03 13:42:31 TRACE [http-nio-8090-exec-6] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [4]
-2025-11-03 13:42:31 DEBUG [http-nio-8090-exec-6] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:42:31 TRACE [http-nio-8090-exec-6] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
-2025-11-03 13:42:31 DEBUG [http-nio-8090-exec-6] org.hibernate.SQL - select ds1_0.id,ds1_0.catatan,ds1_0.data_umkm_id,du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha,ds1_0.kode_stiker,ds1_0.lebar,ds1_0.nama_stiker,ds1_0.panjang,ds1_0.tgl_pembuatan,ds1_0.tgl_perubahan from data_stiker ds1_0 join data_umkm du1_0 on du1_0.id=ds1_0.data_umkm_id where ds1_0.id=?
-2025-11-03 13:42:31 TRACE [http-nio-8090-exec-6] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
-2025-11-03 13:42:31 DEBUG [http-nio-8090-exec-6] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:42:31 TRACE [http-nio-8090-exec-6] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [2]
-2025-11-03 13:42:31 DEBUG [http-nio-8090-exec-6] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:42:31 TRACE [http-nio-8090-exec-6] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [3]
-2025-11-03 13:42:31 DEBUG [http-nio-8090-exec-6] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:42:31 TRACE [http-nio-8090-exec-6] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [4]
-2025-11-03 13:42:31 DEBUG [http-nio-8090-exec-6] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:42:31 TRACE [http-nio-8090-exec-6] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [5]
-2025-11-03 13:42:31 DEBUG [http-nio-8090-exec-6] org.hibernate.SQL - select ds1_0.id,ds1_0.catatan,ds1_0.data_umkm_id,du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha,ds1_0.kode_stiker,ds1_0.lebar,ds1_0.nama_stiker,ds1_0.panjang,ds1_0.tgl_pembuatan,ds1_0.tgl_perubahan from data_stiker ds1_0 join data_umkm du1_0 on du1_0.id=ds1_0.data_umkm_id where ds1_0.id=?
-2025-11-03 13:42:31 TRACE [http-nio-8090-exec-6] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [2]
-2025-11-03 13:42:31 DEBUG [http-nio-8090-exec-6] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:42:31 TRACE [http-nio-8090-exec-6] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [6]
-2025-11-03 13:42:31 DEBUG [http-nio-8090-exec-6] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:42:31 TRACE [http-nio-8090-exec-6] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [7]
-2025-11-03 13:42:31 DEBUG [http-nio-8090-exec-6] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:42:31 TRACE [http-nio-8090-exec-6] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [8]
-2025-11-03 13:42:31 DEBUG [http-nio-8090-exec-6] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:42:31 TRACE [http-nio-8090-exec-6] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [9]
-2025-11-03 13:42:31 DEBUG [http-nio-8090-exec-6] org.hibernate.SQL - select ds1_0.id,ds1_0.catatan,ds1_0.data_umkm_id,du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha,ds1_0.kode_stiker,ds1_0.lebar,ds1_0.nama_stiker,ds1_0.panjang,ds1_0.tgl_pembuatan,ds1_0.tgl_perubahan from data_stiker ds1_0 join data_umkm du1_0 on du1_0.id=ds1_0.data_umkm_id where ds1_0.id=?
-2025-11-03 13:42:31 TRACE [http-nio-8090-exec-6] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [4]
-2025-11-03 13:42:31 DEBUG [http-nio-8090-exec-6] org.hibernate.SQL - select ds1_0.id,ds1_0.catatan,ds1_0.data_umkm_id,du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha,ds1_0.kode_stiker,ds1_0.lebar,ds1_0.nama_stiker,ds1_0.panjang,ds1_0.tgl_pembuatan,ds1_0.tgl_perubahan from data_stiker ds1_0 join data_umkm du1_0 on du1_0.id=ds1_0.data_umkm_id where ds1_0.id=?
-2025-11-03 13:42:31 TRACE [http-nio-8090-exec-6] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [5]
-2025-11-03 13:42:31 DEBUG [http-nio-8090-exec-6] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:42:31 TRACE [http-nio-8090-exec-6] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [10]
-2025-11-03 13:42:31 DEBUG [http-nio-8090-exec-6] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:42:31 TRACE [http-nio-8090-exec-6] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [12]
-2025-11-03 13:42:31 DEBUG [http-nio-8090-exec-6] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:42:31 TRACE [http-nio-8090-exec-6] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [13]
-2025-11-03 13:42:31 DEBUG [http-nio-8090-exec-6] org.hibernate.SQL - select ds1_0.id,ds1_0.catatan,ds1_0.data_umkm_id,du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha,ds1_0.kode_stiker,ds1_0.lebar,ds1_0.nama_stiker,ds1_0.panjang,ds1_0.tgl_pembuatan,ds1_0.tgl_perubahan from data_stiker ds1_0 join data_umkm du1_0 on du1_0.id=ds1_0.data_umkm_id where ds1_0.id=?
-2025-11-03 13:42:31 TRACE [http-nio-8090-exec-6] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [7]
-2025-11-03 13:42:31 DEBUG [http-nio-8090-exec-6] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:42:31 TRACE [http-nio-8090-exec-6] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [14]
-2025-11-03 13:42:34 DEBUG [http-nio-8090-exec-7] org.hibernate.SQL - select os1_0.id,os1_0.faktur,os1_0.tanggal,os1_0.total_stiker,u1_0.id,u1_0.alamat,u1_0.instagram,u1_0.kontak,u1_0.nama_pemilik,u1_0.nama_usaha from orderan_stiker os1_0 left join data_umkm u1_0 on u1_0.id=os1_0.umkm_id where os1_0.id=?
-2025-11-03 13:42:34 TRACE [http-nio-8090-exec-7] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [14]
-2025-11-03 13:42:34 DEBUG [http-nio-8090-exec-7] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:42:34 TRACE [http-nio-8090-exec-7] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [14]
-2025-11-03 13:42:34 DEBUG [http-nio-8090-exec-7] org.hibernate.SQL - select ds1_0.id,ds1_0.catatan,ds1_0.data_umkm_id,du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha,ds1_0.kode_stiker,ds1_0.lebar,ds1_0.nama_stiker,ds1_0.panjang,ds1_0.tgl_pembuatan,ds1_0.tgl_perubahan from data_stiker ds1_0 join data_umkm du1_0 on du1_0.id=ds1_0.data_umkm_id where ds1_0.id=?
-2025-11-03 13:42:34 TRACE [http-nio-8090-exec-7] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [5]
-2025-11-03 13:42:34 DEBUG [http-nio-8090-exec-7] org.hibernate.SQL - select ds1_0.id,ds1_0.catatan,ds1_0.data_umkm_id,du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha,ds1_0.kode_stiker,ds1_0.lebar,ds1_0.nama_stiker,ds1_0.panjang,ds1_0.tgl_pembuatan,ds1_0.tgl_perubahan from data_stiker ds1_0 join data_umkm du1_0 on du1_0.id=ds1_0.data_umkm_id where ds1_0.id=?
-2025-11-03 13:42:34 TRACE [http-nio-8090-exec-7] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [4]
-2025-11-03 13:42:42 DEBUG [http-nio-8090-exec-9] org.hibernate.SQL - select os1_0.id,os1_0.faktur,os1_0.tanggal,os1_0.total_stiker,u1_0.id,u1_0.alamat,u1_0.instagram,u1_0.kontak,u1_0.nama_pemilik,u1_0.nama_usaha from orderan_stiker os1_0 left join data_umkm u1_0 on u1_0.id=os1_0.umkm_id where os1_0.id=?
-2025-11-03 13:42:42 TRACE [http-nio-8090-exec-9] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [14]
-2025-11-03 13:42:42 DEBUG [http-nio-8090-exec-9] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:42:42 TRACE [http-nio-8090-exec-9] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [14]
-2025-11-03 13:42:42 DEBUG [http-nio-8090-exec-9] org.hibernate.SQL - insert into orderan_stiker_rinci (jumlah,orderan_id,stiker_id,id) values (?,?,?,default)
-2025-11-03 13:42:42 TRACE [http-nio-8090-exec-9] org.hibernate.orm.jdbc.bind - binding parameter (1:INTEGER) <- [15]
-2025-11-03 13:42:42 TRACE [http-nio-8090-exec-9] org.hibernate.orm.jdbc.bind - binding parameter (2:BIGINT) <- [14]
-2025-11-03 13:42:42 TRACE [http-nio-8090-exec-9] org.hibernate.orm.jdbc.bind - binding parameter (3:BIGINT) <- [5]
-2025-11-03 13:42:42 DEBUG [http-nio-8090-exec-9] org.hibernate.SQL - insert into orderan_stiker_rinci (jumlah,orderan_id,stiker_id,id) values (?,?,?,default)
-2025-11-03 13:42:42 TRACE [http-nio-8090-exec-9] org.hibernate.orm.jdbc.bind - binding parameter (1:INTEGER) <- [15]
-2025-11-03 13:42:42 TRACE [http-nio-8090-exec-9] org.hibernate.orm.jdbc.bind - binding parameter (2:BIGINT) <- [14]
-2025-11-03 13:42:42 TRACE [http-nio-8090-exec-9] org.hibernate.orm.jdbc.bind - binding parameter (3:BIGINT) <- [4]
-2025-11-03 13:42:42 DEBUG [http-nio-8090-exec-9] org.hibernate.SQL - update orderan_stiker set faktur=?,tanggal=?,total_stiker=?,umkm_id=? where id=?
-2025-11-03 13:42:42 TRACE [http-nio-8090-exec-9] org.hibernate.orm.jdbc.bind - binding parameter (1:VARCHAR) <- [RBBB-2510014]
-2025-11-03 13:42:42 TRACE [http-nio-8090-exec-9] org.hibernate.orm.jdbc.bind - binding parameter (2:TIMESTAMP) <- [2025-10-14T11:48:03.341267]
-2025-11-03 13:42:42 TRACE [http-nio-8090-exec-9] org.hibernate.orm.jdbc.bind - binding parameter (3:INTEGER) <- [30]
-2025-11-03 13:42:42 TRACE [http-nio-8090-exec-9] org.hibernate.orm.jdbc.bind - binding parameter (4:BIGINT) <- [4]
-2025-11-03 13:42:42 TRACE [http-nio-8090-exec-9] org.hibernate.orm.jdbc.bind - binding parameter (5:BIGINT) <- [14]
-2025-11-03 13:42:42 DEBUG [http-nio-8090-exec-9] org.hibernate.SQL - delete from orderan_stiker_rinci where id=?
-2025-11-03 13:42:42 TRACE [http-nio-8090-exec-9] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [33]
-2025-11-03 13:42:42 DEBUG [http-nio-8090-exec-9] org.hibernate.SQL - delete from orderan_stiker_rinci where id=?
-2025-11-03 13:42:42 TRACE [http-nio-8090-exec-9] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [34]
-2025-11-03 13:42:43 DEBUG [http-nio-8090-exec-10] org.hibernate.SQL - 
-            SELECT faktur 
-            FROM orderan_stiker 
-            WHERE YEAR(tanggal) = ? 
-            ORDER BY faktur DESC 
-            LIMIT 1
-        
-2025-11-03 13:42:43 TRACE [http-nio-8090-exec-10] org.hibernate.orm.jdbc.bind - binding parameter (1:INTEGER) <- [2025]
-2025-11-03 13:42:45 DEBUG [http-nio-8090-exec-1] org.hibernate.SQL - select os1_0.id,os1_0.faktur,os1_0.tanggal,os1_0.total_stiker,os1_0.umkm_id from orderan_stiker os1_0
-2025-11-03 13:42:45 DEBUG [http-nio-8090-exec-1] org.hibernate.SQL - select du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha from data_umkm du1_0 where du1_0.id=?
-2025-11-03 13:42:45 TRACE [http-nio-8090-exec-1] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [2]
-2025-11-03 13:42:45 DEBUG [http-nio-8090-exec-1] org.hibernate.SQL - select du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha from data_umkm du1_0 where du1_0.id=?
-2025-11-03 13:42:45 TRACE [http-nio-8090-exec-1] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [3]
-2025-11-03 13:42:45 DEBUG [http-nio-8090-exec-1] org.hibernate.SQL - select du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha from data_umkm du1_0 where du1_0.id=?
-2025-11-03 13:42:45 TRACE [http-nio-8090-exec-1] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [4]
-2025-11-03 13:42:45 DEBUG [http-nio-8090-exec-1] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:42:45 TRACE [http-nio-8090-exec-1] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
-2025-11-03 13:42:45 DEBUG [http-nio-8090-exec-1] org.hibernate.SQL - select ds1_0.id,ds1_0.catatan,ds1_0.data_umkm_id,du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha,ds1_0.kode_stiker,ds1_0.lebar,ds1_0.nama_stiker,ds1_0.panjang,ds1_0.tgl_pembuatan,ds1_0.tgl_perubahan from data_stiker ds1_0 join data_umkm du1_0 on du1_0.id=ds1_0.data_umkm_id where ds1_0.id=?
-2025-11-03 13:42:45 TRACE [http-nio-8090-exec-1] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
-2025-11-03 13:42:45 DEBUG [http-nio-8090-exec-1] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:42:45 TRACE [http-nio-8090-exec-1] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [2]
-2025-11-03 13:42:45 DEBUG [http-nio-8090-exec-1] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:42:45 TRACE [http-nio-8090-exec-1] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [3]
-2025-11-03 13:42:45 DEBUG [http-nio-8090-exec-1] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:42:45 TRACE [http-nio-8090-exec-1] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [4]
-2025-11-03 13:42:45 DEBUG [http-nio-8090-exec-1] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:42:45 TRACE [http-nio-8090-exec-1] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [5]
-2025-11-03 13:42:45 DEBUG [http-nio-8090-exec-1] org.hibernate.SQL - select ds1_0.id,ds1_0.catatan,ds1_0.data_umkm_id,du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha,ds1_0.kode_stiker,ds1_0.lebar,ds1_0.nama_stiker,ds1_0.panjang,ds1_0.tgl_pembuatan,ds1_0.tgl_perubahan from data_stiker ds1_0 join data_umkm du1_0 on du1_0.id=ds1_0.data_umkm_id where ds1_0.id=?
-2025-11-03 13:42:45 TRACE [http-nio-8090-exec-1] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [2]
-2025-11-03 13:42:45 DEBUG [http-nio-8090-exec-1] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:42:45 TRACE [http-nio-8090-exec-1] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [6]
-2025-11-03 13:42:45 DEBUG [http-nio-8090-exec-1] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:42:45 TRACE [http-nio-8090-exec-1] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [7]
-2025-11-03 13:42:45 DEBUG [http-nio-8090-exec-1] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:42:45 TRACE [http-nio-8090-exec-1] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [8]
-2025-11-03 13:42:45 DEBUG [http-nio-8090-exec-1] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:42:45 TRACE [http-nio-8090-exec-1] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [9]
-2025-11-03 13:42:45 DEBUG [http-nio-8090-exec-1] org.hibernate.SQL - select ds1_0.id,ds1_0.catatan,ds1_0.data_umkm_id,du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha,ds1_0.kode_stiker,ds1_0.lebar,ds1_0.nama_stiker,ds1_0.panjang,ds1_0.tgl_pembuatan,ds1_0.tgl_perubahan from data_stiker ds1_0 join data_umkm du1_0 on du1_0.id=ds1_0.data_umkm_id where ds1_0.id=?
-2025-11-03 13:42:45 TRACE [http-nio-8090-exec-1] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [4]
-2025-11-03 13:42:45 DEBUG [http-nio-8090-exec-1] org.hibernate.SQL - select ds1_0.id,ds1_0.catatan,ds1_0.data_umkm_id,du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha,ds1_0.kode_stiker,ds1_0.lebar,ds1_0.nama_stiker,ds1_0.panjang,ds1_0.tgl_pembuatan,ds1_0.tgl_perubahan from data_stiker ds1_0 join data_umkm du1_0 on du1_0.id=ds1_0.data_umkm_id where ds1_0.id=?
-2025-11-03 13:42:45 TRACE [http-nio-8090-exec-1] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [5]
-2025-11-03 13:42:45 DEBUG [http-nio-8090-exec-1] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:42:45 TRACE [http-nio-8090-exec-1] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [10]
-2025-11-03 13:42:45 DEBUG [http-nio-8090-exec-1] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:42:45 TRACE [http-nio-8090-exec-1] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [12]
-2025-11-03 13:42:45 DEBUG [http-nio-8090-exec-1] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:42:45 TRACE [http-nio-8090-exec-1] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [13]
-2025-11-03 13:42:45 DEBUG [http-nio-8090-exec-1] org.hibernate.SQL - select ds1_0.id,ds1_0.catatan,ds1_0.data_umkm_id,du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha,ds1_0.kode_stiker,ds1_0.lebar,ds1_0.nama_stiker,ds1_0.panjang,ds1_0.tgl_pembuatan,ds1_0.tgl_perubahan from data_stiker ds1_0 join data_umkm du1_0 on du1_0.id=ds1_0.data_umkm_id where ds1_0.id=?
-2025-11-03 13:42:45 TRACE [http-nio-8090-exec-1] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [7]
-2025-11-03 13:42:45 DEBUG [http-nio-8090-exec-1] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:42:45 TRACE [http-nio-8090-exec-1] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [14]
-2025-11-03 13:42:45 DEBUG [http-nio-8090-exec-2] org.hibernate.SQL - select os1_0.id,os1_0.faktur,os1_0.tanggal,os1_0.total_stiker,os1_0.umkm_id from orderan_stiker os1_0
-2025-11-03 13:42:45 DEBUG [http-nio-8090-exec-2] org.hibernate.SQL - select du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha from data_umkm du1_0 where du1_0.id=?
-2025-11-03 13:42:45 TRACE [http-nio-8090-exec-2] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [2]
-2025-11-03 13:42:45 DEBUG [http-nio-8090-exec-2] org.hibernate.SQL - select du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha from data_umkm du1_0 where du1_0.id=?
-2025-11-03 13:42:45 TRACE [http-nio-8090-exec-2] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [3]
-2025-11-03 13:42:45 DEBUG [http-nio-8090-exec-2] org.hibernate.SQL - select du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha from data_umkm du1_0 where du1_0.id=?
-2025-11-03 13:42:45 TRACE [http-nio-8090-exec-2] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [4]
-2025-11-03 13:42:45 DEBUG [http-nio-8090-exec-2] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:42:45 TRACE [http-nio-8090-exec-2] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
-2025-11-03 13:42:45 DEBUG [http-nio-8090-exec-2] org.hibernate.SQL - select ds1_0.id,ds1_0.catatan,ds1_0.data_umkm_id,du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha,ds1_0.kode_stiker,ds1_0.lebar,ds1_0.nama_stiker,ds1_0.panjang,ds1_0.tgl_pembuatan,ds1_0.tgl_perubahan from data_stiker ds1_0 join data_umkm du1_0 on du1_0.id=ds1_0.data_umkm_id where ds1_0.id=?
-2025-11-03 13:42:45 TRACE [http-nio-8090-exec-2] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
-2025-11-03 13:42:45 DEBUG [http-nio-8090-exec-2] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:42:45 TRACE [http-nio-8090-exec-2] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [2]
-2025-11-03 13:42:45 DEBUG [http-nio-8090-exec-2] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:42:45 TRACE [http-nio-8090-exec-2] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [3]
-2025-11-03 13:42:45 DEBUG [http-nio-8090-exec-2] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:42:45 TRACE [http-nio-8090-exec-2] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [4]
-2025-11-03 13:42:45 DEBUG [http-nio-8090-exec-2] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:42:45 TRACE [http-nio-8090-exec-2] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [5]
-2025-11-03 13:42:45 DEBUG [http-nio-8090-exec-2] org.hibernate.SQL - select ds1_0.id,ds1_0.catatan,ds1_0.data_umkm_id,du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha,ds1_0.kode_stiker,ds1_0.lebar,ds1_0.nama_stiker,ds1_0.panjang,ds1_0.tgl_pembuatan,ds1_0.tgl_perubahan from data_stiker ds1_0 join data_umkm du1_0 on du1_0.id=ds1_0.data_umkm_id where ds1_0.id=?
-2025-11-03 13:42:45 TRACE [http-nio-8090-exec-2] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [2]
-2025-11-03 13:42:45 DEBUG [http-nio-8090-exec-2] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:42:45 TRACE [http-nio-8090-exec-2] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [6]
-2025-11-03 13:42:45 DEBUG [http-nio-8090-exec-2] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:42:45 TRACE [http-nio-8090-exec-2] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [7]
-2025-11-03 13:42:45 DEBUG [http-nio-8090-exec-2] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:42:45 TRACE [http-nio-8090-exec-2] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [8]
-2025-11-03 13:42:45 DEBUG [http-nio-8090-exec-2] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:42:45 TRACE [http-nio-8090-exec-2] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [9]
-2025-11-03 13:42:45 DEBUG [http-nio-8090-exec-2] org.hibernate.SQL - select ds1_0.id,ds1_0.catatan,ds1_0.data_umkm_id,du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha,ds1_0.kode_stiker,ds1_0.lebar,ds1_0.nama_stiker,ds1_0.panjang,ds1_0.tgl_pembuatan,ds1_0.tgl_perubahan from data_stiker ds1_0 join data_umkm du1_0 on du1_0.id=ds1_0.data_umkm_id where ds1_0.id=?
-2025-11-03 13:42:45 TRACE [http-nio-8090-exec-2] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [4]
-2025-11-03 13:42:45 DEBUG [http-nio-8090-exec-2] org.hibernate.SQL - select ds1_0.id,ds1_0.catatan,ds1_0.data_umkm_id,du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha,ds1_0.kode_stiker,ds1_0.lebar,ds1_0.nama_stiker,ds1_0.panjang,ds1_0.tgl_pembuatan,ds1_0.tgl_perubahan from data_stiker ds1_0 join data_umkm du1_0 on du1_0.id=ds1_0.data_umkm_id where ds1_0.id=?
-2025-11-03 13:42:45 TRACE [http-nio-8090-exec-2] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [5]
-2025-11-03 13:42:45 DEBUG [http-nio-8090-exec-2] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:42:45 TRACE [http-nio-8090-exec-2] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [10]
-2025-11-03 13:42:45 DEBUG [http-nio-8090-exec-2] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:42:45 TRACE [http-nio-8090-exec-2] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [12]
-2025-11-03 13:42:45 DEBUG [http-nio-8090-exec-2] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:42:45 TRACE [http-nio-8090-exec-2] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [13]
-2025-11-03 13:42:45 DEBUG [http-nio-8090-exec-2] org.hibernate.SQL - select ds1_0.id,ds1_0.catatan,ds1_0.data_umkm_id,du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha,ds1_0.kode_stiker,ds1_0.lebar,ds1_0.nama_stiker,ds1_0.panjang,ds1_0.tgl_pembuatan,ds1_0.tgl_perubahan from data_stiker ds1_0 join data_umkm du1_0 on du1_0.id=ds1_0.data_umkm_id where ds1_0.id=?
-2025-11-03 13:42:45 TRACE [http-nio-8090-exec-2] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [7]
-2025-11-03 13:42:45 DEBUG [http-nio-8090-exec-2] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:42:45 TRACE [http-nio-8090-exec-2] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [14]
-2025-11-03 13:43:40 DEBUG [http-nio-8090-exec-7] org.hibernate.SQL - select os1_0.id,os1_0.faktur,os1_0.tanggal,os1_0.total_stiker,os1_0.umkm_id from orderan_stiker os1_0
-2025-11-03 13:43:40 DEBUG [http-nio-8090-exec-7] org.hibernate.SQL - select du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha from data_umkm du1_0 where du1_0.id=?
-2025-11-03 13:43:40 TRACE [http-nio-8090-exec-7] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [2]
-2025-11-03 13:43:40 DEBUG [http-nio-8090-exec-7] org.hibernate.SQL - select du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha from data_umkm du1_0 where du1_0.id=?
-2025-11-03 13:43:40 TRACE [http-nio-8090-exec-7] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [3]
-2025-11-03 13:43:40 DEBUG [http-nio-8090-exec-7] org.hibernate.SQL - select du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha from data_umkm du1_0 where du1_0.id=?
-2025-11-03 13:43:40 TRACE [http-nio-8090-exec-7] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [4]
-2025-11-03 13:43:40 DEBUG [http-nio-8090-exec-7] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:43:40 TRACE [http-nio-8090-exec-7] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
-2025-11-03 13:43:40 DEBUG [http-nio-8090-exec-7] org.hibernate.SQL - select ds1_0.id,ds1_0.catatan,ds1_0.data_umkm_id,du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha,ds1_0.kode_stiker,ds1_0.lebar,ds1_0.nama_stiker,ds1_0.panjang,ds1_0.tgl_pembuatan,ds1_0.tgl_perubahan from data_stiker ds1_0 join data_umkm du1_0 on du1_0.id=ds1_0.data_umkm_id where ds1_0.id=?
-2025-11-03 13:43:40 TRACE [http-nio-8090-exec-7] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
-2025-11-03 13:43:40 DEBUG [http-nio-8090-exec-7] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:43:40 TRACE [http-nio-8090-exec-7] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [2]
-2025-11-03 13:43:40 DEBUG [http-nio-8090-exec-7] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:43:40 TRACE [http-nio-8090-exec-7] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [3]
-2025-11-03 13:43:40 DEBUG [http-nio-8090-exec-7] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:43:40 TRACE [http-nio-8090-exec-7] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [4]
-2025-11-03 13:43:40 DEBUG [http-nio-8090-exec-7] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:43:40 TRACE [http-nio-8090-exec-7] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [5]
-2025-11-03 13:43:40 DEBUG [http-nio-8090-exec-7] org.hibernate.SQL - select ds1_0.id,ds1_0.catatan,ds1_0.data_umkm_id,du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha,ds1_0.kode_stiker,ds1_0.lebar,ds1_0.nama_stiker,ds1_0.panjang,ds1_0.tgl_pembuatan,ds1_0.tgl_perubahan from data_stiker ds1_0 join data_umkm du1_0 on du1_0.id=ds1_0.data_umkm_id where ds1_0.id=?
-2025-11-03 13:43:40 TRACE [http-nio-8090-exec-7] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [2]
-2025-11-03 13:43:40 DEBUG [http-nio-8090-exec-7] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:43:40 TRACE [http-nio-8090-exec-7] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [6]
-2025-11-03 13:43:40 DEBUG [http-nio-8090-exec-7] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:43:40 TRACE [http-nio-8090-exec-7] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [7]
-2025-11-03 13:43:40 DEBUG [http-nio-8090-exec-7] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:43:40 TRACE [http-nio-8090-exec-7] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [8]
-2025-11-03 13:43:40 DEBUG [http-nio-8090-exec-7] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:43:40 TRACE [http-nio-8090-exec-7] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [9]
-2025-11-03 13:43:40 DEBUG [http-nio-8090-exec-7] org.hibernate.SQL - select ds1_0.id,ds1_0.catatan,ds1_0.data_umkm_id,du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha,ds1_0.kode_stiker,ds1_0.lebar,ds1_0.nama_stiker,ds1_0.panjang,ds1_0.tgl_pembuatan,ds1_0.tgl_perubahan from data_stiker ds1_0 join data_umkm du1_0 on du1_0.id=ds1_0.data_umkm_id where ds1_0.id=?
-2025-11-03 13:43:40 TRACE [http-nio-8090-exec-7] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [4]
-2025-11-03 13:43:40 DEBUG [http-nio-8090-exec-7] org.hibernate.SQL - select ds1_0.id,ds1_0.catatan,ds1_0.data_umkm_id,du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha,ds1_0.kode_stiker,ds1_0.lebar,ds1_0.nama_stiker,ds1_0.panjang,ds1_0.tgl_pembuatan,ds1_0.tgl_perubahan from data_stiker ds1_0 join data_umkm du1_0 on du1_0.id=ds1_0.data_umkm_id where ds1_0.id=?
-2025-11-03 13:43:40 TRACE [http-nio-8090-exec-7] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [5]
-2025-11-03 13:43:40 DEBUG [http-nio-8090-exec-7] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:43:40 TRACE [http-nio-8090-exec-7] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [10]
-2025-11-03 13:43:40 DEBUG [http-nio-8090-exec-7] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:43:40 TRACE [http-nio-8090-exec-7] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [12]
-2025-11-03 13:43:40 DEBUG [http-nio-8090-exec-7] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:43:40 TRACE [http-nio-8090-exec-7] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [13]
-2025-11-03 13:43:40 DEBUG [http-nio-8090-exec-7] org.hibernate.SQL - select ds1_0.id,ds1_0.catatan,ds1_0.data_umkm_id,du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha,ds1_0.kode_stiker,ds1_0.lebar,ds1_0.nama_stiker,ds1_0.panjang,ds1_0.tgl_pembuatan,ds1_0.tgl_perubahan from data_stiker ds1_0 join data_umkm du1_0 on du1_0.id=ds1_0.data_umkm_id where ds1_0.id=?
-2025-11-03 13:43:40 TRACE [http-nio-8090-exec-7] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [7]
-2025-11-03 13:43:40 DEBUG [http-nio-8090-exec-7] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:43:40 TRACE [http-nio-8090-exec-7] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [14]
-2025-11-03 13:43:41 DEBUG [http-nio-8090-exec-8] org.hibernate.SQL - select os1_0.id,os1_0.faktur,os1_0.tanggal,os1_0.total_stiker,os1_0.umkm_id from orderan_stiker os1_0
-2025-11-03 13:43:41 DEBUG [http-nio-8090-exec-8] org.hibernate.SQL - select du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha from data_umkm du1_0 where du1_0.id=?
-2025-11-03 13:43:41 TRACE [http-nio-8090-exec-8] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [2]
-2025-11-03 13:43:41 DEBUG [http-nio-8090-exec-8] org.hibernate.SQL - select du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha from data_umkm du1_0 where du1_0.id=?
-2025-11-03 13:43:41 TRACE [http-nio-8090-exec-8] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [3]
-2025-11-03 13:43:41 DEBUG [http-nio-8090-exec-8] org.hibernate.SQL - select du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha from data_umkm du1_0 where du1_0.id=?
-2025-11-03 13:43:41 TRACE [http-nio-8090-exec-8] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [4]
-2025-11-03 13:43:41 DEBUG [http-nio-8090-exec-8] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:43:41 TRACE [http-nio-8090-exec-8] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
-2025-11-03 13:43:41 DEBUG [http-nio-8090-exec-8] org.hibernate.SQL - select ds1_0.id,ds1_0.catatan,ds1_0.data_umkm_id,du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha,ds1_0.kode_stiker,ds1_0.lebar,ds1_0.nama_stiker,ds1_0.panjang,ds1_0.tgl_pembuatan,ds1_0.tgl_perubahan from data_stiker ds1_0 join data_umkm du1_0 on du1_0.id=ds1_0.data_umkm_id where ds1_0.id=?
-2025-11-03 13:43:41 TRACE [http-nio-8090-exec-8] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
-2025-11-03 13:43:41 DEBUG [http-nio-8090-exec-8] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:43:41 TRACE [http-nio-8090-exec-8] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [2]
-2025-11-03 13:43:41 DEBUG [http-nio-8090-exec-8] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:43:41 TRACE [http-nio-8090-exec-8] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [3]
-2025-11-03 13:43:41 DEBUG [http-nio-8090-exec-8] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:43:41 TRACE [http-nio-8090-exec-8] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [4]
-2025-11-03 13:43:41 DEBUG [http-nio-8090-exec-8] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:43:41 TRACE [http-nio-8090-exec-8] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [5]
-2025-11-03 13:43:41 DEBUG [http-nio-8090-exec-8] org.hibernate.SQL - select ds1_0.id,ds1_0.catatan,ds1_0.data_umkm_id,du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha,ds1_0.kode_stiker,ds1_0.lebar,ds1_0.nama_stiker,ds1_0.panjang,ds1_0.tgl_pembuatan,ds1_0.tgl_perubahan from data_stiker ds1_0 join data_umkm du1_0 on du1_0.id=ds1_0.data_umkm_id where ds1_0.id=?
-2025-11-03 13:43:41 TRACE [http-nio-8090-exec-8] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [2]
-2025-11-03 13:43:41 DEBUG [http-nio-8090-exec-8] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:43:41 TRACE [http-nio-8090-exec-8] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [6]
-2025-11-03 13:43:41 DEBUG [http-nio-8090-exec-8] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:43:41 TRACE [http-nio-8090-exec-8] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [7]
-2025-11-03 13:43:41 DEBUG [http-nio-8090-exec-8] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:43:41 TRACE [http-nio-8090-exec-8] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [8]
-2025-11-03 13:43:41 DEBUG [http-nio-8090-exec-8] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:43:41 TRACE [http-nio-8090-exec-8] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [9]
-2025-11-03 13:43:41 DEBUG [http-nio-8090-exec-8] org.hibernate.SQL - select ds1_0.id,ds1_0.catatan,ds1_0.data_umkm_id,du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha,ds1_0.kode_stiker,ds1_0.lebar,ds1_0.nama_stiker,ds1_0.panjang,ds1_0.tgl_pembuatan,ds1_0.tgl_perubahan from data_stiker ds1_0 join data_umkm du1_0 on du1_0.id=ds1_0.data_umkm_id where ds1_0.id=?
-2025-11-03 13:43:41 TRACE [http-nio-8090-exec-8] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [4]
-2025-11-03 13:43:41 DEBUG [http-nio-8090-exec-8] org.hibernate.SQL - select ds1_0.id,ds1_0.catatan,ds1_0.data_umkm_id,du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha,ds1_0.kode_stiker,ds1_0.lebar,ds1_0.nama_stiker,ds1_0.panjang,ds1_0.tgl_pembuatan,ds1_0.tgl_perubahan from data_stiker ds1_0 join data_umkm du1_0 on du1_0.id=ds1_0.data_umkm_id where ds1_0.id=?
-2025-11-03 13:43:41 TRACE [http-nio-8090-exec-8] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [5]
-2025-11-03 13:43:41 DEBUG [http-nio-8090-exec-8] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:43:41 TRACE [http-nio-8090-exec-8] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [10]
-2025-11-03 13:43:41 DEBUG [http-nio-8090-exec-8] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:43:41 TRACE [http-nio-8090-exec-8] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [12]
-2025-11-03 13:43:41 DEBUG [http-nio-8090-exec-8] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:43:41 TRACE [http-nio-8090-exec-8] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [13]
-2025-11-03 13:43:41 DEBUG [http-nio-8090-exec-8] org.hibernate.SQL - select ds1_0.id,ds1_0.catatan,ds1_0.data_umkm_id,du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha,ds1_0.kode_stiker,ds1_0.lebar,ds1_0.nama_stiker,ds1_0.panjang,ds1_0.tgl_pembuatan,ds1_0.tgl_perubahan from data_stiker ds1_0 join data_umkm du1_0 on du1_0.id=ds1_0.data_umkm_id where ds1_0.id=?
-2025-11-03 13:43:41 TRACE [http-nio-8090-exec-8] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [7]
-2025-11-03 13:43:41 DEBUG [http-nio-8090-exec-8] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
-2025-11-03 13:43:41 TRACE [http-nio-8090-exec-8] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [14]
+2026-01-04 10:34:11 TRACE [http-nio-8080-exec-2] org.hibernate.orm.jdbc.bind - binding parameter (1:INTEGER) <- [2026]
+2026-01-04 10:34:14 DEBUG [http-nio-8080-exec-3] org.hibernate.SQL - select os1_0.id,os1_0.faktur,os1_0.tanggal,os1_0.total_stiker,os1_0.umkm_id from orderan_stiker os1_0
+2026-01-04 10:34:14 DEBUG [http-nio-8080-exec-3] org.hibernate.SQL - select du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha from data_umkm du1_0 where du1_0.id=?
+2026-01-04 10:34:14 TRACE [http-nio-8080-exec-3] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [2]
+2026-01-04 10:34:14 DEBUG [http-nio-8080-exec-3] org.hibernate.SQL - select du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha from data_umkm du1_0 where du1_0.id=?
+2026-01-04 10:34:14 TRACE [http-nio-8080-exec-3] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [3]
+2026-01-04 10:34:14 DEBUG [http-nio-8080-exec-3] org.hibernate.SQL - select du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha from data_umkm du1_0 where du1_0.id=?
+2026-01-04 10:34:14 TRACE [http-nio-8080-exec-3] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [4]
+2026-01-04 10:34:14 DEBUG [http-nio-8080-exec-3] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
+2026-01-04 10:34:14 TRACE [http-nio-8080-exec-3] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
+2026-01-04 10:34:14 DEBUG [http-nio-8080-exec-3] org.hibernate.SQL - select ds1_0.id,ds1_0.catatan,ds1_0.data_umkm_id,du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha,ds1_0.kode_stiker,ds1_0.lebar,ds1_0.nama_stiker,ds1_0.panjang,ds1_0.tgl_pembuatan,ds1_0.tgl_perubahan from data_stiker ds1_0 join data_umkm du1_0 on du1_0.id=ds1_0.data_umkm_id where ds1_0.id=?
+2026-01-04 10:34:14 TRACE [http-nio-8080-exec-3] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
+2026-01-04 10:34:14 DEBUG [http-nio-8080-exec-3] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
+2026-01-04 10:34:14 TRACE [http-nio-8080-exec-3] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [2]
+2026-01-04 10:34:14 DEBUG [http-nio-8080-exec-3] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
+2026-01-04 10:34:14 TRACE [http-nio-8080-exec-3] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [3]
+2026-01-04 10:34:14 DEBUG [http-nio-8080-exec-3] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
+2026-01-04 10:34:14 TRACE [http-nio-8080-exec-3] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [4]
+2026-01-04 10:34:14 DEBUG [http-nio-8080-exec-3] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
+2026-01-04 10:34:14 TRACE [http-nio-8080-exec-3] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [5]
+2026-01-04 10:34:14 DEBUG [http-nio-8080-exec-3] org.hibernate.SQL - select ds1_0.id,ds1_0.catatan,ds1_0.data_umkm_id,du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha,ds1_0.kode_stiker,ds1_0.lebar,ds1_0.nama_stiker,ds1_0.panjang,ds1_0.tgl_pembuatan,ds1_0.tgl_perubahan from data_stiker ds1_0 join data_umkm du1_0 on du1_0.id=ds1_0.data_umkm_id where ds1_0.id=?
+2026-01-04 10:34:14 TRACE [http-nio-8080-exec-3] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [2]
+2026-01-04 10:34:14 DEBUG [http-nio-8080-exec-3] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
+2026-01-04 10:34:14 TRACE [http-nio-8080-exec-3] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [6]
+2026-01-04 10:34:14 DEBUG [http-nio-8080-exec-3] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
+2026-01-04 10:34:14 TRACE [http-nio-8080-exec-3] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [7]
+2026-01-04 10:34:14 DEBUG [http-nio-8080-exec-3] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
+2026-01-04 10:34:14 TRACE [http-nio-8080-exec-3] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [8]
+2026-01-04 10:34:14 DEBUG [http-nio-8080-exec-3] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
+2026-01-04 10:34:14 TRACE [http-nio-8080-exec-3] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [9]
+2026-01-04 10:34:14 DEBUG [http-nio-8080-exec-3] org.hibernate.SQL - select ds1_0.id,ds1_0.catatan,ds1_0.data_umkm_id,du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha,ds1_0.kode_stiker,ds1_0.lebar,ds1_0.nama_stiker,ds1_0.panjang,ds1_0.tgl_pembuatan,ds1_0.tgl_perubahan from data_stiker ds1_0 join data_umkm du1_0 on du1_0.id=ds1_0.data_umkm_id where ds1_0.id=?
+2026-01-04 10:34:14 TRACE [http-nio-8080-exec-3] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [4]
+2026-01-04 10:34:14 DEBUG [http-nio-8080-exec-3] org.hibernate.SQL - select ds1_0.id,ds1_0.catatan,ds1_0.data_umkm_id,du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha,ds1_0.kode_stiker,ds1_0.lebar,ds1_0.nama_stiker,ds1_0.panjang,ds1_0.tgl_pembuatan,ds1_0.tgl_perubahan from data_stiker ds1_0 join data_umkm du1_0 on du1_0.id=ds1_0.data_umkm_id where ds1_0.id=?
+2026-01-04 10:34:14 TRACE [http-nio-8080-exec-3] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [5]
+2026-01-04 10:34:14 DEBUG [http-nio-8080-exec-3] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
+2026-01-04 10:34:14 TRACE [http-nio-8080-exec-3] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [10]
+2026-01-04 10:34:14 DEBUG [http-nio-8080-exec-3] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
+2026-01-04 10:34:14 TRACE [http-nio-8080-exec-3] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [12]
+2026-01-04 10:34:14 DEBUG [http-nio-8080-exec-3] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
+2026-01-04 10:34:14 TRACE [http-nio-8080-exec-3] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [13]
+2026-01-04 10:34:14 DEBUG [http-nio-8080-exec-3] org.hibernate.SQL - select ds1_0.id,ds1_0.catatan,ds1_0.data_umkm_id,du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha,ds1_0.kode_stiker,ds1_0.lebar,ds1_0.nama_stiker,ds1_0.panjang,ds1_0.tgl_pembuatan,ds1_0.tgl_perubahan from data_stiker ds1_0 join data_umkm du1_0 on du1_0.id=ds1_0.data_umkm_id where ds1_0.id=?
+2026-01-04 10:34:14 TRACE [http-nio-8080-exec-3] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [7]
+2026-01-04 10:34:14 DEBUG [http-nio-8080-exec-3] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
+2026-01-04 10:34:14 TRACE [http-nio-8080-exec-3] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [14]
+2026-01-04 10:34:14 DEBUG [http-nio-8080-exec-3] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
+2026-01-04 10:34:14 TRACE [http-nio-8080-exec-3] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [15]
+2026-01-04 10:34:15 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - select os1_0.id,os1_0.faktur,os1_0.tanggal,os1_0.total_stiker,os1_0.umkm_id from orderan_stiker os1_0
+2026-01-04 10:34:15 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - select du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha from data_umkm du1_0 where du1_0.id=?
+2026-01-04 10:34:15 TRACE [http-nio-8080-exec-4] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [2]
+2026-01-04 10:34:15 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - select du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha from data_umkm du1_0 where du1_0.id=?
+2026-01-04 10:34:15 TRACE [http-nio-8080-exec-4] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [3]
+2026-01-04 10:34:15 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - select du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha from data_umkm du1_0 where du1_0.id=?
+2026-01-04 10:34:15 TRACE [http-nio-8080-exec-4] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [4]
+2026-01-04 10:34:15 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
+2026-01-04 10:34:15 TRACE [http-nio-8080-exec-4] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
+2026-01-04 10:34:15 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - select ds1_0.id,ds1_0.catatan,ds1_0.data_umkm_id,du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha,ds1_0.kode_stiker,ds1_0.lebar,ds1_0.nama_stiker,ds1_0.panjang,ds1_0.tgl_pembuatan,ds1_0.tgl_perubahan from data_stiker ds1_0 join data_umkm du1_0 on du1_0.id=ds1_0.data_umkm_id where ds1_0.id=?
+2026-01-04 10:34:15 TRACE [http-nio-8080-exec-4] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [1]
+2026-01-04 10:34:15 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
+2026-01-04 10:34:15 TRACE [http-nio-8080-exec-4] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [2]
+2026-01-04 10:34:15 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
+2026-01-04 10:34:15 TRACE [http-nio-8080-exec-4] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [3]
+2026-01-04 10:34:15 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
+2026-01-04 10:34:15 TRACE [http-nio-8080-exec-4] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [4]
+2026-01-04 10:34:15 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
+2026-01-04 10:34:15 TRACE [http-nio-8080-exec-4] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [5]
+2026-01-04 10:34:15 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - select ds1_0.id,ds1_0.catatan,ds1_0.data_umkm_id,du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha,ds1_0.kode_stiker,ds1_0.lebar,ds1_0.nama_stiker,ds1_0.panjang,ds1_0.tgl_pembuatan,ds1_0.tgl_perubahan from data_stiker ds1_0 join data_umkm du1_0 on du1_0.id=ds1_0.data_umkm_id where ds1_0.id=?
+2026-01-04 10:34:15 TRACE [http-nio-8080-exec-4] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [2]
+2026-01-04 10:34:15 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
+2026-01-04 10:34:15 TRACE [http-nio-8080-exec-4] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [6]
+2026-01-04 10:34:15 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
+2026-01-04 10:34:15 TRACE [http-nio-8080-exec-4] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [7]
+2026-01-04 10:34:15 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
+2026-01-04 10:34:15 TRACE [http-nio-8080-exec-4] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [8]
+2026-01-04 10:34:15 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
+2026-01-04 10:34:15 TRACE [http-nio-8080-exec-4] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [9]
+2026-01-04 10:34:15 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - select ds1_0.id,ds1_0.catatan,ds1_0.data_umkm_id,du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha,ds1_0.kode_stiker,ds1_0.lebar,ds1_0.nama_stiker,ds1_0.panjang,ds1_0.tgl_pembuatan,ds1_0.tgl_perubahan from data_stiker ds1_0 join data_umkm du1_0 on du1_0.id=ds1_0.data_umkm_id where ds1_0.id=?
+2026-01-04 10:34:15 TRACE [http-nio-8080-exec-4] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [4]
+2026-01-04 10:34:15 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - select ds1_0.id,ds1_0.catatan,ds1_0.data_umkm_id,du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha,ds1_0.kode_stiker,ds1_0.lebar,ds1_0.nama_stiker,ds1_0.panjang,ds1_0.tgl_pembuatan,ds1_0.tgl_perubahan from data_stiker ds1_0 join data_umkm du1_0 on du1_0.id=ds1_0.data_umkm_id where ds1_0.id=?
+2026-01-04 10:34:15 TRACE [http-nio-8080-exec-4] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [5]
+2026-01-04 10:34:15 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
+2026-01-04 10:34:15 TRACE [http-nio-8080-exec-4] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [10]
+2026-01-04 10:34:15 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
+2026-01-04 10:34:15 TRACE [http-nio-8080-exec-4] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [12]
+2026-01-04 10:34:15 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
+2026-01-04 10:34:15 TRACE [http-nio-8080-exec-4] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [13]
+2026-01-04 10:34:15 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - select ds1_0.id,ds1_0.catatan,ds1_0.data_umkm_id,du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha,ds1_0.kode_stiker,ds1_0.lebar,ds1_0.nama_stiker,ds1_0.panjang,ds1_0.tgl_pembuatan,ds1_0.tgl_perubahan from data_stiker ds1_0 join data_umkm du1_0 on du1_0.id=ds1_0.data_umkm_id where ds1_0.id=?
+2026-01-04 10:34:15 TRACE [http-nio-8080-exec-4] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [7]
+2026-01-04 10:34:15 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
+2026-01-04 10:34:15 TRACE [http-nio-8080-exec-4] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [14]
+2026-01-04 10:34:15 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
+2026-01-04 10:34:15 TRACE [http-nio-8080-exec-4] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [15]
+2026-01-04 10:34:32 DEBUG [http-nio-8080-exec-5] org.hibernate.SQL - select os1_0.id,os1_0.faktur,os1_0.tanggal,os1_0.total_stiker,u1_0.id,u1_0.alamat,u1_0.instagram,u1_0.kontak,u1_0.nama_pemilik,u1_0.nama_usaha from orderan_stiker os1_0 left join data_umkm u1_0 on u1_0.id=os1_0.umkm_id where os1_0.id=?
+2026-01-04 10:34:32 TRACE [http-nio-8080-exec-5] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [14]
+2026-01-04 10:34:32 DEBUG [http-nio-8080-exec-5] org.hibernate.SQL - select r1_0.orderan_id,r1_0.id,r1_0.jumlah,r1_0.stiker_id from orderan_stiker_rinci r1_0 where r1_0.orderan_id=?
+2026-01-04 10:34:32 TRACE [http-nio-8080-exec-5] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [14]
+2026-01-04 10:34:32 DEBUG [http-nio-8080-exec-5] org.hibernate.SQL - select ds1_0.id,ds1_0.catatan,ds1_0.data_umkm_id,du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha,ds1_0.kode_stiker,ds1_0.lebar,ds1_0.nama_stiker,ds1_0.panjang,ds1_0.tgl_pembuatan,ds1_0.tgl_perubahan from data_stiker ds1_0 join data_umkm du1_0 on du1_0.id=ds1_0.data_umkm_id where ds1_0.id=?
+2026-01-04 10:34:32 TRACE [http-nio-8080-exec-5] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [5]
+2026-01-04 10:34:32 DEBUG [http-nio-8080-exec-5] org.hibernate.SQL - select ds1_0.id,ds1_0.catatan,ds1_0.data_umkm_id,du1_0.id,du1_0.alamat,du1_0.instagram,du1_0.kontak,du1_0.nama_pemilik,du1_0.nama_usaha,ds1_0.kode_stiker,ds1_0.lebar,ds1_0.nama_stiker,ds1_0.panjang,ds1_0.tgl_pembuatan,ds1_0.tgl_perubahan from data_stiker ds1_0 join data_umkm du1_0 on du1_0.id=ds1_0.data_umkm_id where ds1_0.id=?
+2026-01-04 10:34:32 TRACE [http-nio-8080-exec-5] org.hibernate.orm.jdbc.bind - binding parameter (1:BIGINT) <- [4]

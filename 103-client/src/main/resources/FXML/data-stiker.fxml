@@ -19,7 +19,8 @@
         <content>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="811.0" prefWidth="765.0">
                <children>
-                  <HBox alignment="CENTER" layoutX="16.0" layoutY="318.0" prefHeight="80.0" prefWidth="732.0" spacing="30.0" style="-fx-border-color: #BABABA;      /* warna garis border */                         -fx-border-width: 1.3;           /* ketebalan border */                         -fx-border-radius: 8;         /* sudut border melengkung */                         -fx-background-radius: 8;     /* sudut background melengkung */                         -fx-border-style: solid;       /* jenis garis solid */                         -fx-background-color: #f4f4f4;">
+                  <HBox alignment="CENTER" layoutX="16.0" layoutY="318.0" prefHeight="80.0" prefWidth="732.0" spacing="30.0"
+                        style="-fx-border-color: #BABABA;      /* warna garis border */                         -fx-border-width: 1.3;           /* ketebalan border */                         -fx-border-radius: 8;         /* sudut border melengkung */                         -fx-background-radius: 8;     /* sudut background melengkung */                         -fx-border-style: solid;       /* jenis garis solid */                         -fx-background-color: #f4f4f4;">
                      <children>
                         <Button fx:id="btnSimpan" mnemonicParsing="false" prefHeight="54.0" prefWidth="75.0" text="Simpan" />
                         <Button fx:id="btnHapus" mnemonicParsing="false" prefHeight="54.0" prefWidth="75.0" text="Hapus" />
@@ -27,7 +28,14 @@
                         <Button fx:id="btnTutup" mnemonicParsing="false" prefHeight="54.0" prefWidth="75.0" text="Tutup" />
                      </children>
                   </HBox>
-                  <Pane layoutX="18.0" layoutY="14.0" maxWidth="907.0" minWidth="731.0" prefHeight="290.0" prefWidth="731.0" style="-fx-border-color: #BABABA;      /* warna garis border */                         -fx-border-width: 1.3;           /* ketebalan border */                         -fx-border-radius: 8;         /* sudut border melengkung */                         -fx-background-radius: 8;     /* sudut background melengkung */                         -fx-border-style: solid;       /* jenis garis solid */                         -fx-background-color: #f4f4f4;">
+                  <Pane layoutX="18.0" layoutY="14.0" maxWidth="907.0" minWidth="731.0" prefHeight="290.0" prefWidth="731.0"
+                        style="
+                        -fx-border-color: #BABABA;      /* warna garis border */
+                        -fx-border-width: 1.3;           /* ketebalan border */
+                        -fx-border-radius: 8;         /* sudut border melengkung */
+                        -fx-background-radius: 8;     /* sudut background melengkung */
+                        -fx-border-style: solid;       /* jenis garis solid */
+                        -fx-background-color: #f4f4f4;">
                      <children>
                         <TextField fx:id="txtNamaUsaha" editable="false" layoutX="126.0" layoutY="20.0" prefHeight="25.0" prefWidth="206.0" />
                         <TextField fx:id="txtNamaPemilik" editable="false" layoutX="126.0" layoutY="57.0" prefHeight="25.0" prefWidth="206.0" />
