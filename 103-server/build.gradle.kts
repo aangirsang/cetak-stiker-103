@@ -29,9 +29,12 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 
-    // Database
-    implementation("com.h2database:h2")
-    runtimeOnly("com.h2database:h2")
+    // Database: SQLite
+    implementation("org.xerial:sqlite-jdbc:3.46.0.0")
+    implementation("org.hibernate.orm:hibernate-community-dialects:6.6.1.Final")
+
+
+
 
     // Testing
     testImplementation("org.springframework.boot:spring-boot-starter-test")
@@ -40,11 +43,13 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
     // JavaFX
-    implementation("org.openjfx:javafx-controls:20")
-    implementation("org.openjfx:javafx-fxml:20")
+    implementation("org.openjfx:javafx-controls:21.0.4")
+    implementation("org.openjfx:javafx-fxml:21.0.4")
+
 
     // Coroutine
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
+
 
     // DateTime (Jackson)
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
@@ -66,7 +71,7 @@ allOpen {
 
 // JavaFX configuration
 javafx {
-    version = "20"
+    version = "21"
     modules = listOf("javafx.controls", "javafx.fxml")
 }
 

@@ -8,6 +8,7 @@ import com.girsang.server.repository.DataStikerRepository
 import com.girsang.server.repository.OrderanStikerRepository
 import com.girsang.server.repository.OrderanStikerRinciRepository
 import jakarta.transaction.Transactional
+import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 
@@ -23,6 +24,7 @@ class OrderanStikerService(
 
     fun findAll(): List<OrderanStiker> = repositoryOrderan.findAll()
 
+    @EntityGraph(attributePaths = ["rincian"])
     fun findById(id: Long): OrderanStiker? = repositoryOrderan.findById(id).orElse(null)
 
     fun save(orderan: OrderanStiker): OrderanStiker {
@@ -82,12 +84,13 @@ class OrderanStikerService(
         val tahunShort = tahunFull % 100  // contoh: 2025 -> 25
         val bulan = String.format("%02d", now.monthValue)
 
-        // Ambil faktur terakhir untuk tahun ini
-        val lastFaktur = repositoryOrderan.findLastFakturByYear(tahunFull)
+        // Ambil faktur terakhir untuk tahun ini (gunakan string)
+        val lastFaktur = repositoryOrderan.findLastFakturByYear(tahunFull.toString())
+        println("Last faktur = $lastFaktur")
 
         // Tentukan nomor urut berikutnya
-        val nextUrut = if (lastFaktur != null && lastFaktur.length >= 9) {
-            val lastUrut = lastFaktur.takeLast(3).toIntOrNull() ?: 0
+        val nextUrut = if (!lastFaktur.isNullOrBlank() && lastFaktur.length >= 12) {
+            val lastUrut = lastFaktur.takeLast(4).toIntOrNull() ?: 0
             lastUrut + 1
         } else {
             1

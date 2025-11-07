@@ -1,112 +1,255 @@
 package com.girsang.server.service
 
-import jakarta.annotation.PostConstruct
-import org.springframework.beans.factory.annotation.Value
-import org.springframework.boot.context.event.ApplicationReadyEvent
-import org.springframework.context.event.EventListener
-import org.springframework.scheduling.annotation.Scheduled
-import org.springframework.stereotype.Service
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.File
+import java.io.FileWriter
+import java.nio.file.Files
+import java.nio.file.StandardCopyOption
 import java.sql.DriverManager
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import kotlin.io.copyTo
+import java.text.SimpleDateFormat
+import java.util.*
 
-@Service
 class DatabaseBackupService(
-    @Value("\${spring.datasource.url}") private val dbUrl: String,
-    @Value("\${spring.datasource.username}") private val dbUser: String,
-    @Value("\${spring.datasource.password}") private val dbPass: String
+    private val dbUrl: String,   // contoh: "jdbc:sqlite:./data/cetak-stiker.db"
 ) {
 
-    private val backupDir = File("./backup")
-    private val formatter = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss")
-    private val dbFile = File("./data/serverdb.mv.db")
-
-    init { if (!backupDir.exists()) backupDir.mkdirs() }
-
-    /** ✅ Backup otomatis saat aplikasi mulai */
-    @EventListener(ApplicationReadyEvent::class)
-    fun backupOnStart() {
-        backupSql()
-        backupFile()
-        hapusBackUpFileMax(6)
+    private fun getDatabaseFile(): File {
+        val path = dbUrl.removePrefix("jdbc:sqlite:")
+        return File(path)
     }
 
-    /** ✅ Backup setiap hari jam 02:00 */
-    @Scheduled(cron = "0 0 2 * * *")
-    fun scheduledBackup() {
-        backupSql()
-        backupFile()
-        hapusBackUpFileMax(6)
+    private fun getBackupDir(): File {
+        val dir = File("./backup")
+        if (!dir.exists()) dir.mkdirs()
+        return dir
+    }
+    private fun getBackupDirSQL(): File {
+        val dir = File("./backup/sql-file")
+        if (!dir.exists()) dir.mkdirs()
+        return dir
     }
 
-    /** ✅ Backup SQL */
-    fun backupSql(): String {
-        val fileName = "backup-${now()}.sql"
-        val filePath = File(backupDir, fileName).absolutePath
+    private fun timestamp(): String {
+        val fmt = SimpleDateFormat("yyyyMMdd-HHmmss")
+        return fmt.format(Date())
+    }
+
+    /**
+     * 🔹 Backup cepat — hanya copy file .db apa adanya
+     */
+    suspend fun backupSQLiteCopy(): File = withContext(Dispatchers.IO) {
+        val dbFile = getDatabaseFile()
+        val backupFile = File(getBackupDir(), "sqlite-backup-${timestamp()}.db")
+
+        if (!dbFile.exists()) throw IllegalStateException("Database file tidak ditemukan: ${dbFile.absolutePath}")
+
+        Files.copy(dbFile.toPath(), backupFile.toPath(), StandardCopyOption.REPLACE_EXISTING)
+        println("✅ Backup SQLite sukses: ${backupFile.name}")
+        return@withContext backupFile
+    }
+
+    /**
+     * 🔹 Backup dalam bentuk SQL Dump (struktur + data)
+     *    Bisa dibuka & dibaca manual, atau restore ke DB lain.
+     */
+    suspend fun backupSQLiteToSQL(): File = withContext(Dispatchers.IO) {
+        val dbFile = getDatabaseFile()
+        val backupFile = File(getBackupDirSQL(), "sqlite-backup-${timestamp()}.sql")
+
+        if (!dbFile.exists()) throw IllegalStateException("Database file tidak ditemukan: ${dbFile.absolutePath}")
+
+        val url = "jdbc:sqlite:$dbUrl"
+        println(url)
+        val conn = DriverManager.getConnection(url)
+        val stmt = conn.createStatement()
+
+        val writer = FileWriter(backupFile)
+
+        // Tulis header
+        writer.write("-- SQLite Backup Dump\n")
+        writer.write("-- Tanggal: ${Date()}\n\n")
+
+        // Dapatkan daftar tabel
+        val tables = mutableListOf<String>()
+        val rsTables = stmt.executeQuery("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%';")
+        while (rsTables.next()) tables.add(rsTables.getString("name"))
+        rsTables.close()
+
+        // Untuk setiap tabel, tulis CREATE TABLE dan INSERT
+        for (table in tables) {
+            // Struktur tabel
+            val rsCreate = stmt.executeQuery("SELECT sql FROM sqlite_master WHERE type='table' AND name='$table';")
+            if (rsCreate.next()) {
+                writer.write("${rsCreate.getString("sql")};\n\n")
+            }
+            rsCreate.close()
+
+            // Data tabel
+            val rsData = stmt.executeQuery("SELECT * FROM $table;")
+            val meta = rsData.metaData
+            val columnCount = meta.columnCount
+
+            while (rsData.next()) {
+                val values = (1..columnCount).joinToString(", ") { i ->
+                    val value = rsData.getObject(i)
+                    if (value == null) "NULL"
+                    else "'${value.toString().replace("'", "''")}'"
+                }
+                writer.write("INSERT INTO $table VALUES ($values);\n")
+            }
+            writer.write("\n")
+            rsData.close()
+        }
+
+        writer.flush()
+        writer.close()
+        stmt.close()
+        conn.close()
+
+        println("✅ Backup SQL sukses: ${backupFile.name}")
+        return@withContext backupFile
+    }
+
+    /**
+     * 🔹 Restore database dari file .db (copy langsung)
+     */
+    suspend fun restoreSQLite(dbBackupFile: File): Unit = withContext(Dispatchers.IO) {
+        val dbFile = getDatabaseFile()
+
+        if (!dbBackupFile.exists()) throw IllegalArgumentException("File backup tidak ditemukan: ${dbBackupFile.absolutePath}")
+
         try {
-            Class.forName("org.h2.Driver")
-            DriverManager.getConnection(dbUrl, dbUser, dbPass).use {
-                it.createStatement().execute("SCRIPT TO '$filePath'")
-            }
-            println("✅ SQL Backup: $fileName")
-            return filePath
+            if (dbFile.exists()) dbFile.delete()
+            Files.copy(dbBackupFile.toPath(), dbFile.toPath(), StandardCopyOption.REPLACE_EXISTING)
+            println("✅ Restore SQLite berhasil dari file: ${dbBackupFile.name}")
         } catch (e: Exception) {
-            println("❌ Gagal SQL backup: ${e.message}")
-            return ""
+            println("❌ Gagal restore SQLite: ${e.message}")
+            throw e
         }
     }
 
-    /** ✅ Copy file .mv.db */
-    fun backupFile(): String {
-        val fileName = "serverdb-backup-${now()}.zip"
-        val backupPath = File(backupDir, fileName).absolutePath
+    /**
+     * 🔹 Restore database dari file SQL dump
+     */
+    suspend fun restoreSQLiteFromSQL(sqlFile: File): Unit = withContext(Dispatchers.IO) {
+        if (!sqlFile.exists()) throw IllegalArgumentException("File SQL tidak ditemukan: ${sqlFile.absolutePath}")
 
-        return try {
-            Class.forName("org.h2.Driver")
-            DriverManager.getConnection(dbUrl, dbUser, dbPass).use { conn ->
-                conn.createStatement().execute("BACKUP TO '$backupPath'")
+        val url = "jdbc:sqlite:$dbUrl"
+        val conn = DriverManager.getConnection(url)
+        val stmt = conn.createStatement()
+        val sqlText = sqlFile.readText()
+
+        // Pisahkan per baris per perintah SQL
+        val sqlCommands = sqlText.split(";")
+        var count = 0
+
+        conn.autoCommit = false
+        try {
+            for (cmd in sqlCommands) {
+                val trimmed = cmd.trim()
+                if (trimmed.isNotEmpty() && !trimmed.startsWith("--")) {
+                    stmt.execute(trimmed)
+                    count++
+                }
             }
-            println("✅ H2 Backup: $fileName")
-            backupPath
+            conn.commit()
+            println("✅ Restore SQL selesai ($count perintah).")
         } catch (e: Exception) {
-            println("❌ Gagal H2 BACKUP: ${e.message}")
-            ""
+            conn.rollback()
+            println("❌ Gagal restore SQL: ${e.message}")
+            throw e
+        } finally {
+            stmt.close()
+            conn.close()
         }
     }
 
-    fun hapusBackUpFileMax(maxFiles: Int = 5) {
-        // Ambil semua file backup .sql & .zip
-        val files = backupDir.listFiles { file ->
-            file.extension == "sql" || file.extension == "zip"
-        } ?: return
+    /**
+     * ✅ Backup hanya DATA ke file SQL
+     *    Tidak termasuk struktur tabel (CREATE TABLE)
+     */
+    suspend fun backupSQLiteDataOnly(): File = withContext(Dispatchers.IO) {
+        val url = "jdbc:sqlite:$dbUrl"
+        val backupFile = File(getBackupDirSQL(), "sqlite-data-backup-${timestamp()}.sql")
+        val conn = DriverManager.getConnection(url)
+        val stmt = conn.createStatement()
+        val writer = FileWriter(backupFile)
 
-        // Jika jumlah sudah <= batas, tidak perlu hapus
-        if (files.size <= maxFiles) return
+        writer.write("-- SQLite Data Backup\n")
+        writer.write("-- Generated: ${Date()}\n\n")
 
-        // Sort file berdasarkan lastModified() → terbaru dulu
-        val sorted = files.sortedByDescending { it.lastModified() }
+        // Ambil semua nama tabel user (bukan internal sqlite)
+        val tables = mutableListOf<String>()
+        val rsTables = stmt.executeQuery(
+            "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%';"
+        )
+        while (rsTables.next()) tables.add(rsTables.getString("name"))
+        rsTables.close()
 
-        // File yang harus dihapus (mulai dari urutan ke-6 dst)
-        val toDelete = sorted.drop(maxFiles)
+        // Tulis semua INSERT
+        for (table in tables) {
+            val rs = stmt.executeQuery("SELECT * FROM $table;")
+            val meta = rs.metaData
+            val colCount = meta.columnCount
 
-        toDelete.forEach { file ->
-            if (file.delete()) {
-                println("🗑️ Hapus backup lama (exceeded max): ${file.name}")
-            } else {
-                println("⚠️ Gagal hapus backup: ${file.name}")
+            while (rs.next()) {
+                val values = (1..colCount).joinToString(", ") { i ->
+                    val value = rs.getObject(i)
+                    if (value == null) "NULL"
+                    else "'${value.toString().replace("'", "''")}'"
+                }
+
+                // gunakan INSERT OR IGNORE agar duplikat di-skip saat restore
+                writer.write("INSERT OR IGNORE INTO $table VALUES ($values);\n")
             }
+            writer.write("\n")
+            rs.close()
         }
+
+        writer.flush()
+        writer.close()
+        stmt.close()
+        conn.close()
+
+        println("✅ Backup data-only SQL sukses: ${backupFile.name}")
+        return@withContext backupFile
     }
 
-    private fun now() = LocalDateTime.now().format(formatter)
+    /**
+     * ✅ Restore data dari file SQL
+     *    Tidak hapus data lama, hanya tambahkan data baru
+     *    Duplikat ID otomatis diabaikan (karena pakai INSERT OR IGNORE)
+     */
+    suspend fun restoreSQLiteDataOnly(sqlFile: File): Unit = withContext(Dispatchers.IO) {
+        if (!sqlFile.exists()) throw IllegalArgumentException("File SQL tidak ditemukan: ${sqlFile.absolutePath}")
 
-    /** ✅ Restore jika corrupt */
-    fun restoreFrom(file: File) {
-        DriverManager.getConnection(dbUrl, dbUser, dbPass).use {
-            it.createStatement().execute("RUNSCRIPT FROM '${file.absolutePath}'")
+        val url = "jdbc:sqlite:$dbUrl"
+        val conn = DriverManager.getConnection(url)
+        val stmt = conn.createStatement()
+        val sqlText = sqlFile.readText()
+
+        val sqlCommands = sqlText.split(";")
+        var count = 0
+
+        conn.autoCommit = false
+        try {
+            for (cmd in sqlCommands) {
+                val trimmed = cmd.trim()
+                if (trimmed.isNotEmpty() && !trimmed.startsWith("--")) {
+                    stmt.execute(trimmed)
+                    count++
+                }
+            }
+            conn.commit()
+            println("✅ Restore data-only SQL selesai ($count perintah).")
+        } catch (e: Exception) {
+            conn.rollback()
+            println("❌ Gagal restore data SQL: ${e.message}")
+            throw e
+        } finally {
+            stmt.close()
+            conn.close()
         }
-        println("✅ Database berhasil direstore dari ${file.name}")
     }
 }

@@ -4,45 +4,64 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
 
 
-<TitledPane animated="false" collapsible="false" prefHeight="292.0" prefWidth="363.0" text="Pengaturan Server" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.girsang.server.controller.UI.ConfigServerController">
-   <content>
-      <Pane prefHeight="266.0" prefWidth="488.0">
+<AnchorPane xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.girsang.server.controller.UI.ConfigServerController">
+   <children>
+      <Pane prefHeight="382.0" prefWidth="395.0">
          <children>
-         
-                            <Label layoutX="14.0" layoutY="14.0" style="-fx-font-size:18; -fx-font-weight:bold" text="Pengaturan Server" />
-         
-                            <HBox layoutX="14.0" layoutY="51.0" spacing="10">
-                 <Label prefWidth="120" text="Port:" />
-                 <TextField fx:id="txtPort" prefWidth="200" />
-             </HBox>
-         
-                            <HBox layoutX="14.0" layoutY="86.0" spacing="10">
-                 <Label prefWidth="120" text="Username:" />
-                 <TextField fx:id="txtUser" prefWidth="200" />
-             </HBox>
-         
-                            <HBox layoutX="14.0" layoutY="121.0" spacing="10">
-                 <Label prefWidth="120" text="Password Baru:" />
-                 <PasswordField fx:id="txtNewPass" prefWidth="200" />
-             </HBox>
-         
-                            <HBox layoutX="14.0" layoutY="156.0" spacing="10">
-                 <Label prefWidth="120" text="Ulangi Password:" />
-                 <PasswordField fx:id="txtConfirmPass" prefWidth="200" />
-             </HBox>
-         
-                            <HBox layoutX="14.0" layoutY="191.0" spacing="10">
-                 <Label prefWidth="120" text="Roles (comma):" />
-                 <TextField fx:id="txtRoles" prefWidth="200" />
-             </HBox>
-         
-                            <Button layoutX="71.0" layoutY="227.0" onAction="#saveConfig" prefWidth="200" text="Simpan Pengaturan" />
+            <VBox alignment="CENTER" layoutX="14.0" layoutY="303.0" prefHeight="61.0" prefWidth="368.0" spacing="10.0" style="-fx-border-color: #BABABA;      /* warna garis border */                         -fx-border-width: 1.3;           /* ketebalan border */                         -fx-border-radius: 8;         /* sudut border melengkung */                         -fx-background-radius: 8;     /* sudut background melengkung */                         -fx-border-style: solid;       /* jenis garis solid */                         -fx-background-color: #f4f4f4;">
+               <children>
+                  <HBox alignment="CENTER" prefHeight="25.0" prefWidth="375.0" spacing="30.0">
+                     <children>
+                        <Button fx:id="btnBackUp" mnemonicParsing="false" prefHeight="25.0" prefWidth="140.0" text="Backup Database" />
+                        <Button fx:id="btnRestore" mnemonicParsing="false" prefHeight="25.0" prefWidth="140.0" text="Restore Database" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" layoutX="14.0" layoutY="14.0" prefHeight="278.0" prefWidth="368.0" spacing="10.0" style="-fx-border-color: #BABABA;      /* warna garis border */                         -fx-border-width: 1.3;           /* ketebalan border */                         -fx-border-radius: 8;         /* sudut border melengkung */                         -fx-background-radius: 8;     /* sudut background melengkung */                         -fx-border-style: solid;       /* jenis garis solid */                         -fx-background-color: #f4f4f4;">
+               <children>
+                  <Pane prefHeight="280.0" prefWidth="338.0">
+                     <children>
+                     
+                                                                      <Label layoutX="14.0" layoutY="14.0" style="-fx-font-size:18; -fx-font-weight:bold" text="Pengaturan Server" />
+                     
+                                                                      <HBox layoutX="14.0" layoutY="51.0" spacing="10">
+                             <Label prefWidth="120" text="Port:" />
+                             <TextField fx:id="txtPort" prefWidth="200" />
+                         </HBox>
+                     
+                                                                      <HBox layoutX="14.0" layoutY="86.0" spacing="10">
+                             <Label prefWidth="120" text="Username:" />
+                             <TextField fx:id="txtUser" prefWidth="200" />
+                         </HBox>
+                     
+                                                                      <HBox layoutX="14.0" layoutY="121.0" spacing="10">
+                             <Label prefWidth="120" text="Password Baru:" />
+                             <PasswordField fx:id="txtNewPass" prefWidth="200" />
+                         </HBox>
+                     
+                                                                      <HBox layoutX="14.0" layoutY="156.0" spacing="10">
+                             <Label prefWidth="120" text="Ulangi Password:" />
+                             <PasswordField fx:id="txtConfirmPass" prefWidth="200" />
+                         </HBox>
+                     
+                                                                      <HBox layoutX="14.0" layoutY="191.0" spacing="10">
+                             <Label prefWidth="120" text="Roles (comma):" />
+                             <TextField fx:id="txtRoles" prefWidth="200" />
+                         </HBox>
+                     
+                                                                      <Button layoutX="83.0" layoutY="230.0" onAction="#saveConfig" prefWidth="200" text="Simpan Pengaturan" />
+                     </children>
+                  </Pane>
+               </children>
+            </VBox>
          </children>
       </Pane>
-   </content>
-</TitledPane>
+   </children>
+</AnchorPane>

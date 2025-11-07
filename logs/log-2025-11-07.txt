@@ -1,0 +1,99 @@
+2025-11-07 08:38:35 | [INFO] Memuat semua data Pengguna
+2025-11-07 09:54:38 | [INFO] Client terhubung
+2025-11-07 09:54:42 | [INFO] Memuat semua data UMKM
+2025-11-07 09:55:14 | [INFO] Menyimpan Data UMKM baru: {DataUmkm(id=null, namaPemilik=Zulfan Manurung, namaUsaha=Rengginang Agung, kontak=85212138956, instagram=-, alamat=Dusun III, Pahang, Talawi
+Kab. Batu Bara
+Sumatera Utara, daftarStiker=[])}
+2025-11-07 09:55:16 | [INFO] Memuat semua data UMKM
+2025-11-07 10:05:31 | [INFO] Client terhubung
+2025-11-07 10:05:34 | [INFO] Memuat semua data UMKM
+2025-11-07 10:06:10 | [INFO] Memuat semua data UMKM
+2025-11-07 10:06:34 | [INFO] Memuat semua data UMKM
+2025-11-07 10:06:53 | [INFO] Mengupdate Data UMKM dengan id=DataUmkm(id=1, namaPemilik=Zulfan Manurung, namaUsaha=Rengginang Agung, kontak=85212138956, instagram=-, alamat=Dusun III, Pahang, Talawi, Kab. Batu Bara, Sumatera Utara, daftarStiker=[])
+2025-11-07 10:06:54 | [INFO] Memuat semua data UMKM
+2025-11-07 10:07:06 | [INFO] Memuat semua data Pengguna
+2025-11-07 10:07:07 | [INFO] Memuat semua data UMKM
+2025-11-07 10:07:07 | [INFO] Memuat semua data UMKM
+2025-11-07 10:07:24 | [INFO] Memuat semua data UMKM
+2025-11-07 10:07:29 | [INFO] Memuat semua data UMKM
+2025-11-07 10:07:41 | [INFO] Memuat semua data UMKM
+2025-11-07 10:07:51 | [INFO] Memuat semua data UMKM
+2025-11-07 10:08:02 | [INFO] Memuat semua data UMKM
+2025-11-07 11:22:51 | [INFO] Client terhubung
+2025-11-07 11:22:56 | [INFO] Memuat semua data Pengguna
+2025-11-07 11:22:57 | [INFO] Memuat semua data UMKM
+2025-11-07 11:22:58 | [INFO] Memuat semua data UMKM
+2025-11-07 11:23:09 | [INFO] Simpan data Stiker {"id":null,"dataUmkmId":1,"kodeStiker":"","namaStiker":"Bulat","panjang":4,"lebar":4,"catatan":"-","tglPembuatan":"2025-11-07T11:23:09.0327994","tglPerubahan":"2025-11-07T11:23:09.0327994"}
+2025-11-07 11:23:10 | [INFO] Memuat semua data Pengguna
+2025-11-07 11:24:15 | [INFO] Memuat semua data Pengguna
+2025-11-07 11:24:16 | [INFO] Memuat semua data Pengguna
+2025-11-07 11:24:17 | [INFO] Memuat semua data Pengguna
+2025-11-07 11:24:23 | [INFO] Client terhubung
+2025-11-07 11:24:30 | [INFO] Memuat semua data Pengguna
+2025-11-07 11:27:57 | [INFO] Client terhubung
+2025-11-07 11:28:14 | [INFO] Memuat semua data Orderan
+2025-11-07 11:28:15 | [INFO] Memuat semua data Orderan
+2025-11-07 11:28:18 | [INFO] Memuat semua data Orderan
+2025-11-07 11:28:19 | [INFO] Memuat semua data UMKM
+2025-11-07 11:28:20 | [INFO] Memuat semua data UMKM
+2025-11-07 11:28:26 | [INFO] Memuat semua data Pengguna
+2025-11-07 11:28:27 | [INFO] Memuat semua data UMKM
+2025-11-07 11:28:27 | [INFO] Memuat semua data UMKM
+2025-11-07 11:28:37 | [INFO] Simpan data Stiker {"id":null,"dataUmkmId":1,"kodeStiker":"","namaStiker":"Bulat","panjang":4,"lebar":4,"catatan":"1","tglPembuatan":"2025-11-07T11:28:37.760681","tglPerubahan":"2025-11-07T11:28:37.760681"}
+2025-11-07 11:28:39 | [INFO] Memuat semua data Pengguna
+2025-11-07 11:28:42 | [INFO] Memuat semua data UMKM
+2025-11-07 11:28:42 | [INFO] Memuat semua data UMKM
+2025-11-07 11:28:47 | [INFO] Simpan data Orderan RBBB-25110001, 2025-11-07T11:28:47.126006200, ,  1
+2025-11-07 11:28:53 | [INFO] Memuat semua data Orderan
+2025-11-07 11:28:53 | [INFO] Memuat semua data Orderan
+2025-11-07 11:29:02 | [INFO] Simpan perubahan data Orderan OrderanStikerDTO(id=1, faktur=RBBB-25110001, tanggal=2025-11-07T11:28:47.126, totalStiker=1, umkm=DataUmkm(id=1, namaPemilik=, namaUsaha=, kontak=, instagram=, alamat=, daftarStiker=[]), umkmNama=, rincian=[OrderanStikerRinciDTO(id=null, jumlah=1, stiker=DataStiker(id=1, dataUmkm=null, kodeStiker=, namaStiker=, panjang=0, lebar=0, catatan=, tglPembuatan=2025-11-07T11:29:01.742851500, tglPerubahan=2025-11-07T11:29:01.742851500), stikerId=null, kodeStiker=Rengginang Agung - 25001, stikerNama=Bulat, ukuran=4 x 4)])
+2025-11-07 11:29:05 | [INFO] Memuat semua data Orderan
+2025-11-07 11:29:05 | [INFO] Memuat semua data Orderan
+2025-11-07 11:30:26 | [INFO] Simpan perubahan data Orderan OrderanStikerDTO(id=1, faktur=RBBB-25110001, tanggal=2025-11-07T11:28:47.126, totalStiker=5, umkm=DataUmkm(id=1, namaPemilik=, namaUsaha=, kontak=, instagram=, alamat=, daftarStiker=[]), umkmNama=, rincian=[OrderanStikerRinciDTO(id=null, jumlah=5, stiker=DataStiker(id=1, dataUmkm=null, kodeStiker=, namaStiker=, panjang=0, lebar=0, catatan=, tglPembuatan=2025-11-07T11:30:25.054528600, tglPerubahan=2025-11-07T11:30:25.054528600), stikerId=null, kodeStiker=Rengginang Agung - 25001, stikerNama=Bulat, ukuran=4 x 4)])
+2025-11-07 11:30:28 | [INFO] Memuat semua data Orderan
+2025-11-07 11:30:28 | [INFO] Memuat semua data Orderan
+2025-11-07 11:30:32 | [INFO] Memuat semua data Orderan
+2025-11-07 11:32:34 | [INFO] Client terhubung
+2025-11-07 11:32:42 | [INFO] Memuat semua data Orderan
+2025-11-07 11:32:43 | [INFO] Memuat semua data Orderan
+2025-11-07 11:32:47 | [INFO] Memuat semua data Orderan
+2025-11-07 11:32:49 | [INFO] Memuat semua data UMKM
+2025-11-07 11:32:50 | [INFO] Memuat semua data UMKM
+2025-11-07 11:32:55 | [INFO] Simpan data Orderan RBBB-25110001, 2025-11-07T11:32:54.838513, ,  1
+2025-11-07 11:32:57 | [INFO] Memuat semua data Orderan
+2025-11-07 11:32:57 | [INFO] Memuat semua data Orderan
+2025-11-07 11:34:23 | [INFO] Client terhubung
+2025-11-07 11:34:29 | [INFO] Memuat semua data UMKM
+2025-11-07 11:34:30 | [INFO] Memuat semua data UMKM
+2025-11-07 11:34:36 | [INFO] Simpan data Orderan RBBB-25110001, 2025-11-07T11:34:36.326525600, ,  1
+2025-11-07 11:34:38 | [INFO] Memuat semua data Orderan
+2025-11-07 11:34:39 | [INFO] Memuat semua data Orderan
+2025-11-07 11:37:21 | [INFO] Client terhubung
+2025-11-07 11:37:25 | [INFO] Memuat semua data UMKM
+2025-11-07 11:37:26 | [INFO] Memuat semua data UMKM
+2025-11-07 11:37:28 | [INFO] Memuat semua data UMKM
+2025-11-07 11:37:29 | [INFO] Memuat semua data Orderan
+2025-11-07 11:37:30 | [INFO] Memuat semua data Orderan
+2025-11-07 11:41:37 | [INFO] Client terhubung
+2025-11-07 11:41:55 | [INFO] Memuat semua data Orderan
+2025-11-07 11:41:56 | [INFO] Memuat semua data Orderan
+2025-11-07 11:42:00 | [INFO] Memuat semua data Orderan
+2025-11-07 11:42:48 | [INFO] Memuat semua data UMKM
+2025-11-07 11:42:48 | [INFO] Memuat semua data UMKM
+2025-11-07 11:42:53 | [INFO] Simpan data Orderan RBBB-25110001, 2025-11-07T11:42:52.839099500, ,  1
+2025-11-07 11:44:30 | [INFO] Memuat semua data Orderan
+2025-11-07 11:49:26 | [INFO] Memuat semua data Orderan
+2025-11-07 11:49:26 | [INFO] Memuat semua data Orderan
+2025-11-07 11:49:33 | [INFO] Hapus data Orderan 2
+2025-11-07 11:49:35 | [INFO] Memuat semua data Orderan
+2025-11-07 11:49:35 | [INFO] Memuat semua data Orderan
+2025-11-07 11:49:39 | [INFO] Hapus data Orderan 3
+2025-11-07 11:49:41 | [INFO] Memuat semua data Orderan
+2025-11-07 11:49:42 | [INFO] Memuat semua data Orderan
+2025-11-07 11:49:46 | [INFO] Hapus data Orderan 4
+2025-11-07 11:49:49 | [INFO] Memuat semua data UMKM
+2025-11-07 11:49:49 | [INFO] Memuat semua data UMKM
+2025-11-07 11:49:54 | [INFO] Simpan data Orderan RBBB-25110002, 2025-11-07T11:49:54.591386600, ,  1
+2025-11-07 11:49:58 | [INFO] Memuat semua data Orderan
+2025-11-07 11:49:59 | [INFO] Memuat semua data Orderan
+2025-11-07 11:50:00 | [INFO] Memuat semua data Orderan
