@@ -2,6 +2,7 @@ package client.controller
 
 import client.DTO.DataUmkmDTO
 import client.util.LocalDateTimeSerializer
+import client.util.PesanPeringatan
 import com.girsang.client.controller.MainClientAppController
 import javafx.application.Platform
 import javafx.beans.property.SimpleLongProperty
@@ -42,6 +43,7 @@ class PopUpUMKMController : Initializable{
     @FXML private lateinit var kolInstagram: TableColumn<DataUmkmDTO, String>
     @FXML private lateinit var kolAlamat: TableColumn<DataUmkmDTO, String>
 
+    val title = "Data UMKM"
     var selectedUmkm: DataUmkmDTO? = null
     fun setData(list: List<DataUmkmDTO>) {
         tblUmkm.items = FXCollections.observableArrayList(list)
@@ -86,7 +88,7 @@ class PopUpUMKMController : Initializable{
         }
         btnPilih.setOnAction {
             if(selectedUmkm == null){
-                clientController?.showError("Tidak ada data yang dipilih. Silakan pilih salah satu UMKM dari tabel terlebih dahulu.")
+                PesanPeringatan.error(title,"Tidak ada data yang dipilih. Silakan pilih salah satu UMKM dari tabel terlebih dahulu.")
             }
             val stage = btnTutup.scene?.window as? Stage
             stage?.close()
@@ -134,7 +136,7 @@ class PopUpUMKMController : Initializable{
     fun loadDataUMKM(){
         println("DEBUG: clientController = $clientController, url = ${clientController?.url}")
         if(clientController?.url.isNullOrBlank()){
-            Platform.runLater { clientController?.showError("URL server belum di set") }
+            Platform.runLater { PesanPeringatan.error(title,"URL server belum di set") }
             return
         }
         Thread {
@@ -155,12 +157,12 @@ class PopUpUMKMController : Initializable{
                     }
                 } else {
                     Platform.runLater {
-                        clientController?.showError("Server Error ${response.statusCode()}")
+                        PesanPeringatan.error(title,"Server Error ${response.statusCode()}")
                     }
                 }
             } catch (ex: Exception){
                 Platform.runLater {
-                    clientController?.showError(ex.message ?: "Gagal memeuat data UMKM")
+                    PesanPeringatan.error(title,ex.message ?: "Gagal memeuat data UMKM")
                 }
             }
         }.start()
@@ -186,7 +188,7 @@ class PopUpUMKMController : Initializable{
     }
     fun cariDataUmkm(paramName: String, keyword: String) {
         if (clientController?.url.isNullOrBlank()) {
-            Platform.runLater { clientController?.showError("URL server belum di set") }
+            Platform.runLater { PesanPeringatan.error(title,"URL server belum di set") }
             return
         }
 
@@ -218,13 +220,13 @@ class PopUpUMKMController : Initializable{
                     }
                 } else {
                     Platform.runLater {
-                        clientController?.showError("Server Error ${response.statusCode()}")
+                        PesanPeringatan.error(title,"Server Error ${response.statusCode()}")
                         tblUmkm.items = FXCollections.observableArrayList() // kosongkan tabel juga
                     }
                 }
             } catch (ex: Exception) {
                 Platform.runLater {
-                    clientController?.showError(ex.message ?: "Gagal mencari data UMKM")
+                    PesanPeringatan.error(title,ex.message ?: "Gagal mencari data UMKM")
                     tblUmkm.items = FXCollections.observableArrayList() // kosongkan tabel jika error
                 }
             }

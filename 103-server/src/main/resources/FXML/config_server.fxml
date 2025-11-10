@@ -9,7 +9,6 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-
 <AnchorPane xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.girsang.server.controller.UI.ConfigServerController">
    <children>
       <Pane prefHeight="382.0" prefWidth="395.0">
@@ -56,7 +55,7 @@
                              <TextField fx:id="txtRoles" prefWidth="200" />
                          </HBox>
                      
-                                                                      <Button layoutX="83.0" layoutY="230.0" onAction="#saveConfig" prefWidth="200" text="Simpan Pengaturan" />
+                                                                      <Button fx:id="btnSimpanConfig" layoutX="83.0" layoutY="230.0" prefWidth="200" text="Simpan Pengaturan" />
                      </children>
                   </Pane>
                </children>

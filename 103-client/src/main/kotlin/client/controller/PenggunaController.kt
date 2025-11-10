@@ -242,7 +242,7 @@ class PenggunaController : Initializable {
     fun loadData() {
         if (clientController?.url.isNullOrBlank()) {
             Platform.runLater {
-                clientController?.showError("URL server belum diset.")
+                PesanPeringatan.error("Data Pengguna","URL server belum diset.")
             }
             return
         }

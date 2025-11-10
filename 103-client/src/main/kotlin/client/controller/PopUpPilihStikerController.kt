@@ -42,6 +42,7 @@ class PopUpPilihStikerController : Initializable{
 
     var selectedStiker: DataStikerDTO? = null
     var selectedUmkm: DataUmkmDTO? = null
+    val title = "Data Stiker"
     private var searchThread: Thread? = null
     private val client = HttpClient.newBuilder().build()
     private val json = Json {
@@ -126,7 +127,7 @@ class PopUpPilihStikerController : Initializable{
     }
     fun loadDataStiker(){
         if(clientController?.url.isNullOrBlank()){
-            Platform.runLater { clientController?.showError("URL server belum di set") }
+            Platform.runLater { PesanPeringatan.error(title,"URL server belum di set") }
             return
         }
         Thread {
@@ -179,7 +180,7 @@ class PopUpPilihStikerController : Initializable{
     }
     fun cariDataUmkm(paramName: String, keyword: String) {
         if (clientController?.url.isNullOrBlank()) {
-            Platform.runLater { clientController?.showError("URL server belum di set") }
+            Platform.runLater { PesanPeringatan.error(title,"URL server belum di set") }
             return
         }
 

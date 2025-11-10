@@ -24,8 +24,9 @@ class DatabaseBackupService(
         if (!dir.exists()) dir.mkdirs()
         return dir
     }
+
     private fun getBackupDirSQL(): File {
-        val dir = File("./backup/sql-file")
+        val dir = File("./backup/SQL-File")
         if (!dir.exists()) dir.mkdirs()
         return dir
     }
@@ -35,19 +36,40 @@ class DatabaseBackupService(
         return fmt.format(Date())
     }
 
+    suspend fun backupOtomatis(limit: Int) {
+        val ts = timestamp() // ✅ timestamp tunggal
+
+        backupSQLiteCopy(ts)
+        backupSQLiteDataOnly()
+        hapusFileLama(limit)
+    }
+
+
     /**
-     * 🔹 Backup cepat — hanya copy file .db apa adanya
+     * 🔹 Backup cepat — hanya copy file .db
      */
-    suspend fun backupSQLiteCopy(): File = withContext(Dispatchers.IO) {
+    suspend fun backupSQLiteCopy(ts: String): File = withContext(Dispatchers.IO) {
         val dbFile = getDatabaseFile()
-        val backupFile = File(getBackupDir(), "sqlite-backup-${timestamp()}.db")
+        val backupFile = File(getBackupDir(), "backup-sqlite-$ts.db")
 
         if (!dbFile.exists()) throw IllegalStateException("Database file tidak ditemukan: ${dbFile.absolutePath}")
+
+        try {
+            val conn = DriverManager.getConnection("jdbc:sqlite:$dbUrl")
+            conn.createStatement().use { stmt ->
+                stmt.execute("PRAGMA wal_checkpoint(FULL);")
+                stmt.execute("PRAGMA optimize;")
+            }
+            conn.close()
+        } catch (e: Exception) {
+            println("⚠️ Gagal flush SQLite sebelum backup: ${e.message}")
+        }
 
         Files.copy(dbFile.toPath(), backupFile.toPath(), StandardCopyOption.REPLACE_EXISTING)
         println("✅ Backup SQLite sukses: ${backupFile.name}")
         return@withContext backupFile
     }
+
 
     /**
      * 🔹 Backup dalam bentuk SQL Dump (struktur + data)
@@ -55,7 +77,7 @@ class DatabaseBackupService(
      */
     suspend fun backupSQLiteToSQL(): File = withContext(Dispatchers.IO) {
         val dbFile = getDatabaseFile()
-        val backupFile = File(getBackupDirSQL(), "sqlite-backup-${timestamp()}.sql")
+        val backupFile = File(getBackupDir(), "backup-sql-${timestamp()}.sql")
 
         if (!dbFile.exists()) throw IllegalStateException("Database file tidak ditemukan: ${dbFile.absolutePath}")
 
@@ -112,66 +134,12 @@ class DatabaseBackupService(
     }
 
     /**
-     * 🔹 Restore database dari file .db (copy langsung)
-     */
-    suspend fun restoreSQLite(dbBackupFile: File): Unit = withContext(Dispatchers.IO) {
-        val dbFile = getDatabaseFile()
-
-        if (!dbBackupFile.exists()) throw IllegalArgumentException("File backup tidak ditemukan: ${dbBackupFile.absolutePath}")
-
-        try {
-            if (dbFile.exists()) dbFile.delete()
-            Files.copy(dbBackupFile.toPath(), dbFile.toPath(), StandardCopyOption.REPLACE_EXISTING)
-            println("✅ Restore SQLite berhasil dari file: ${dbBackupFile.name}")
-        } catch (e: Exception) {
-            println("❌ Gagal restore SQLite: ${e.message}")
-            throw e
-        }
-    }
-
-    /**
-     * 🔹 Restore database dari file SQL dump
-     */
-    suspend fun restoreSQLiteFromSQL(sqlFile: File): Unit = withContext(Dispatchers.IO) {
-        if (!sqlFile.exists()) throw IllegalArgumentException("File SQL tidak ditemukan: ${sqlFile.absolutePath}")
-
-        val url = "jdbc:sqlite:$dbUrl"
-        val conn = DriverManager.getConnection(url)
-        val stmt = conn.createStatement()
-        val sqlText = sqlFile.readText()
-
-        // Pisahkan per baris per perintah SQL
-        val sqlCommands = sqlText.split(";")
-        var count = 0
-
-        conn.autoCommit = false
-        try {
-            for (cmd in sqlCommands) {
-                val trimmed = cmd.trim()
-                if (trimmed.isNotEmpty() && !trimmed.startsWith("--")) {
-                    stmt.execute(trimmed)
-                    count++
-                }
-            }
-            conn.commit()
-            println("✅ Restore SQL selesai ($count perintah).")
-        } catch (e: Exception) {
-            conn.rollback()
-            println("❌ Gagal restore SQL: ${e.message}")
-            throw e
-        } finally {
-            stmt.close()
-            conn.close()
-        }
-    }
-
-    /**
      * ✅ Backup hanya DATA ke file SQL
      *    Tidak termasuk struktur tabel (CREATE TABLE)
      */
     suspend fun backupSQLiteDataOnly(): File = withContext(Dispatchers.IO) {
         val url = "jdbc:sqlite:$dbUrl"
-        val backupFile = File(getBackupDirSQL(), "sqlite-data-backup-${timestamp()}.sql")
+        val backupFile = File(getBackupDirSQL(), "backup-sql-data-only-${timestamp()}.sql")
         val conn = DriverManager.getConnection(url)
         val stmt = conn.createStatement()
         val writer = FileWriter(backupFile)
@@ -252,4 +220,43 @@ class DatabaseBackupService(
             conn.close()
         }
     }
+
+    /**
+     * 🔹 Hapus file backup lama per tipe (db dan sql),
+     *    hanya simpan sejumlah 'limit' file terbaru untuk masing-masing.
+     */
+    private fun hapusFileLama(limit: Int = 5) {
+        val dirDb = getBackupDir()
+        val dirSql = getBackupDirSQL()
+
+        // === Hapus file .db lama ===
+        val dbFiles = dirDb.listFiles { file -> file.extension == "db" }
+            ?.sortedBy { it.lastModified() } ?: emptyList() // 🔹 Urut paling lama → paling baru
+
+        if (dbFiles.size > limit) {
+            val toDelete = dbFiles.take(dbFiles.size - limit) // 🔹 ambil yang paling lama untuk dihapus
+            toDelete.forEach {
+                if (it.delete()) println("🗑️ Hapus backup DB lama: ${it.name}")
+                else println("⚠️ Gagal hapus backup DB: ${it.name}")
+            }
+        } else {
+            println("✅ Tidak ada backup DB lama yang perlu dihapus (${dbFiles.size}/$limit).")
+        }
+
+        // === Hapus file .sql lama ===
+        val sqlFiles = dirSql.listFiles { file -> file.extension == "sql" }
+            ?.sortedBy { it.lastModified() } ?: emptyList() // 🔹 Urut paling lama → paling baru
+
+        if (sqlFiles.size > limit) {
+            val toDelete = sqlFiles.take(sqlFiles.size - limit)
+            toDelete.forEach {
+                if (it.delete()) println("🗑️ Hapus backup SQL lama: ${it.name}")
+                else println("⚠️ Gagal hapus backup SQL: ${it.name}")
+            }
+        } else {
+            println("✅ Tidak ada backup SQL lama yang perlu dihapus (${sqlFiles.size}/$limit).")
+        }
+    }
+
+
 }

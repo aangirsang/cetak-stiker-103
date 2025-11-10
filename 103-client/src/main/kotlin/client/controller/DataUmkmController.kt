@@ -90,6 +90,7 @@ class DataUmkmController : Initializable{
         setupSearchListener(txtCariNamaUsaha)
         setupSearchListener(txtCariAlamat)
 
+
         tblUmkm.columnResizePolicy = TableView.UNCONSTRAINED_RESIZE_POLICY
 
         tblUmkm.widthProperty().addListener { _, _, newWidth ->
@@ -339,7 +340,7 @@ class DataUmkmController : Initializable{
     }
     fun cariDataUmkm(namaPemilik: String, namaUsaha: String, alamat: String) {
         if (clientController?.url.isNullOrBlank()) {
-            Platform.runLater { clientController?.showError("URL server belum di set") }
+            Platform.runLater { PesanPeringatan.error("Data UMKM","URL server belum di set") }
             return
         }
 
@@ -374,13 +375,13 @@ class DataUmkmController : Initializable{
                     }
                 } else {
                     Platform.runLater {
-                        clientController?.showError("Server Error ${response.statusCode()}")
+                        PesanPeringatan.error("Data UMKM","Server Error ${response.statusCode()}")
                         tblUmkm.items = FXCollections.observableArrayList() // kosongkan tabel juga
                     }
                 }
             } catch (ex: Exception) {
                 Platform.runLater {
-                    clientController?.showError(ex.message ?: "Gagal mencari data UMKM")
+                    PesanPeringatan.error("Data UMKM",ex.message ?: "Gagal mencari data UMKM")
                     tblUmkm.items = FXCollections.observableArrayList() // kosongkan tabel jika error
                 }
             }

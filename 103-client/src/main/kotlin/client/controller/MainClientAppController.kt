@@ -44,6 +44,7 @@ class MainClientAppController : Initializable {
     val ip = ClientConfig.getIP()
     val port = ClientConfig.getPort()
     val url = "http://$ip:$port"
+    val baseUrl = this.url.trim().removeSuffix("/")   // gunakan this.url, bukan url lokal
 
     override fun initialize(location: URL?, resources: ResourceBundle?) {
         mnPengguna.setOnAction { tampilFormPengguna() }
@@ -51,7 +52,7 @@ class MainClientAppController : Initializable {
         mnDataStiker.setOnAction { tampilFormStiker() }
         mnOrderStiker.setOnAction { tampilOrdertiker() }
         lblURL.text = ""
-        pingServer()
+        konekServer(baseUrl)
     }
 
     private fun tampilFormPengguna() {
@@ -91,51 +92,64 @@ class MainClientAppController : Initializable {
     }
 
     fun konekServer(baseUrl: String){
+        lblStatusServer.text = "Mencoba terhubung ke server…"
         println("Server: $url")
         println("User: $user")
         println("Password: $pass")
+
+
         val builder = HttpRequest.newBuilder()
             .uri(URI.create("$baseUrl/api/pengguna/ping"))
             .GET()
+
         buildAuthHeader()?.let { builder.header("Authorization", it) }
         val req = builder.build()
-        val resp = makeRequest(req)
-        Platform.runLater {
-            lblStatusServer.text = "Aktif - Ping: ${resp.statusCode()} - ${resp.body()}"
-            lblURL.text = "URL Server:   $url"
-        }
-    }
-    fun pingServer() {
-        val baseUrl = this.url.trim().removeSuffix("/")   // gunakan this.url, bukan url lokal
-        lblStatusServer.text = "Pinging..."
-        thread {
-            try {
-                konekServer(baseUrl)
-            } catch (ex: Exception) {
-                Platform.runLater {
-                    lblStatusServer.text = "Ping failed"
-                    val confirm = PesanPeringatan.confirmWithSettings("Konfirmasi", "Koneksi ke server gagal.\nApakah ingin mencoba kembali?")
 
-                    when (confirm) {
-                        "OK" -> {
-                            pingServer()
-                        }
-                        "SETTING" -> {
-                            tampilSettings()
-                            val stage = lblWaktu.scene.window as javafx.stage.Stage
-                            stage.close()
-                        }
-                        "CANCEL" -> {
-                            println("User pilih tutup")
-                            val stage = lblWaktu.scene.window as javafx.stage.Stage
-                            stage.close()
-                        }
+        try {
+            val resp = makeRequest(req)
+
+            Platform.runLater {
+                when (resp.statusCode()) {
+                    200 -> {
+                        lblStatusServer.text = "✅ Aktif - Ping: ${resp.statusCode()} - ${resp.body()}"
+                    }
+                    401 -> {
+                        lblStatusServer.text = "❌ Autentikasi gagal (401)"
+                        showError("Username atau password salah.\nSilakan periksa pengaturan koneksi Anda.")
+                    }
+                    else -> {
+                        lblStatusServer.text = "⚠️ Server merespons kode ${resp.statusCode()}"
+                        showError("Koneksi ke server berhasil tapi tidak valid.\nKode: ${resp.statusCode()}")
+                    }
+                }
+                lblURL.text = "URL Server: $url"
+            }
+
+        } catch (ex: Exception) {
+            // misalnya: server mati, jaringan putus, atau timeout
+            Platform.runLater {
+                lblStatusServer.text = "❌ Server tidak dapat dihubungi"
+                val confirm = PesanPeringatan.confirmWithSettings("Konfirmasi", "Koneksi ke server gagal.\nApakah ingin mencoba kembali?")
+
+                when (confirm) {
+                    "OK" -> {
+                        konekServer(baseUrl)
+                        lblStatusServer.text = "Mencoba terhubung ke server…"
+                    }
+                    "SETTING" -> {
+                        tampilSettings()
+                        val stage = lblWaktu.scene.window as javafx.stage.Stage
+                        stage.close()
+                    }
+                    "CANCEL" -> {
+                        println("User pilih tutup")
+                        val stage = lblWaktu.scene.window as javafx.stage.Stage
+                        stage.close()
                     }
                 }
             }
         }
     }
-
     fun buildAuthHeader(): String? {
         val token = Base64.getEncoder().encodeToString("$user:$pass".toByteArray())
         return "Basic $token"

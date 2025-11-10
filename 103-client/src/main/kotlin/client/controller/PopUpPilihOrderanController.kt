@@ -5,6 +5,7 @@ import client.DTO.DataUmkmDTO
 import client.DTO.OrderanStikerDTO
 import client.DTO.OrderanStikerRinciDTO
 import client.util.LocalDateTimeSerializer
+import client.util.PesanPeringatan
 import com.girsang.client.controller.MainClientAppController
 import javafx.application.Platform
 import javafx.beans.property.SimpleIntegerProperty
@@ -56,7 +57,7 @@ class PopUpPilihOrderanController : Initializable {
     @FXML private lateinit var kolJumlah: TableColumn<OrderanStikerRinciDTO, Int>
 
     val formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy", Locale("id", "ID"))
-
+    val title = "Data Orderan"
     var  selectedOrderan: OrderanStikerDTO? = null
 
     private val client = HttpClient.newBuilder().build()
@@ -117,7 +118,7 @@ class PopUpPilihOrderanController : Initializable {
         btnRefresh.setOnAction {bersih()}
         btnPilih.setOnAction {
             if(selectedOrderan == null){
-                clientController?.showError("Tidak ada data yang dipilih. Silakan pilih salah satu UMKM dari tabel terlebih dahulu.")
+                PesanPeringatan.error(title,"Tidak ada data yang dipilih. Silakan pilih salah satu UMKM dari tabel terlebih dahulu.")
             }
             val stage = btnTutup.scene?.window as? Stage
             stage?.close()
@@ -159,10 +160,10 @@ class PopUpPilihOrderanController : Initializable {
                 if (response.statusCode() in 200..299) {
                     val list = json.decodeFromString<List<OrderanStikerDTO>>(response.body())
                     Platform.runLater { tblOrderan.items = FXCollections.observableArrayList(list) }
-                } else Platform.runLater { clientController?.showError("Server Error ${response.statusCode()}") }
+                } else Platform.runLater { PesanPeringatan.error(title,"Server Error ${response.statusCode()}") }
 
             } catch (ex: Exception) {
-                Platform.runLater { clientController?.showError(ex.message ?: "Gagal memuat data orderan stiker") }
+                Platform.runLater { PesanPeringatan.error(title,ex.message ?: "Gagal memuat data orderan stiker") }
             }
         }.start()
     }

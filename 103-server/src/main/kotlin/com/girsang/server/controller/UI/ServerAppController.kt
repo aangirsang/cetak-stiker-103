@@ -2,11 +2,12 @@ package com.girsang.server.controller.UI
 
 import com.girsang.server.ServerUI
 import com.girsang.server.SpringApp
+import com.girsang.server.config.DatabasePathFromProperties
 import com.girsang.server.config.ServerPort
-import com.girsang.server.config.SpringFXMLLoader
 import com.girsang.server.service.DatabaseBackupService
 import javafx.application.Platform
 import javafx.fxml.FXML
+import javafx.fxml.FXMLLoader
 import javafx.fxml.Initializable
 import javafx.scene.Parent
 import javafx.scene.Scene
@@ -38,9 +39,6 @@ import kotlin.coroutines.suspendCoroutine
 @Component
 class ServerAppController : Initializable {
 
-    @Autowired
-    lateinit var fxmlLoader: SpringFXMLLoader
-
     @FXML private lateinit var txtStatusServer: TextField
     @FXML private lateinit var txtIPServer: TextField
     @FXML private lateinit var txtPortServer: TextField
@@ -49,8 +47,6 @@ class ServerAppController : Initializable {
     @FXML private lateinit var btnStartServer: Button
     @FXML private lateinit var btnStopServer: Button
     @FXML private lateinit var btnPengaturan: Button
-    @FXML private lateinit var btnBackUp: Button
-    @FXML private lateinit var btnRestore: Button
 
 
     private val controllerScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
@@ -61,7 +57,7 @@ class ServerAppController : Initializable {
     private var port = 0
     private val ip = getLocalIPv4Address()
 
-    val dbService = DatabaseBackupService(getDatabasePathFromProperties())
+    val dbService = DatabaseBackupService(DatabasePathFromProperties.getDatabasePathFromProperties())
 
 
     override fun initialize(location: URL?, resources: ResourceBundle?) {
@@ -77,8 +73,6 @@ class ServerAppController : Initializable {
         btnStartServer.setOnAction { startServer() }
         btnStopServer.setOnAction { stopServer() }
         btnPengaturan.setOnAction { tampilSettings() }
-        btnBackUp.setOnAction { manualBackup() }
-        btnRestore.setOnAction { pilihRestoreFile() }
 
         updateUI()
         redirectConsoleToTextArea()
@@ -99,8 +93,7 @@ class ServerAppController : Initializable {
                     isRunning = true
                     port = ServerPort.port
                     appendConsole("✅ Server Spring Boot berjalan!")
-                    dbService.backupSQLiteCopy()
-                    dbService.backupSQLiteDataOnly()
+                    dbService.backupOtomatis(6)
                 } catch (e: Exception) {
                     appendConsole("❌ Gagal menjalankan server: ${e.message}")
                 }
@@ -132,131 +125,13 @@ class ServerAppController : Initializable {
         }
     }
 
-    /** 💾 Manual backup PostgreSQL */
-    private fun manualBackup() {
-        controllerScope.launch {
-            appendConsole("🔄 Manual backup Sqlite berjalan...")
-
-            try {
-                // Jalankan backup data-only SQL di background thread
-                val backupFileSQLLengkap = withContext(Dispatchers.IO) { dbService.backupSQLiteToSQL() }
-                val backupFileSQL = withContext(Dispatchers.IO) { dbService.backupSQLiteDataOnly() }
-                val sqliteFile = File("./data/cetak-stiker.db")
-
-                if (!backupFileSQL.exists() || !sqliteFile.exists() || !backupFileSQLLengkap.exists()) {
-                    appendConsole("❌ Backup gagal: file sumber tidak ditemukan.")
-                    return@launch
-                }
-
-                // 🗂️ Pilih lokasi file ZIP pakai FileChooser (jalan di JavaFX thread)
-                val selectedFile = showSaveFileChooser() ?: run {
-                    appendConsole("⚠️ Backup dibatalkan oleh pengguna.")
-                    return@launch
-                }
-
-                val zipFile = if (selectedFile.name.endsWith(".zip")) selectedFile else File(selectedFile.absolutePath + ".zip")
-
-                // 🔧 Buat ZIP di background thread
-                withContext(Dispatchers.IO) {
-                    zipFiles(
-                        zipFile,
-                        mapOf(
-                            "database/cetak-stiker.db" to sqliteFile,
-                            "sql/data-backup-dataOnly.sql" to backupFileSQL,
-                            "sql/data-backup-lengkap.sql" to backupFileSQLLengkap
-                        )
-                    )
-                }
-
-                appendConsole("✅ Backup ZIP berhasil disimpan di: ${zipFile.absolutePath}")
-
-            } catch (e: Exception) {
-                appendConsole("❌ Backup gagal: ${e.message}")
-                e.printStackTrace()
-            }
-        }
-    }
-
-    /** ♻️ Pilih file SQL untuk restore */
-    private fun pilihRestoreFile() {
-        if (springContext != null) {
-            appendConsole("⚠️ Matikan server dulu sebelum restore database.")
-            return
-        }
-
-        // Jalankan FileChooser di JavaFX thread
-        Platform.runLater {
-            val chooser = FileChooser()
-            chooser.title = "Pilih File Backup untuk Restore"
-            chooser.extensionFilters.addAll(
-                FileChooser.ExtensionFilter("Backup File (*.sql, *.db, *.sqlite)", "*.sql", "*.db", "*.sqlite"),
-                FileChooser.ExtensionFilter("SQL File", "*.sql"),
-                FileChooser.ExtensionFilter("SQLite File", "*.db", "*.sqlite")
-            )
-
-            val file = chooser.showOpenDialog(null)
-            if (file == null) {
-                appendConsole("ℹ️ Restore dibatalkan oleh pengguna.")
-                return@runLater
-            }
-
-            // Jalankan proses restore di coroutine
-            controllerScope.launch {
-                try {
-                    val fileName = file.name.lowercase()
-                    val dbPath = getDatabasePathFromProperties()
-                    val dbFile = File(dbPath)
-
-                    appendConsole("♻️ Memulai proses restore dari file: ${file.name}")
-
-                    if (fileName.endsWith(".sql")) {
-                        // 🔄 Restore data-only SQL
-                        appendConsole("🧩 Mode: Restore SQL (data-only)")
-                        dbService.restoreSQLiteDataOnly(file)
-                        appendConsole("✅ Restore SQL selesai dari file: ${file.name}")
-
-                    } else if (fileName.endsWith(".db") || fileName.endsWith(".sqlite")) {
-                        // 🔄 Restore file database SQLite (replace file lama)
-                        appendConsole("🧩 Mode: Restore SQLite file")
-
-                        if (!dbFile.exists()) {
-                            dbFile.parentFile?.mkdirs()
-                            dbFile.createNewFile()
-                        }
-
-                        // Tutup koneksi aktif (jika ada)
-                        // dbService.closeConnection() // jika kamu punya fungsi close DB
-
-                        java.nio.file.Files.copy(
-                            file.toPath(),
-                            dbFile.toPath(),
-                            java.nio.file.StandardCopyOption.REPLACE_EXISTING
-                        )
-
-                        appendConsole("✅ File SQLite aktif telah diganti dari backup: ${file.name}")
-                    } else {
-                        appendConsole("❌ Jenis file tidak dikenali. Hanya mendukung .sql, .db, atau .sqlite")
-                        return@launch
-                    }
-
-                    appendConsole("🔁 Silakan jalankan kembali server untuk menerapkan perubahan.")
-
-                } catch (e: Exception) {
-                    appendConsole("❌ Gagal restore database: ${e.message}")
-                    e.printStackTrace()
-                }
-            }
-        }
-    }
-
 
     private fun updateUI() {
         if (isRunning) {
             txtStatusServer.text = "Server Running"
             btnStartServer.isDisable = true
             btnStopServer.isDisable = false
-            btnBackUp.isDisable = false
-            btnRestore.isDisable = true
+            btnPengaturan.isDisable = true
 
             txtPortServer.text = "$port"
             txtURLServer.text = "http://$ip:$port"
@@ -264,17 +139,9 @@ class ServerAppController : Initializable {
             txtStatusServer.text = "Server Stopped"
             btnStartServer.isDisable = false
             btnStopServer.isDisable = true
-            btnBackUp.isDisable = false
-            btnRestore.isDisable = false
-
+            btnPengaturan.isDisable = false
             txtPortServer.text = "-"
             txtURLServer.text = "-"
-        }
-    }
-
-    private fun updateStatus(text: String) {
-        Platform.runLater {
-            txtStatusServer.text = text
         }
     }
 
@@ -287,10 +154,9 @@ class ServerAppController : Initializable {
 
     private fun tampilSettings() {
         val stage = Stage()
-        val url = javaClass.getResource("/fxml/config_server.fxml")
-        val root = fxmlLoader.load(url!!)
         stage.title = "Pengaturan Server"
-        stage.scene = Scene(root as Parent?)
+        val loader = FXMLLoader(javaClass.getResource("/fxml/config_server.fxml"))
+        stage.scene = Scene(loader.load())
         stage.show()
     }
 
@@ -322,55 +188,6 @@ class ServerAppController : Initializable {
     private fun appendConsole(msg: String) {
         Platform.runLater {
             txtConsole.appendText(msg + "\n")
-        }
-    }
-    fun getDatabasePathFromProperties(): String {
-        val props = Properties()
-        val propFile = File("./103-server/src/main/resources/application.properties") // ubah sesuai lokasi file-mu
-
-        if (!propFile.exists()) {
-            println("⚠️ File application.properties tidak ditemukan: ${propFile.absolutePath}")
-            return "./data/cetak-stiker.db" // fallback default
-        }
-
-        propFile.inputStream().use { props.load(it) }
-
-        val url = props.getProperty("spring.datasource.url") ?: "jdbc:sqlite:./data/cetak-stiker.db"
-        val dbPath = url.substringAfter("jdbc:sqlite:").trim()
-
-        return dbPath
-    }
-
-    fun zipFiles(zipFile: File, files: Map<String, File>) {
-        ZipOutputStream(BufferedOutputStream(FileOutputStream(zipFile))).use { zipOut ->
-            files.forEach { (pathInZip, file) ->
-                if (file.exists()) {
-                    FileInputStream(file).use { fis ->
-                        val entry = ZipEntry(pathInZip)
-                        zipOut.putNextEntry(entry)
-                        fis.copyTo(zipOut, 1024)
-                        zipOut.closeEntry()
-                    }
-                }
-            }
-        }
-    }
-    private suspend fun showSaveFileChooser(): File? = suspendCoroutine { cont ->
-        Platform.runLater {
-            try {
-                val chooser = FileChooser()
-                chooser.title = "Simpan File Backup"
-                chooser.initialDirectory = File(System.getProperty("user.dir"), "backup").apply { mkdirs() }
-                chooser.extensionFilters.add(FileChooser.ExtensionFilter("ZIP Backup File", "*.zip"))
-
-                val timestamp = SimpleDateFormat("yyyyMMdd-HHmmss").format(Date())
-                chooser.initialFileName = "manual-backup-$timestamp.zip"
-
-                val file = chooser.showSaveDialog(null)
-                cont.resume(file)
-            } catch (e: Exception) {
-                cont.resumeWithException(e)
-            }
         }
     }
 }

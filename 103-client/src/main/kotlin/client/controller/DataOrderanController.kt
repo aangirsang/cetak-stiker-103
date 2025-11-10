@@ -179,7 +179,7 @@ class DataOrderanController : Initializable {
             val response = client.send(request, HttpResponse.BodyHandlers.ofString())
 
             if (response.statusCode() !in 200..299) {
-                clientController?.showError("Gagal memuat data UMKM (${response.statusCode()})")
+                PesanPeringatan.error("Data Orderan","Gagal memuat data UMKM (${response.statusCode()})")
                 return
             }
 
@@ -580,13 +580,13 @@ class DataOrderanController : Initializable {
                             bersih()
                             clientController?.showInfo("Orderan berhasil dihapus.")
                         } else {
-                            clientController?.showError("Server returned ${response.statusCode()} : ${response.body()}")
+                            PesanPeringatan.error("Data Orderan","Server returned ${response.statusCode()} : ${response.body()}")
                         }
                     }
                 } catch (ex: Exception) {
                     Platform.runLater {
                         println("Gagal menghapus orderan")
-                        clientController?.showError(ex.message ?: "Gagal menghapus orderan")
+                        PesanPeringatan.error("Data Orderan",ex.message ?: "Gagal menghapus orderan")
                     }
                 }
             }

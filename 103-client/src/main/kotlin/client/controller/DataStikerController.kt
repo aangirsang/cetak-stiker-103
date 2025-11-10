@@ -278,7 +278,7 @@ class DataStikerController : Initializable {
             val response = client.send(request, HttpResponse.BodyHandlers.ofString())
 
             if (response.statusCode() !in 200..299) {
-                clientController?.showError("Gagal memuat data UMKM (${response.statusCode()})")
+                PesanPeringatan.error("Data Stiker","Gagal memuat data UMKM (${response.statusCode()})")
                 return
             }
 
