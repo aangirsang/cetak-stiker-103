@@ -11,10 +11,12 @@ import javafx.collections.FXCollections
 import javafx.fxml.FXML
 import javafx.fxml.Initializable
 import javafx.scene.control.Button
+import javafx.scene.control.Label
 import javafx.scene.control.TableColumn
 import javafx.scene.control.TableView
 import javafx.scene.control.TextArea
 import javafx.scene.control.TextField
+import javafx.scene.text.Text
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
@@ -44,6 +46,7 @@ class DataUmkmController : Initializable{
     @FXML private lateinit var btnHapus: Button
     @FXML private lateinit var btnTutup: Button
 
+    @FXML private lateinit var lblTotal: Label
     @FXML private lateinit var txtNamaPemilik: TextField
     @FXML private lateinit var txtNamaUsaha: TextField
     @FXML private lateinit var txtKontak: TextField
@@ -85,6 +88,20 @@ class DataUmkmController : Initializable{
                 umkmTerpilih(newValue)
             }
         }
+        fun wrapColumnText(column: TableColumn<DataUmkmDTO, String>) {
+            column.setCellFactory {
+                javafx.scene.control.TableCell<DataUmkmDTO, String>().apply {
+                    val textNode = Text()
+                    textNode.wrappingWidthProperty().bind(column.widthProperty().subtract(15)) // biar pas kolomnya
+                    textNode.textProperty().bind(itemProperty())
+
+                    graphic = textNode
+                    contentDisplay = javafx.scene.control.ContentDisplay.GRAPHIC_ONLY
+                }
+            }
+        }
+        // Terapkan pada kolom yang butuh wrap
+        wrapColumnText(kolAlamat)
 
         setupSearchListener(txtCariNamaPemilik)
         setupSearchListener(txtCariNamaUsaha)
@@ -128,15 +145,17 @@ class DataUmkmController : Initializable{
                     } else {
                         cariDataUmkm(txtCariNamaPemilik.text,
                             txtCariNamaUsaha.text,
-                            txtAlamat.text)
+                            txtCariAlamat.text)
                     }
                 } catch (_: InterruptedException) {
+                    println("error")
                 }
             }
             searchThread?.start()
         }
     }
     fun bersih(){
+        lblTotal.text = "Total Data Dalam Tabel: 0"
         txtNamaPemilik.clear()
         txtNamaUsaha.clear()
         txtKontak.clear()
@@ -145,6 +164,7 @@ class DataUmkmController : Initializable{
         txtCariNamaPemilik.clear()
         txtCariNamaUsaha.clear()
         txtCariAlamat.clear()
+        txtAlamat.isWrapText = true
 
         txtNamaPemilik.promptText = "Data Nama Pemilik Usaha"
         txtNamaUsaha.promptText = "Data Nama Usaha"
@@ -177,6 +197,7 @@ class DataUmkmController : Initializable{
                     val list = json.decodeFromString<List<DataUmkmDTO>>(response.body())
                     Platform.runLater {
                         tblUmkm.items = FXCollections.observableArrayList(list)
+                        lblTotal.text = "Total Data Dalam Tabel: ${tblUmkm.items.count()}"
                     }
                 } else {
                     Platform.runLater {

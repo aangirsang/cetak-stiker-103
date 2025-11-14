@@ -19,4 +19,17 @@ interface OrderanStikerRepository : JpaRepository<OrderanStiker, Long>{
         nativeQuery = true
     )
     fun findLastFakturByYear(@Param("tahun") tahun: String): String?
+
+    @Query(
+        value = """
+        SELECT *
+        FROM orderan_stiker
+        WHERE (:faktur IS NULL OR LOWER(faktur) LIKE LOWER('%' || :faktur || '%'))
+        ORDER BY faktur DESC
+    """,
+        nativeQuery = true
+    )
+    fun cariFaktur(@Param("faktur") faktur: String?): List<OrderanStiker>
+
+
 }

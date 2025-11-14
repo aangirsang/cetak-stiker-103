@@ -226,6 +226,7 @@ class DataStikerController : Initializable {
 
         btnSimpan.text = "Simpan"
         btnCariUMKM.isDisable = false
+        txtCatatan.isWrapText = true
 
         tblStiker.selectionModel.clearSelection()
 

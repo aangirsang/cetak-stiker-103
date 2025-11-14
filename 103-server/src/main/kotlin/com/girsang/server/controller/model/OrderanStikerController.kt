@@ -30,6 +30,12 @@ class OrderanStikerController(private val service: OrderanStikerService) {
     fun getById(@PathVariable id: Long): OrderanStikerDTO? =
         service.findById(id)?.let { OrderanStikerDTO.fromEntity(it) }
 
+    @GetMapping("/cari-faktur")
+    fun cariFaktur(faktur: String): List<OrderanStikerDTO> {
+        SimpanFileLogger.info("Mencari Faktur Orderan")
+        return service.cariFaktur(faktur).map { OrderanStikerDTO.fromEntity(it) }
+    }
+
     @PostMapping
     fun create(@RequestBody orderan: OrderanStiker): ResponseEntity<OrderanStiker> {
         val simpan = service.save(orderan)

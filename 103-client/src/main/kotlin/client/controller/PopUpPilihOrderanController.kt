@@ -38,8 +38,8 @@ class PopUpPilihOrderanController : Initializable {
 
     @FXML private lateinit var txtCariFaktur: TextField
     @FXML private lateinit var txtCariNamaUMKM: TextField
-    @FXML private lateinit var txtCariNamaStiker: TextField
-    @FXML private lateinit var dpCariTangalOrder: DatePicker
+    @FXML private lateinit var dpCariTangalMulai: DatePicker
+    @FXML private lateinit var dpCariTangalAkhir: DatePicker
 
     @FXML private lateinit var btnRefresh: Button
     @FXML private lateinit var btnPilih: Button
@@ -70,6 +70,7 @@ class PopUpPilihOrderanController : Initializable {
         }
     }
     private var clientController: MainClientAppController? = null
+    private var searchThread: Thread? = null
 
     fun setClientController(controller: MainClientAppController) {
         this.clientController = controller
@@ -104,7 +105,12 @@ class PopUpPilihOrderanController : Initializable {
         kolNamaStiker.setCellValueFactory { SimpleStringProperty(it.value.stikerNama) }
         kolJumlah.setCellValueFactory { SimpleIntegerProperty(it.value.jumlah).asObject() }
         // ===== DatePicker Converter =====
-        dpCariTangalOrder.converter = object : StringConverter<LocalDate>() {
+        dpCariTangalMulai.converter = object : StringConverter<LocalDate>() {
+            override fun toString(date: LocalDate?): String = date?.format(formatter) ?: ""
+            override fun fromString(string: String?): LocalDate? = if (string.isNullOrBlank()) null else LocalDate.parse(string, formatter)
+        }
+
+        dpCariTangalAkhir.converter = object : StringConverter<LocalDate>() {
             override fun toString(date: LocalDate?): String = date?.format(formatter) ?: ""
             override fun fromString(string: String?): LocalDate? = if (string.isNullOrBlank()) null else LocalDate.parse(string, formatter)
         }
@@ -128,6 +134,8 @@ class PopUpPilihOrderanController : Initializable {
             val stage = btnTutup.scene?.window as? Stage
             stage?.close()
         }
+
+        setupSearchListener(txtCariFaktur)
     }
 
     fun bersih() {
@@ -135,13 +143,13 @@ class PopUpPilihOrderanController : Initializable {
 
         txtCariFaktur.clear()
         txtCariNamaUMKM.clear()
-        txtCariNamaStiker.clear()
-        dpCariTangalOrder.value = null
+        dpCariTangalMulai.value = null
+        dpCariTangalAkhir.value = null
 
         txtCariFaktur.promptText = "Cari Faktur"
         txtCariNamaUMKM.promptText = "Cari Nama Usaha"
-        txtCariNamaStiker.promptText = "Cari Nama Stiker"
-        dpCariTangalOrder.promptText = "Tanggal Orderan"
+        dpCariTangalMulai.promptText = "Start Tanggal"
+        dpCariTangalAkhir.promptText = "End Tanggal"
 
         loadDataOrderan()
     }
@@ -174,5 +182,49 @@ class PopUpPilihOrderanController : Initializable {
             return
         }
         tblOrderanRinci.items = FXCollections.observableArrayList(orderan.rincian)
+    }
+    private fun setupSearchListener(field: TextField) {
+        field.textProperty().addListener { _, _, newValue ->
+            searchThread?.interrupt() // hentikan thread sebelumnya jika user masih mengetik
+            searchThread = Thread {
+                try {
+                    Thread.sleep(300) // debounce 300ms
+                    if (Thread.interrupted()) return@Thread
+
+                    if (newValue.isNullOrBlank()) {
+                        Platform.runLater { loadDataOrderan() }
+                    } else {
+                        cariFaktur(newValue)
+                    }
+                } catch (_: InterruptedException) {
+                }
+            }
+            searchThread?.start()
+        }
+    }
+    fun cariFaktur(faktur: String){
+        if (clientController?.url.isNullOrBlank()) {
+            Platform.runLater { PesanPeringatan.error(title,"URL server belum di set") }
+            return
+        }
+        Thread {
+            try {
+                val builder = HttpRequest.newBuilder()
+                    .uri(URI.create("${clientController?.url}/api/orderan-stiker/cari-faktur?faktur=$faktur"))
+                    .GET()
+                    .header("Content-Type", "application/json")
+                clientController?.buildAuthHeader()?.let { builder.header("Authorization", it) }
+                val request = builder.build()
+                val response = client.send(request, HttpResponse.BodyHandlers.ofString())
+
+                if (response.statusCode() in 200..299) {
+                    val list = json.decodeFromString<List<OrderanStikerDTO>>(response.body())
+                    Platform.runLater { tblOrderan.items = FXCollections.observableArrayList(list) }
+                } else Platform.runLater { PesanPeringatan.error(title,"Server Error ${response.statusCode()}") }
+
+            } catch (ex: Exception) {
+                Platform.runLater { PesanPeringatan.error(title,ex.message ?: "Gagal memuat data orderan stiker") }
+            }
+        }.start()
     }
 }

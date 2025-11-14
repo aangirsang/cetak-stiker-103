@@ -27,6 +27,9 @@ class OrderanStikerService(
     @EntityGraph(attributePaths = ["rincian"])
     fun findById(id: Long): OrderanStiker? = repositoryOrderan.findById(id).orElse(null)
 
+    @EntityGraph(attributePaths = ["rincian"])
+    fun cariFaktur(faktur: String?): List<OrderanStiker> = repositoryOrderan.cariFaktur(faktur)
+
     fun save(orderan: OrderanStiker): OrderanStiker {
         if (orderan.faktur.isBlank()) {
             orderan.faktur = generateFaktur()

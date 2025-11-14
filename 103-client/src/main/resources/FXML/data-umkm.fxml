@@ -11,15 +11,15 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="903.0" prefWidth="1124.0" styleClass="card" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.controller.DataUmkmController">
+<AnchorPane prefHeight="880.0" prefWidth="1516.0" styleClass="card" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.controller.DataUmkmController">
    <children>
-      <TitledPane animated="false" collapsible="false" layoutX="-8.0" prefHeight="801.0" prefWidth="901.0"  text="Data UMKM" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <TitledPane animated="false" collapsible="false" layoutX="-8.0" prefHeight="801.0" prefWidth="901.0" text="Data UMKM" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <content>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="877.0" prefWidth="1061.0" stylesheets="@/css/style.css"
-                      styleClass="card">
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="877.0" prefWidth="1061.0" styleClass="card" stylesheets="@/css/style.css">
                <children>
-                  <Pane layoutX="15.0" layoutY="14.0" maxWidth="1089.0" minWidth="855.0" prefHeight="170.0" prefWidth="1089.0" style="-fx-border-color: #BABABA;      /* warna garis border */                         -fx-border-width: 1.3;           /* ketebalan border */                         -fx-border-radius: 8;         /* sudut border melengkung */                         -fx-background-radius: 8;     /* sudut background melengkung */                         -fx-border-style: solid;       /* jenis garis solid */                         -fx-background-color: #f4f4f4;">
+                  <Pane layoutX="23.0" layoutY="20.0" maxWidth="1089.0" minWidth="463.0" prefHeight="422.0" prefWidth="463.0" style="-fx-border-color: #BABABA;      /* warna garis border */                         -fx-border-width: 1.3;           /* ketebalan border */                         -fx-border-radius: 8;         /* sudut border melengkung */                         -fx-background-radius: 8;     /* sudut background melengkung */                         -fx-border-style: solid;       /* jenis garis solid */                         -fx-background-color: #f4f4f4;">
                      <children>
                         <Label layoutX="19.0" layoutY="11.0" text="Nama Pemilik Usaha">
                            <padding>
@@ -40,20 +40,35 @@
                         <TextField fx:id="txtNamaUsaha" layoutX="166.0" layoutY="54.0" prefHeight="25.0" prefWidth="165.0" />
                         <TextField fx:id="txtKontak" layoutX="166.0" layoutY="91.0" prefHeight="25.0" prefWidth="267.0" />
                         <TextField fx:id="txtInstagram" layoutX="166.0" layoutY="128.0" prefHeight="25.0" prefWidth="267.0" />
+                        <TextArea fx:id="txtAlamat" layoutX="166.0" layoutY="165.0" prefHeight="227.0" prefWidth="268.0" />
                         <Label layoutX="19.0" layoutY="122.0" text="Instagram">
                            <padding>
                               <Insets bottom="10.0" left="5.0" right="5.0" top="10.0" />
                            </padding>
                         </Label>
-                        <Label layoutX="468.0" layoutY="11.0" prefHeight="37.0" prefWidth="66.0" text="Alamat">
+                        <Label layoutX="18.0" layoutY="159.0" prefHeight="37.0" prefWidth="66.0" text="Alamat">
                            <padding>
                               <Insets bottom="10.0" left="5.0" right="5.0" top="10.0" />
                            </padding>
                         </Label>
-                        <TextArea fx:id="txtAlamat" layoutX="557.0" layoutY="14.0" prefHeight="139.0" prefWidth="518.0" />
                      </children>
                   </Pane>
-                  <TableView fx:id="tblUmkm" layoutX="15.0" layoutY="394.0" prefHeight="466.0" prefWidth="1091.0">
+                  <HBox fx:id="hBoxTest" alignment="CENTER" layoutX="24.0" layoutY="454.0" prefHeight="105.0" prefWidth="462.0" spacing="30.0" style="-fx-border-color: #BABABA;      /* warna garis border */                         -fx-border-width: 1.3;           /* ketebalan border */                         -fx-border-radius: 8;         /* sudut border melengkung */                         -fx-background-radius: 8;     /* sudut background melengkung */                         -fx-border-style: solid;       /* jenis garis solid */                         -fx-background-color: #f4f4f4;">
+                     <children>
+                        <Button fx:id="btnSimpan" mnemonicParsing="false" prefHeight="54.0" prefWidth="75.0" text="Simpan" />
+                        <Button fx:id="btnHapus" mnemonicParsing="false" prefHeight="54.0" prefWidth="75.0" text="Hapus" />
+                     </children>
+                  </HBox>
+                  <HBox fx:id="hBoxTest1" alignment="CENTER" layoutX="520.0" layoutY="30.0" prefHeight="105.0" prefWidth="989.0" spacing="30.0" style="-fx-border-color: #BABABA;      /* warna garis border */                         -fx-border-width: 1.3;           /* ketebalan border */                         -fx-border-radius: 8;         /* sudut border melengkung */                         -fx-background-radius: 8;     /* sudut background melengkung */                         -fx-border-style: solid;       /* jenis garis solid */                         -fx-background-color: #f4f4f4;" AnchorPane.leftAnchor="500.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="10.0">
+                     <children>
+                        <TextField fx:id="txtCariNamaPemilik" prefHeight="25.0" prefWidth="240.0" promptText="Cari Nama Pemilik" />
+                        <TextField fx:id="txtCariNamaUsaha" prefHeight="25.0" prefWidth="240.0" promptText="Cari Nama Usaha" />
+                        <TextField fx:id="txtCariAlamat" prefHeight="25.0" prefWidth="240.0" promptText="Cari Usaha" />
+                        <Button fx:id="btnRefresh" mnemonicParsing="false" prefHeight="54.0" prefWidth="75.0" text="Refresh" />
+                        <Button fx:id="btnTutup" mnemonicParsing="false" prefHeight="54.0" prefWidth="75.0" text="Tutup" />
+                     </children>
+                  </HBox>
+                  <TableView fx:id="tblUmkm" layoutX="520.0" layoutY="160.0" prefHeight="680.0" prefWidth="989.0" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="500.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="140.0">
                     <columns>
                       <TableColumn fx:id="kolId" prefWidth="48.0" text="ID" />
                       <TableColumn fx:id="kolNamaPemilik" prefWidth="180.0" text="Nama Pemilik" />
@@ -63,21 +78,11 @@
                         <TableColumn fx:id="kolAlamat" maxWidth="1.7976931348623157E308" prefWidth="213.0" resizable="false" text="Alamat" />
                     </columns>
                   </TableView>
-                  <HBox fx:id="hBoxTest" alignment="CENTER" layoutX="15.0" layoutY="196.0" prefHeight="105.0" prefWidth="1089.0" spacing="30.0" style="-fx-border-color: #BABABA;      /* warna garis border */                         -fx-border-width: 1.3;           /* ketebalan border */                         -fx-border-radius: 8;         /* sudut border melengkung */                         -fx-background-radius: 8;     /* sudut background melengkung */                         -fx-border-style: solid;       /* jenis garis solid */                         -fx-background-color: #f4f4f4;">
-                     <children>
-                        <Button fx:id="btnSimpan" mnemonicParsing="false" prefHeight="54.0" prefWidth="75.0" text="Simpan" />
-                        <Button fx:id="btnHapus" mnemonicParsing="false" prefHeight="54.0" prefWidth="75.0" text="Hapus" />
-                        <Button fx:id="btnRefresh" mnemonicParsing="false" prefHeight="54.0" prefWidth="75.0" text="Refresh" />
-                        <Button fx:id="btnTutup" mnemonicParsing="false" prefHeight="54.0" prefWidth="75.0" text="Tutup" />
-                     </children>
-                  </HBox>
-                  <HBox fx:id="hBoxTest1" alignment="CENTER" layoutX="15.0" layoutY="313.0" prefHeight="68.0" prefWidth="1090.0" spacing="30.0" style="-fx-border-color: #BABABA;      /* warna garis border */                         -fx-border-width: 1.3;           /* ketebalan border */                         -fx-border-radius: 8;         /* sudut border melengkung */                         -fx-background-radius: 8;     /* sudut background melengkung */                         -fx-border-style: solid;       /* jenis garis solid */                         -fx-background-color: #f4f4f4;">
-                     <children>
-                        <TextField fx:id="txtCariNamaPemilik" prefHeight="25.0" prefWidth="240.0" promptText="Cari Nama Pemilik" />
-                        <TextField fx:id="txtCariNamaUsaha" prefHeight="25.0" prefWidth="240.0" promptText="Cari Nama Usaha" />
-                        <TextField fx:id="txtCariAlamat" prefHeight="25.0" prefWidth="240.0" promptText="Cari Usaha" />
-                     </children>
-                  </HBox>
+                  <Label fx:id="lblTotal" layoutX="520.0" layoutY="819.0" prefHeight="17.0" prefWidth="328.0" text="adasd" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="500.0">
+                     <font>
+                        <Font name="System Italic" size="12.0" />
+                     </font>
+                  </Label>
                </children>
             </AnchorPane>
         </content>

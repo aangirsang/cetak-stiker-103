@@ -12,15 +12,6 @@ class DataUmkmService(private val repo: DataUmkmRepository) {
     fun cariById(id: Long): DataUmkm =
         repo.findById(id).orElseThrow { NoSuchElementException("Data UMKM dengan id $id tidak ditemukan") }
 
-//    fun cariNamaPemilikLike(keyword: String): List<DataUmkm> =
-//        repo.findByNamaPemilikContainingIgnoreCase(keyword.trim())
-//
-//    fun cariNamaUsahaLike(keyword: String): List<DataUmkm> =
-//        repo.findByNamaUsahaContainingIgnoreCase(keyword.trim())
-//
-//    fun cariAlamatLike(keyword: String): List<DataUmkm> =
-//        repo.findByAlamatContainingIgnoreCase(keyword.trim())
-
     fun simpan(dataUmkm: DataUmkm): DataUmkm =
         repo.save(dataUmkm)
 

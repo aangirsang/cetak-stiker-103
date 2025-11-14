@@ -28,13 +28,10 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("org.hibernate.orm:hibernate-community-dialects:6.6.1.Final")
 
     // Database: SQLite
     implementation("org.xerial:sqlite-jdbc:3.46.0.0")
-    implementation("org.hibernate.orm:hibernate-community-dialects:6.6.1.Final")
-
-
-
 
     // Testing
     testImplementation("org.springframework.boot:spring-boot-starter-test")
